@@ -80,6 +80,10 @@ body[data-theme="dark"] { --btn-bg:#f0e9dc; --btn-fg:#171310; }
 #app { --btn-bg:var(--accent); --btn-fg:#fff8f2; }
 
 /* ---------- documented exceptions (must stay distinct) ---------- */
+.menu-btn, #menu-side { display:none; }
+@media(max-width:760px) {
+  .menu-btn, #menu-side { display:inline-flex; }
+}
 .zen-banner a.cta { background-color:#fff;border-color:#fff;color:#111; }
 .plan.featured .btn { background-color:#fff;border-color:#fff;color:#111; }
 .plan.featured .btn:hover { background-color:var(--accent-bright);border-color:var(--accent-bright); }
