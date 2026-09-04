@@ -2,6 +2,15 @@
 
  brisk demo site inspired by opencode.ai, rebranded as Sandcode. All English.
 
+## Product intro
+
+[![Watch the Sandcode intro](remotion/poster.png)](./remotion/out/sandcode-intro.mp4)
+
+![Sandcode intro preview](remotion/preview.gif)
+
+> Full video: [`remotion/out/sandcode-intro.mp4`](./remotion/out/sandcode-intro.mp4) (24s, 720p, Remotion).
+> Re-render: `cd remotion && npm install && npm run render`.
+
 ## Pages
 - `index.html` — home: hero, install tabs, animated terminal, logo strip, bento features, stats, quotes, use-case tabs, privacy, FAQ, changelog cards, Zen banner, waitlist
 - Motion: GSAP hero timeline, scroll reveals, stat count-up, logo marquee (`vendor/` local GSAP + ScrollTrigger); legacy IO reveal fallback when GSAP missing or reduced-motion on.
