@@ -19,7 +19,7 @@
 - `zen.html` — Zen models: problem, how it works, testimonials, FAQ
 - `docs.html` — condensed docs: Install / Configure / Init / Usage
 - `enterprise.html` — enterprise privacy page
-- `workspace.html` (+ `workspace.js` / `workspace.css`) — dark workspace app: projects/sessions sidebar, conversation stream with tool + diff cards, share/unshare mock links, composer with simulated replies, details panel. All mock data, no backend.
+- `workspace-*.html` (+ `workspace.css` / `workspace-pages.js`) — dark workspace app (mock, no backend).
 - Workspace sub-pages (mock, `workspace-pages.js`): `workspace-overview` (plan + stats + top models), `workspace-go` (rolling/weekly/monthly usage, allowances, provider toggles), `workspace-usage` (daily chart, per-model table), `workspace-billing` (balance top-up, invoices), `workspace-keys` (create/copy/regenerate/revoke), `workspace-members` (roles, invite), `workspace-settings` (profile, share mode, danger zone).
 - `style.css` / `script.js` — shared styles + interactions (tabs, copy fallback, mobile menu, waitlist, terminal typing)
 - `tokens.css` — design tokens, single source of truth (type, brand amber, radius 14/10, shadows, motion, layout). Loaded before `style.css` / `workspace.css`; both build on it.

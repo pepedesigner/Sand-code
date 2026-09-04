@@ -225,7 +225,7 @@ export const Main: React.FC = () => {
         <Shot src="go-desktop.png" dur={150} travel={4139} caption="Go plans — from $1/mo" />
       </Sequence>
       <Sequence from={480} durationInFrames={120} name="workspace">
-        <ZoomShot src="workspace-desktop.png" dur={120} caption="Workspace — sessions, diffs, share links" />
+        <ZoomShot src="workspace-desktop.png" dur={120} caption="Workspace — plan, usage, billing" />
       </Sequence>
       <Sequence from={600} durationInFrames={120} name="cta">
         <Cta />
