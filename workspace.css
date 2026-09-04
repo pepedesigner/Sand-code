@@ -293,6 +293,10 @@ pre.diff{margin:0;padding:10px 0 12px;font-family:var(--font-mono);font-size:12p
 .burn-line{fill:none;stroke:var(--green);stroke-width:1.6}
 
 /* ---------- toast + theme btn ---------- */
+#theme-btn,.theme-btn{background:transparent;border:1px solid var(--aline);color:var(--afg);
+  width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:13px;flex:none;
+  display:inline-flex;align-items:center;justify-content:center}
+#theme-btn:hover,.theme-btn:hover{background:var(--ahover)}
 #toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:var(--apanel2);
   border:1px solid var(--aline);color:var(--afg);font-size:13px;padding:10px 18px;border-radius:var(--radius-s);
   box-shadow:var(--shadow-pop);z-index:99}
@@ -308,6 +312,7 @@ body[data-theme="light"]{
   --afg:#221d1a; --amut:#6f695f; --adim:#6f6a60;
 }
 body[data-theme="light"] .mini-logo{background:#221d1a;color:#f5f2eb}
+body[data-theme="light"] #topbar{background:rgba(255,253,248,.88)}
 body[data-theme="light"] #new-session{background:#221d1a;color:#fff}
 body[data-theme="light"] .side-search input,body[data-theme="light"] #model-pick{background:#fff;color:var(--afg)}
 body[data-theme="light"] .sess.active{background:rgba(188,91,52,.14)}

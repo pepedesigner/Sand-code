@@ -11,8 +11,7 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { el.hidden = true; }, 2000);
   }
-  function copyText(t, msg) {
-    try {
+  function copyText(t, msg) {    try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(t).catch(function () {});
       }
@@ -20,7 +19,25 @@
     toast(msg || 'Copied to clipboard.');
   }
 
+  // theme: light default, dark on toggle; preference shared with marketing site
+  function setTheme(t) {
+    document.body.dataset.theme = t;
+    var b = $('theme-btn');
+    if (b) b.textContent = (t === 'dark') ? '☀' : '☾';
+    try { localStorage.setItem('sandcode-theme', t); } catch (e) {}
+  }
+  function initTheme() {
+    var t = 'light';
+    try { t = localStorage.getItem('sandcode-theme') || 'light'; } catch (e) {}
+    setTheme(t);
+    var b = $('theme-btn');
+    if (b) b.addEventListener('click', function () {
+      setTheme(document.body.dataset.theme === 'dark' ? 'light' : 'dark');
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
+    initTheme();
     // mobile sidebar
     var menu = $('menu-side'), side = $('side'), scrim = $('side-scrim');
     if (menu && side) {
