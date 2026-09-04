@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sandcode Workspace — API keys</title>
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./workspace.css"><link rel="icon" href="data:,"></head>
+<body>
+<div id="app">
+  <aside id="side">
+    <div class="side-top">
+      <a class="mini-logo" href="./index.html"><span>SAND</span>CODE<i>*</i></a>
+      <span class="env-pill"><span class="pulse"></span>local:4096</span>
+    </div>
+    <nav class="ws-nav">
+      <span>Workspace</span>
+      <a href="./workspace-overview.html">Overview</a>
+      <a href="./workspace.html">Sessions</a>
+      <a href="./workspace-go.html">Go</a>
+      <a href="./workspace-usage.html">Usage</a>
+      <a href="./workspace-billing.html">Billing</a>
+      <a href="./workspace-keys.html" class="active">Keys</a>
+      <a href="./workspace-members.html">Members</a>
+      <a href="./workspace-settings.html">Settings</a>
+    </nav>
+    <div class="side-foot">
+      <a class="back-site" href="./index.html">← Back to site</a>
+    </div>
+  </aside>
+  <div id="side-scrim" hidden></div>
+  <div class="main">
+    <header id="topbar">
+      <button id="menu-side" type="button" aria-label="Menu">☰</button>
+      <div class="crumbs"><span>acme</span><span class="sep">/</span><span id="crumb-sess">API keys</span></div>
+      <div class="top-actions"><span class="avatar">Q</span></div>
+    </header>
+    <div class="ws-page"><div class="ws-inner">
+      <h1>API keys</h1>
+      <p class="ws-sub">Keys inherit workspace quotas · mock data, values are fake.</p>
+      <div class="ws-card">
+        <table class="utable" id="keys-table"><thead><tr><th>Name</th><th>Key</th><th>Last used</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>CI runner</td><td class="mono">sk-sand-••••ab12</td><td>2h ago</td>
+            <td class="num"><button class="wbtn ghost" data-copy="sk-sand-mock-ab12-key" type="button">Copy</button>
+            <button class="wbtn ghost" data-regen type="button">Regenerate</button>
+            <button class="wbtn danger" data-revoke type="button">Revoke</button></td></tr>
+          <tr><td>Laptop</td><td class="mono">sk-sand-••••9f04</td><td>Yesterday</td>
+            <td class="num"><button class="wbtn ghost" data-copy="sk-sand-mock-9f04-key" type="button">Copy</button>
+            <button class="wbtn ghost" data-regen type="button">Regenerate</button>
+            <button class="wbtn danger" data-revoke type="button">Revoke</button></td></tr>
+        </tbody></table>
+        <div class="btnrow"><button class="wbtn" id="key-create" type="button">Create key</button></div>
+      </div>
+    </div></div>
+  </div>
+</div>
+<div id="toast" hidden></div>
+<script src="./workspace-pages.js"></script>
+</body></html>

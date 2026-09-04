@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sandcode Workspace — Usage</title>
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./workspace.css"><link rel="icon" href="data:,"></head>
+<body>
+<div id="app">
+  <aside id="side">
+    <div class="side-top">
+      <a class="mini-logo" href="./index.html"><span>SAND</span>CODE<i>*</i></a>
+      <span class="env-pill"><span class="pulse"></span>local:4096</span>
+    </div>
+    <nav class="ws-nav">
+      <span>Workspace</span>
+      <a href="./workspace-overview.html">Overview</a>
+      <a href="./workspace.html">Sessions</a>
+      <a href="./workspace-go.html">Go</a>
+      <a href="./workspace-usage.html" class="active">Usage</a>
+      <a href="./workspace-billing.html">Billing</a>
+      <a href="./workspace-keys.html">Keys</a>
+      <a href="./workspace-members.html">Members</a>
+      <a href="./workspace-settings.html">Settings</a>
+    </nav>
+    <div class="side-foot">
+      <a class="back-site" href="./index.html">← Back to site</a>
+    </div>
+  </aside>
+  <div id="side-scrim" hidden></div>
+  <div class="main">
+    <header id="topbar">
+      <button id="menu-side" type="button" aria-label="Menu">☰</button>
+      <div class="crumbs"><span>acme</span><span class="sep">/</span><span id="crumb-sess">Usage</span></div>
+      <div class="top-actions"><span class="avatar">Q</span></div>
+    </header>
+    <div class="ws-page"><div class="ws-inner">
+      <h1>Usage</h1>
+      <p class="ws-sub">Last 14 days · per-model breakdown · mock data.</p>
+      <div class="ws-grid">
+        <div class="ws-card"><h3>Spend · 14d</h3><div class="big">$47.20</div><p>vs $51.90 previous period</p></div>
+        <div class="ws-card"><h3>Requests · 14d</h3><div class="big">12.4K</div><p>8.1M tokens · 96% tool-call success</p></div>
+      </div>
+      <div class="ws-card" style="margin-bottom:14px"><h3>Daily spend</h3><div class="dbars" id="daily-bars"></div>
+        <div class="urow" style="margin-top:8px"><span>Aug 22</span><span>Sep 4</span></div></div>
+      <div class="ws-card"><h3>By model</h3>
+        <table class="utable"><thead><tr><th>Model</th><th class="num">Requests</th><th class="num">Tokens</th><th class="num">Cost</th></tr></thead>
+        <tbody><tr><td>Claude Sonnet</td><td class="num">6,104</td><td class="num">4.2M</td><td class="num">$24.10</td></tr>
+        <tr><td>GPT-5.2</td><td class="num">3,208</td><td class="num">2.1M</td><td class="num">$13.60</td></tr>
+        <tr><td>Gemini 3 Pro</td><td class="num">1,930</td><td class="num">1.4M</td><td class="num">$7.90</td></tr>
+        <tr><td>Open models</td><td class="num">1,158</td><td class="num">0.4M</td><td class="num">$1.60</td></tr></tbody></table></div>
+    </div></div>
+  </div>
+</div>
+<div id="toast" hidden></div>
+<script src="./workspace-pages.js"></script>
+</body></html>

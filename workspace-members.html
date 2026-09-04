@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sandcode Workspace — Members</title>
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./workspace.css"><link rel="icon" href="data:,"></head>
+<body>
+<div id="app">
+  <aside id="side">
+    <div class="side-top">
+      <a class="mini-logo" href="./index.html"><span>SAND</span>CODE<i>*</i></a>
+      <span class="env-pill"><span class="pulse"></span>local:4096</span>
+    </div>
+    <nav class="ws-nav">
+      <span>Workspace</span>
+      <a href="./workspace-overview.html">Overview</a>
+      <a href="./workspace.html">Sessions</a>
+      <a href="./workspace-go.html">Go</a>
+      <a href="./workspace-usage.html">Usage</a>
+      <a href="./workspace-billing.html">Billing</a>
+      <a href="./workspace-keys.html">Keys</a>
+      <a href="./workspace-members.html" class="active">Members</a>
+      <a href="./workspace-settings.html">Settings</a>
+    </nav>
+    <div class="side-foot">
+      <a class="back-site" href="./index.html">← Back to site</a>
+    </div>
+  </aside>
+  <div id="side-scrim" hidden></div>
+  <div class="main">
+    <header id="topbar">
+      <button id="menu-side" type="button" aria-label="Menu">☰</button>
+      <div class="crumbs"><span>acme</span><span class="sep">/</span><span id="crumb-sess">Members</span></div>
+      <div class="top-actions"><span class="avatar">Q</span></div>
+    </header>
+    <div class="ws-page"><div class="ws-inner">
+      <h1>Members</h1>
+      <p class="ws-sub">Everyone draws from one shared credit bucket · mock data.</p>
+      <div class="ws-card" style="margin-bottom:14px">
+        <table class="utable" id="members-table"><thead><tr><th>Member</th><th>Role</th><th>Joined</th></tr></thead>
+        <tbody>
+          <tr><td><b>qumo</b> · owner</td><td>Owner</td><td>May 2026</td></tr>
+          <tr><td><b>jay</b> · jay@acme.dev</td><td><select class="wselect member-role" style="width:auto"><option>Member</option><option>Admin</option></select></td><td>Jun 2026</td></tr>
+          <tr><td><b>dax</b> · dax@acme.dev</td><td><select class="wselect member-role" style="width:auto"><option>Member</option><option>Admin</option></select></td><td>Aug 2026</td></tr>
+        </tbody></table>
+      </div>
+      <div class="ws-card"><h3>Invite member</h3>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+          <input class="winput" id="invite-email" type="email" placeholder="teammate@acme.dev" style="flex:1;min-width:200px">
+          <button class="wbtn" id="invite-btn" type="button">Send invite</button>
+        </div></div>
+    </div></div>
+  </div>
+</div>
+<div id="toast" hidden></div>
+<script src="./workspace-pages.js"></script>
+</body></html>

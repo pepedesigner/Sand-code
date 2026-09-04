@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sandcode Workspace — Go subscription</title>
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./workspace.css"><link rel="icon" href="data:,"></head>
+<body>
+<div id="app">
+  <aside id="side">
+    <div class="side-top">
+      <a class="mini-logo" href="./index.html"><span>SAND</span>CODE<i>*</i></a>
+      <span class="env-pill"><span class="pulse"></span>local:4096</span>
+    </div>
+    <nav class="ws-nav">
+      <span>Workspace</span>
+      <a href="./workspace-overview.html">Overview</a>
+      <a href="./workspace.html">Sessions</a>
+      <a href="./workspace-go.html" class="active">Go</a>
+      <a href="./workspace-usage.html">Usage</a>
+      <a href="./workspace-billing.html">Billing</a>
+      <a href="./workspace-keys.html">Keys</a>
+      <a href="./workspace-members.html">Members</a>
+      <a href="./workspace-settings.html">Settings</a>
+    </nav>
+    <div class="side-foot">
+      <a class="back-site" href="./index.html">← Back to site</a>
+    </div>
+  </aside>
+  <div id="side-scrim" hidden></div>
+  <div class="main">
+    <header id="topbar">
+      <button id="menu-side" type="button" aria-label="Menu">☰</button>
+      <div class="crumbs"><span>acme</span><span class="sep">/</span><span id="crumb-sess">Go subscription</span></div>
+      <div class="top-actions"><span class="model-badge">GOAT · $10/mo</span><span class="avatar">Q</span></div>
+    </header>
+    <div class="ws-page"><div class="ws-inner">
+      <h1>Go subscription</h1>
+      <p class="ws-sub">Rolling, weekly and monthly windows · resets automatically · mock data.</p>
+      <div class="ws-grid">
+        <div class="ws-card"><h3>Rolling · 5h</h3><div class="big">19%</div>
+          <div class="ubar"><i style="width:19%"></i></div>
+          <div class="urow"><span>$2.34 of $12.00</span><span>resets in 2h 04m</span></div></div>
+        <div class="ws-card"><h3>Weekly</h3><div class="big">30%</div>
+          <div class="ubar"><i style="width:30%"></i></div>
+          <div class="urow"><span>$8.91 of $30.00</span><span>resets in 3d 11h</span></div></div>
+      </div>
+      <div class="ws-card" style="margin-bottom:14px"><h3>Monthly</h3><div class="big">25%</div>
+        <div class="ubar"><i style="width:25%"></i></div>
+        <div class="urow"><span>$15.00 of $60.00 · subscribed May 22</span><span>resets in 16d</span></div>
+        <div class="btnrow"><button class="wbtn" id="go-manage" type="button">Manage billing</button>
+        <button class="wbtn ghost" id="go-topup" type="button">Top up $20</button></div></div>
+      <div class="ws-card" style="margin-bottom:14px"><h3>Model allowances</h3>
+        <table class="utable"><thead><tr><th>Model</th><th class="num">Used</th><th class="num">Quota</th><th class="num">Share</th></tr></thead>
+        <tbody><tr><td>Claude Sonnet</td><td class="num">$6.10</td><td class="num">$25.00</td><td class="num">41%</td></tr>
+        <tr><td>GPT-5.2</td><td class="num">$3.40</td><td class="num">$15.00</td><td class="num">23%</td></tr>
+        <tr><td>Gemini 3 Pro</td><td class="num">$2.10</td><td class="num">$10.00</td><td class="num">14%</td></tr>
+        <tr><td>Open models</td><td class="num">$0.00</td><td class="num">unlimited</td><td class="num">0%</td></tr></tbody></table></div>
+      <div class="ws-card"><h3>Providers</h3>
+        <div class="switchrow"><div>Use balance first<small>Spend subscription credits before top-ups.</small></div>
+          <label class="switch"><input type="checkbox" checked data-toast="Balance-first routing on"><em></em></label></div>
+        <div class="switchrow"><div>Allow training improvements<small>Let providers learn from usage patterns. Code never included.</small></div>
+          <label class="switch"><input type="checkbox" data-toast="Training improvements off"><em></em></label></div>
+      </div>
+    </div></div>
+  </div>
+</div>
+<div id="toast" hidden></div>
+<script src="./workspace-pages.js"></script>
+</body></html>
