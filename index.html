@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sandcode | The open source AI coding agent</title>
+<meta name="description" content="Sandcode — the open source AI coding agent for terminal, IDE, and desktop. Free models included, or bring Claude, GPT, Gemini, and 75+ more.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./style.css">
+<link rel="icon" href="data:,">
+</head>
+<body>
+<header class="site-header">
+<div class="wrap nav">
+<a class="logo" href="./index.html"><span>SAND</span>CODE</a>
+<button class="menu-btn" id="menu-btn" type="button">Open menu</button>
+<nav class="nav-links" id="nav-links">
+<a href="https://github.com/sandcode-dev/sandcode" target="_blank" rel="noopener">GitHub</a>
+<a href="./docs.html">Docs</a>
+<a href="./go.html">Go</a>
+<a href="./zen.html">Zen</a>
+<a href="./enterprise.html">Enterprise</a>
+<a class="btn" href="./download.html">Get Sandcode</a></nav>
+</div>
+</header>
+
+<main class="wrap">
+<div class="hero home">
+<div class="badge">New &nbsp;·&nbsp; Desktop Tabs are here for macOS / Windows / Linux &nbsp;<a href="./download.html">Download now →</a></div>
+<h1>The <em>open-source</em> AI coding agent</h1>
+<p class="sub">Free models included, or connect any model from any provider — including Claude, GPT, Gemini, and more.</p>
+<div class="hero-ctas"><a class="btn" href="./download.html">Get Sandcode</a><a class="btn light" href="./docs.html">Read documentation</a></div>
+
+<div class="install">
+<div class="tabs">
+<button data-k="curl" class="active" type="button">curl</button>
+<button data-k="npm" type="button">npm</button>
+<button data-k="bun" type="button">bun</button>
+<button data-k="brew" type="button">brew</button>
+<button data-k="paru" type="button">paru</button>
+</div>
+<div class="cmd"><code id="install-cmd">curl -fsSL https://sandcode.ai/install | bash</code><button class="copy" id="copy-btn" type="button">Copy</button></div>
+</div>
+
+<div class="terminal">
+<div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span style="margin-left:8px;font-size:12px" class="dim">sandcode — zsh</span></div>
+<div class="term-body"><pre id="term-typing" style="margin:0;white-space:pre-wrap">$ sandcode</pre>
+<div style="margin-top:14px" class="dim">Product demo video placeholder — animated terminal preview above.</div>
+</div>
+</div>
+<div class="scroll-hint" aria-hidden="true"><span></span></div>
+</div>
+
+<div class="logos">
+<p>Trusted by developers at</p>
+<div class="logo-row"><span>Acme</span><span>NORTHWIND</span><span>Finch</span><span>HEXDAB</span><span>Quantia</span><span>LOOMLY</span><span>Datawise</span><span>VERTEX</span></div>
+</div>
+
+<section class="block">
+<div class="eyebrow">Why Sandcode</div>
+<h2>What is Sandcode?</h2>
+<p class="sub">Sandcode is an open source agent that helps you write code in your terminal, IDE, or desktop.</p>
+<div class="features">
+<div class="feat">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/></svg>
+<p><b>Any model.</b> 75+ providers — Claude, GPT, Gemini, local models. Free ones included.</p>
+</div>
+<div class="feat">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></svg>
+<p><b>Any editor.</b> Terminal, desktop app, IDE extensions.</p>
+</div>
+<div class="feat">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg>
+<p><b>LSP enabled.</b> Loads the right language servers automatically.</p>
+</div>
+<div class="feat">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>
+<p><b>Multi-session.</b> Parallel agents, same project.</p>
+</div>
+<div class="feat">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a5 5 0 007.1 0l2-2a5 5 0 00-7.1-7.1l-1 1"/><path d="M14 10a5 5 0 00-7.1 0l-2 2a5 5 0 007.1 7.1l1-1"/></svg>
+<p><b>Share links.</b> Share any session for review or debugging.</p>
+</div>
+<div class="feat">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg>
+<p><b>GitHub Copilot.</b> Bring your Copilot seat.</p>
+</div>
+<div class="feat">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-8 8H4l2-3a8 8 0 1115-5z"/></svg>
+<p><b>ChatGPT Plus / Pro.</b> Bring your OpenAI plan.</p>
+</div>
+<div class="feat">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
+<p><b>Privacy first.</b> Nothing stored. <a href="./enterprise.html">Learn more →</a></p>
+</div>
+</div>
+<p><a class="btn" href="./docs.html">Read docs</a></p>
+</section>
+
+<section class="block">
+<h2>The open source AI coding agent</h2>
+<p class="sub">With over <b>195,000</b> GitHub stars, <b>950</b> contributors, and over <b>13,000</b> commits, Sandcode is used and trusted by over <b>16M</b> developers every month. (Sample figures.)</p>
+<div class="stats">
+<div class="stat"><strong data-count="195" data-suffix="K">195K</strong>GitHub Stars</div>
+<div class="stat"><strong data-count="950" data-suffix="">950</strong>Contributors</div>
+<div class="stat"><strong data-count="16" data-suffix="M">16M</strong>Monthly Devs</div>
+</div>
+</section>
+
+<section class="block">
+<div class="eyebrow">Loved by developers</div>
+<h2>What developers <em>are saying</em></h2>
+<div class="testimonials">
+<div class="t"><b>Dax R.</b><p>“Sandcode Zen has been life changing, truly a no-brainer.”</p><span class="sub" style="margin:0">ex-CEO, Terminal Products</span></div>
+<div class="t"><b>Jay V.</b><p>“4 out of 5 people on our team love using Zen.”</p><span class="sub" style="margin:0">Founder, multiple startups</span></div>
+<div class="t"><b>David H.</b><p>“With Zen I know all the models are tested and perfect for coding agents.”</p><span class="sub" style="margin:0">ex-Head of Design</span></div>
+</div>
+</section>
+
+<section class="block">
+<div class="eyebrow">Use cases</div>
+<h2>What could you do with <em>Sandcode?</em></h2>
+<div class="uc-tabs">
+<button data-uctab="onboard" class="active" type="button">Onboard fast</button>
+<button data-uctab="issues" type="button">Issues to PRs</button>
+<button data-uctab="edits" type="button">Powerful edits</button>
+</div>
+<div class="uc-panel active" data-ucpanel="onboard">
+<div><h3>Code onboarding</h3><p class="sub" style="margin:0">Maps entire codebases in seconds — structure, dependencies, conventions.</p><p><a class="btn light" href="./docs.html">How it works</a></p></div>
+<div class="uc-term"><div class="uc-prompt">$ sandcode "How is auth handled here?"</div><div class="uc-out"><span class="green">⏺</span> I'll map the auth flow across 6 files.<br><br>Auth lives in <b>src/middleware/auth.ts</b>: <b>verifyToken()</b> checks JWTs, <b>limitByIP()</b> throttles anonymous calls. Routes compose them in <b>server.ts</b>.</div></div>
+</div>
+<div class="uc-panel" data-ucpanel="issues">
+<div><h3>Turn issues into PRs</h3><p class="sub" style="margin:0">Reads the issue, reproduces it, fixes, tests, opens the PR.</p><p><a class="btn light" href="./docs.html">See workflows</a></p></div>
+<div class="uc-term"><div class="uc-prompt">$ sandcode run "Fix #412: double-charge in checkout"</div><div class="uc-out"><span class="green">⏺</span> Reproduced with a failing test.<br><span class="green">⏺</span> Edited <b>checkout.ts</b> +12 −3.<br><span class="green">✓</span> 31 pass · 0 fail — PR #413 opened.</div></div>
+</div>
+<div class="uc-panel" data-ucpanel="edits">
+<div><h3>Make powerful edits</h3><p class="sub" style="margin:0">Multi-file refactors that work — verified end to end.</p><p><a class="btn light" href="./docs.html">Read docs</a></p></div>
+<div class="uc-term"><div class="uc-prompt">$ sandcode "Migrate to the new provider API"</div><div class="uc-out"><span class="green">⏺</span> Renamed across <b>14 files</b>, updated imports.<br><span class="green">⏺</span> Codemod + manual pass on edge cases.<br><span class="green">✓</span> Types clean, suite green.</div></div>
+</div>
+</section>
+
+<section class="block">
+<h2>Built for privacy first</h2>
+<p class="sub">Zero retention by default — nothing stored, nothing trained on. <a href="./enterprise.html">Privacy →</a></p>
+</section>
+
+<section class="block">
+<h2>FAQ</h2>
+<div class="faq">
+<details open><summary>What is Sandcode?</summary><p>An open source AI coding agent that runs in your terminal, IDE, or desktop — reading, editing, and shipping code with you.</p></details>
+<details><summary>How do I use Sandcode?</summary><p>Install with <code>curl -fsSL https://sandcode.ai/install | bash</code>, open your project, run <code>sandcode</code>, then <code>/init</code> to generate an AGENTS.md.</p></details>
+<details><summary>How much does Sandcode cost?</summary><p>The core is free and open source. Zen and Go plans are usage-based, starting at $1–$20 with caps and instant cancel.</p></details>
+<details><summary>What about data and privacy?</summary><p>Zero retention by default — your code is never used for training. Teams get SSO, audit logs, and private deployment.</p></details>
+<details><summary>Is Sandcode open source?</summary><p>Yes. Star it, open issues, and send PRs — all welcome.</p></details>
+</div>
+</section>
+
+<div class="zen-banner">
+<h2 style="margin:0">Access reliable optimized models for coding agents</h2>
+<p style="color:#cfcecd">Sand Zen gives you a handpicked set of AI models tested and benchmarked specifically for coding agents.</p>
+<a class="cta" href="./zen.html">Learn about Zen →</a>
+</div>
+
+<div class="waitlist">
+<h2 style="margin:0">Be the first to know when we release new products</h2>
+<p class="sub" style="margin:8px 0 0">Join the waitlist for early access.</p>
+<form id="waitlist-form"><input required type="email" placeholder="you@example.com"><button type="submit">Subscribe</button></form>
+<p id="waitlist-msg" style="font-weight:700"></p>
+</div>
+
+</main>
+
+<footer>
+<div class="wrap fcols">
+<div class="fbrand"><a class="logo" href="./index.html"><span>SAND</span>CODE</a><p>The open source AI coding agent for terminal, IDE, and desktop.</p></div>
+<div><b>Products</b><a href="./docs.html">Docs</a><a href="./go.html">Go</a><a href="./zen.html">Zen</a><a href="./download.html">Download</a><a href="./workspace.html">Workspace</a></div>
+<div><b>Resources</b><a href="./enterprise.html">Enterprise</a><a href="./go.html">Pricing</a><a href="./download.html">Changelog</a><a href="./docs.html">Get started</a></div>
+<div><b>Connect</b><a href="https://github.com/sandcode-dev/sandcode">GitHub</a><a href="./zen.html">Discord</a><a href="./enterprise.html">X</a></div>
+</div>
+<div class="wrap fbase"><span>©2026 Sandcode</span><span>Demo site inspired by opencode.ai. All trademarks belong to their respective owners.</span><span style="margin-left:auto">English</span></div>
+</footer>
+<script src="./vendor/gsap.min.js"></script>
+<script src="./vendor/ScrollTrigger.min.js"></script>
+<script src="./script.js"></script>
+</body>
+</html>

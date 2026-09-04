@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sandcode Workspace</title>
+<meta name="description" content="Sandcode Workspace — browse sessions, review tool calls and diffs, share links. Demo with mock data.">
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./workspace.css"><link rel="icon" href="data:,"></head>
+<body>
+<div id="app">
+  <!-- ============ sidebar ============ -->
+  <aside id="side">
+    <div class="side-top">
+      <a class="mini-logo" href="./index.html"><span>SAND</span>CODE</a>
+      <span class="env-pill"><span class="pulse"></span>local:4096</span>
+    </div>
+    <button id="new-session" type="button">+ New session</button>
+    <div class="side-search"><input id="sess-search" type="text" placeholder="Search sessions…" autocomplete="off"></div>
+    <div id="project-list"></div>
+    <div class="side-foot">
+      <button id="servers-btn" type="button"><span class="dot-ok"></span>Servers · 1 connected</button>
+      <div id="servers-pop" hidden>
+        <div class="srv"><span class="dot-ok"></span><div><b>local</b><span>127.0.0.1:4096 · v1.4.2</span></div></div>
+      </div>
+      <a class="back-site" href="./index.html">← Back to site</a>
+    </div>
+  </aside>
+  <div id="side-scrim" hidden></div>
+
+  <!-- ============ main ============ -->
+  <div class="main">
+    <header id="topbar">
+      <button id="menu-side" type="button" aria-label="Sessions">☰</button>
+      <div class="crumbs"><span id="crumb-proj">sandcode-web</span><span class="sep">/</span><span id="crumb-sess">session</span></div>
+      <div class="top-actions">
+        <span id="model-badge" class="model-badge">Claude Sonnet</span>
+        <button id="theme-btn" type="button" title="Toggle theme">☀</button>
+        <button id="detail-toggle" type="button">Details</button>
+        <button id="share-btn" type="button">Share</button>
+        <button id="copy-link-btn" type="button" hidden>Copy link</button>
+        <span class="avatar">Q</span>
+      </div>
+    </header>
+    <div id="share-bar" hidden>
+      <span class="shared-dot"></span>
+      <span>Public on the web — anyone with the link can view.</span>
+      <code id="share-url"></code>
+      <button id="unshare-btn" type="button">Unshare</button>
+    </div>
+    <div id="view-tabs">
+      <button data-view="convo" class="active" type="button">Conversation</button>
+      <button data-view="changes" type="button">Changes <span id="changes-count"></span></button>
+      <button data-view="timeline" type="button">Timeline</button>
+    </div>
+    <div id="pane-convo" class="pane"><div id="stream"></div></div>
+    <div id="pane-changes" class="pane" hidden><div class="narrow"><div id="changes"></div></div></div>
+    <div id="pane-timeline" class="pane" hidden><div class="narrow"><div id="timeline"></div></div></div>
+    <div class="composer">
+      <div class="composer-box">
+        <textarea id="composer-input" rows="2" placeholder="Ask Sandcode anything…  (@ to attach files, TAB for plan mode)"></textarea>
+        <div class="composer-row">
+          <select id="model-pick">
+            <option>Claude Sonnet</option>
+            <option>GPT-5.2</option>
+            <option>Gemini 3 Pro</option>
+            <option>Sand Zen Auto</option>
+          </select>
+          <span id="composer-hint">mock workspace — replies are simulated</span>
+          <button id="send-btn" type="button">Send ⏎</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ detail panel ============ -->
+  <aside id="detail">
+    <div class="detail-head"><b>Session details</b><button id="detail-close" type="button">✕</button></div>
+    <div class="d-tabs">
+      <button data-dtab="info" class="active" type="button">Details</button>
+      <button data-dtab="files" type="button">Files</button>
+    </div>
+    <div id="detail-body"></div>
+    <div id="files-body" hidden></div>
+  </aside>
+  <div id="detail-scrim" hidden></div>
+</div>
+<div id="toast" hidden></div>
+<script src="./workspace.js"></script>
+</body></html>

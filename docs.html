@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sandcode Docs | Intro</title><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./style.css"><link rel="icon" href="data:,"></head>
+<body>
+<header class="site-header"><div class="wrap nav">
+<a class="logo" href="./index.html"><span>SAND</span>CODE</a>
+<button class="menu-btn" id="menu-btn" type="button">Open menu</button>
+<nav class="nav-links" id="nav-links">
+<a href="https://github.com/sandcode-dev/sandcode" target="_blank" rel="noopener">GitHub</a>
+<a href="./docs.html" class="active">Docs</a>
+<a href="./go.html">Go</a>
+<a href="./zen.html">Zen</a>
+<a href="./enterprise.html">Enterprise</a>
+<a class="btn" href="./download.html">Get Sandcode</a></nav></div></header>
+<main class="wrap docs-layout">
+<aside class="sidebar">
+<b>Docs</b>
+<a class="active" href="./docs.html">Intro</a>
+<a href="./docs.html#install">Install</a>
+<a href="./docs.html#configure">Configure</a>
+<a href="./docs.html#usage">Usage</a>
+<a href="./zen.html">Zen</a>
+<a href="./go.html">Go</a>
+<a href="./download.html">TUI / CLI / Web / IDE</a>
+<a href="./enterprise.html">Enterprise</a>
+</aside>
+<article class="doc">
+<h1>Intro</h1>
+<p>Get started with Sandcode. <b>Sandcode</b> is an open source AI coding agent. Terminal, desktop, IDE extension.</p>
+<h2 id="install">Install</h2>
+<pre>curl -fsSL https://sandcode.ai/install | bash
+# node
+npm install -g sandcode-ai
+# brew
+brew install sandcode/tap/sandcode
+# arch
+paru -S sandcode</pre>
+<h2 id="configure">Configure</h2>
+<p>Run <code class="inline">/connect</code> in TUI, pick a provider, paste API key. New users recommended <a href="./zen.html">Sand Zen</a>.</p>
+<pre>/connect
+# → select sandcode → https://sandcode.ai/auth → paste key</pre>
+<h2 id="initialize">Initialize</h2>
+<pre>cd /path/to/project
+sandcode
+/init  # analyze project, create AGENTS.md (commit it)</pre>
+<h2 id="usage">Usage</h2>
+<p><code class="inline">How is authentication handled in @packages/functions/src/api/index.ts</code> — press <code class="inline">@</code> to fuzzy-find files.</p>
+<p>Press <code class="inline">TAB</code> for Plan mode, <code class="inline">/undo</code> / <code class="inline">/redo</code> to step back and forward, <code class="inline">/share</code> for a session link.</p>
+<h2>Customize</h2>
+<p>Themes, keybinds, formatters, commands, MCP, LSP, agents, and rules are all supported — this is a condensed reference.</p>
+<p style="color:#656363">Last updated: Sep 3, 2026 · Sandcode docs</p>
+</article>
+</main>
+<footer>
+<div class="wrap fcols">
+<div class="fbrand"><a class="logo" href="./index.html"><span>SAND</span>CODE</a><p>The open source AI coding agent for terminal, IDE, and desktop.</p></div>
+<div><b>Products</b><a href="./docs.html">Docs</a><a href="./go.html">Go</a><a href="./zen.html">Zen</a><a href="./download.html">Download</a><a href="./workspace.html">Workspace</a></div>
+<div><b>Resources</b><a href="./enterprise.html">Enterprise</a><a href="./go.html">Pricing</a><a href="./download.html">Changelog</a><a href="./docs.html">Get started</a></div>
+<div><b>Connect</b><a href="https://github.com/sandcode-dev/sandcode">GitHub</a><a href="./zen.html">Discord</a><a href="./enterprise.html">X</a></div>
+</div>
+<div class="wrap fbase"><span>©2026 Sandcode</span><span>Demo site inspired by opencode.ai. All trademarks belong to their respective owners.</span><span style="margin-left:auto">English</span></div>
+</footer>
+<script src="./vendor/gsap.min.js"></script>
+<script src="./vendor/ScrollTrigger.min.js"></script>
+<script src="./script.js"></script></body></html>

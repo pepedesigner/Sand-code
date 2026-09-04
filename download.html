@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sandcode | Download</title><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./style.css"><link rel="icon" href="data:,"></head>
+<body>
+<header class="site-header"><div class="wrap nav">
+<a class="logo" href="./index.html"><span>SAND</span>CODE</a>
+<button class="menu-btn" id="menu-btn" type="button">Open menu</button>
+<nav class="nav-links" id="nav-links">
+<a href="https://github.com/sandcode-dev/sandcode" target="_blank" rel="noopener">GitHub</a>
+<a href="./docs.html">Docs</a>
+<a href="./go.html">Go</a>
+<a href="./zen.html">Zen</a>
+<a href="./enterprise.html">Enterprise</a>
+<a class="btn" href="./download.html">Get Sandcode</a></nav></div></header>
+<main class="wrap">
+<div class="hero"><h1>Download Sandcode Desktop</h1>
+<p class="sub">Organize your work and active sessions with tabs. Download the latest to get started.</p></div>
+
+<section class="block">
+<h2>Terminal</h2>
+<div class="doc">
+<pre>curl -fsSL https://sandcode.ai/install | bash
+npm i -g sandcode-ai
+bun add -g sandcode-ai
+brew install sandcode/tap/sandcode
+paru -S sandcode</pre>
+</div>
+</section>
+
+<section class="block"><h2>Desktop</h2>
+<div class="dl-grid">
+<div class="card"><b>macOS (Apple Silicon)</b><p>.dmg universal</p><a class="btn" href="#">Download</a></div>
+<div class="card"><b>macOS (Intel)</b><p>.dmg x64</p><a class="btn" href="#">Download</a></div>
+<div class="card"><b>Windows (x64)</b><p>.exe nsis installer</p><a class="btn" href="#">Download</a></div>
+<div class="card"><b>Linux (.deb / .rpm)</b><p>x64 deb + rpm</p><a class="btn" href="#">Download .deb</a><a class="btn light" href="#">Download .rpm</a></div>
+</div>
+<p class="sub" style="margin-top:12px"><code>brew install --cask sandcode-desktop</code></p>
+</section>
+
+<section class="block"><h2>Extensions</h2>
+<div class="dl-grid">
+<div class="card"><b>VS Code</b><p>Terminal + sidebar agent</p><a class="btn" href="./docs.html">Install</a></div>
+<div class="card"><b>Cursor</b><p>Native integration</p><a class="btn" href="./docs.html">Install</a></div>
+<div class="card"><b>Zed</b><p>ACP support</p><a class="btn" href="./docs.html">Install</a></div>
+<div class="card"><b>Windsurf / VSCodium</b><p>VSIX compatible</p><a class="btn" href="./docs.html">Install</a></div>
+</div></section>
+
+<section class="block"><h2>Integrations</h2>
+<div class="dl-grid">
+<div class="card"><b>GitHub</b><p>PR review, actions, /share link</p><a class="btn" href="./docs.html">Install</a></div>
+<div class="card"><b>GitLab</b><p>MR assistant, CI summary</p><a class="btn" href="./docs.html">Install</a></div>
+</div></section>
+
+<section class="block"><h2>FAQ</h2>
+<div class="faq">
+<details open><summary>What is Sandcode?</summary><p>The open source AI coding agent for terminal, desktop, and IDE.</p></details>
+<details><summary>How much does Sandcode cost?</summary><p>The core is free. Zen starts at $20 pay-as-you-go, Go plans from $1/mo.</p></details>
+<details><summary>Is Sandcode open source?</summary><p>Yes — contributions are welcome.</p></details>
+</div></section>
+</main>
+<footer>
+<div class="wrap fcols">
+<div class="fbrand"><a class="logo" href="./index.html"><span>SAND</span>CODE</a><p>The open source AI coding agent for terminal, IDE, and desktop.</p></div>
+<div><b>Products</b><a href="./docs.html">Docs</a><a href="./go.html">Go</a><a href="./zen.html">Zen</a><a href="./download.html">Download</a><a href="./workspace.html">Workspace</a></div>
+<div><b>Resources</b><a href="./enterprise.html">Enterprise</a><a href="./go.html">Pricing</a><a href="./download.html">Changelog</a><a href="./docs.html">Get started</a></div>
+<div><b>Connect</b><a href="https://github.com/sandcode-dev/sandcode">GitHub</a><a href="./zen.html">Discord</a><a href="./enterprise.html">X</a></div>
+</div>
+<div class="wrap fbase"><span>©2026 Sandcode</span><span>Demo site inspired by opencode.ai. All trademarks belong to their respective owners.</span><span style="margin-left:auto">English</span></div>
+</footer>
+<script src="./vendor/gsap.min.js"></script>
+<script src="./vendor/ScrollTrigger.min.js"></script>
+<script src="./script.js"></script></body></html>
