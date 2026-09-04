@@ -45,10 +45,10 @@ h1 em,h2 em{font-style:italic;color:var(--accent)}
 .logo span{color:var(--accent)}
 .logo i{font-style:normal;color:var(--accent);margin-left:1px}
 .menu-btn{display:none;margin-left:auto;background:transparent;border:1px solid var(--line-strong);
-  padding:8px 14px;border-radius:8px;cursor:pointer;font:inherit;font-size:13px;font-weight:600;flex:none}
+  padding:8px 14px;border-radius:6px;cursor:pointer;font:inherit;font-size:13px;font-weight:600;flex:none}
 .nav-links{display:flex;gap:2px;margin-left:auto;align-items:center;flex:none;flex-wrap:nowrap;white-space:nowrap}
 .nav-links a{position:relative;text-decoration:none;font-size:14px;font-weight:500;color:#4a443d;
-  padding:9px 12px;border-radius:8px;transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
+  padding:9px 12px;border-radius:6px;transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
 .nav-links a:not(.btn):hover{background:rgba(31,28,25,.06);color:var(--ink)}
 .nav-links a:not(.btn).active{background:var(--accent-soft);color:var(--accent-strong);font-weight:700}
 body[data-theme="dark"] .nav-links a:not(.btn):hover{background:rgba(255,253,249,.08);color:var(--ink)}
@@ -86,13 +86,13 @@ h1{font-size:clamp(40px,6.2vw,72px);line-height:1.06;margin:0 0 20px}
 .cmd{display:flex;align-items:center;gap:12px;background:var(--code-bg);color:var(--code-fg);
   padding:16px;font-size:13.5px;overflow-x:auto}
 .cmd code{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.copy{margin-left:auto;background:#f1ecec;color:var(--night-deep);border:0;padding:7px 14px;border-radius:8px;
+.copy{margin-left:auto;background:#f1ecec;color:var(--night-deep);border:0;padding:7px 14px;border-radius:6px;
   cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;flex:none;transition:transform var(--t-fast) var(--ease)}
 .copy:hover{transform:translateY(-1px)}.copy:active{transform:scale(.97)}
 
 /* ---------- terminal product frame ---------- */
 .terminal{border:1px solid var(--line-strong);background:var(--night-deep);color:#e8e8e8;margin:26px auto 0;max-width:860px;
-  border-radius:14px;box-shadow:var(--shadow-hover);overflow:hidden;text-align:left;position:relative}
+  border-radius:10px;box-shadow:var(--shadow-hover);overflow:hidden;text-align:left;position:relative}
 .term-bar{display:flex;gap:7px;align-items:center;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.09)}
 .dot{width:11px;height:11px;border-radius:50%;background:#57534e;flex:none}
 .dot:nth-child(1){background:#f87171}.dot:nth-child(2){background:#fbbf24}.dot:nth-child(3){background:#34d399}
@@ -152,17 +152,17 @@ section.block .eyebrow::before{counter-increment:sec;content:"0" counter(sec);ma
 
 /* ---------- banners ---------- */
 .zen-banner{border:1px solid var(--line-strong);background:var(--night-deep);
-  color:#fff;padding:56px 32px;margin:40px 0;border-radius:16px;box-shadow:var(--shadow);position:relative;overflow:hidden;text-align:center}
+  color:#fff;padding:56px 32px;margin:40px 0;border-radius:12px;box-shadow:var(--shadow);position:relative;overflow:hidden;text-align:center}
 .zen-banner h2{position:relative;color:#fff}
 .zen-banner p{position:relative}
 .zen-banner a.cta{position:relative;display:inline-block;margin-top:16px;background:#fff;color:#111;
-  padding:13px 28px;text-decoration:none;font-weight:700;border-radius:8px;
+  padding:13px 28px;text-decoration:none;font-weight:700;border-radius:6px;
   transition:transform var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease)}
 .zen-banner a.cta:hover{transform:translateY(-2px)}
 .waitlist{border:1px solid var(--line);background:var(--card);padding:40px 32px;
   border-radius:var(--radius);box-shadow:var(--shadow);margin:36px 0;text-align:center}
 .waitlist form{display:flex;gap:10px;margin:18px auto 0;max-width:520px;flex-wrap:wrap}
-.waitlist input{flex:1;min-width:220px;padding:14px 18px;border:1px solid var(--line-strong);border-radius:8px;
+.waitlist input{flex:1;min-width:220px;padding:14px 18px;border:1px solid var(--line-strong);border-radius:6px;
   font-family:inherit;font-size:14px;background:#fff}
 .waitlist input:focus{border-color:var(--accent);outline:2px solid var(--accent-soft)}
 .waitlist button{padding:14px 28px;background:var(--ink);color:#fff;border:1px solid var(--ink);border-radius:8px;
@@ -186,7 +186,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,253,
 .sidebar{border:1px solid var(--line);background:var(--card);padding:12px;height:fit-content;
   position:sticky;top:calc(var(--header-h) + 16px);box-shadow:var(--shadow);border-radius:var(--radius)}
 .sidebar b{display:block;padding:6px 10px 10px;font-size:11.5px;letter-spacing:1.5px;color:var(--muted)}
-.sidebar a{display:block;padding:8px 10px;text-decoration:none;font-size:13.5px;border-radius:8px;color:#3d3835}
+.sidebar a{display:block;padding:8px 10px;text-decoration:none;font-size:13.5px;border-radius:6px;color:#3d3835}
 .sidebar a:hover{background:rgba(31,28,25,.05)}
 .sidebar a.active{background:var(--ink);color:#fff}
 .doc{border:1px solid var(--line);background:var(--card);padding:36px;box-shadow:var(--shadow);border-radius:var(--radius);text-align:left}
@@ -199,7 +199,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,253,
 /* ---------- misc grids ---------- */
 .dl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;text-align:left}
 .btn{display:inline-block;background:var(--ink);color:#fff;padding:12px 26px;
-  text-decoration:none;font-weight:600;font-size:14px;margin:8px 8px 0 0;border-radius:8px;
+  text-decoration:none;font-weight:600;font-size:14px;margin:8px 8px 0 0;border-radius:6px;
   transition:transform var(--t-fast) var(--ease),background var(--t-fast) var(--ease)}
 .btn:hover{transform:translateY(-2px);background:var(--accent-strong)}
 .btn.light{background:transparent;color:var(--ink);border:1px solid var(--line-strong);box-shadow:none}
@@ -229,7 +229,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,253,
 
 /* ---------- pricing (Go) ---------- */
 .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px;text-align:left}
-.plan{position:relative;border:1px solid var(--line);background:var(--card);border-radius:14px;
+.plan{position:relative;border:1px solid var(--line);background:var(--card);border-radius:10px;
   box-shadow:var(--shadow);padding:30px 28px;display:flex;flex-direction:column;
   transition:transform var(--t-med) var(--ease),box-shadow var(--t-med) var(--ease)}
 .plan:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover)}
@@ -272,7 +272,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,253,
   section.block{padding:52px 0}
   .menu-btn{display:block}
   .nav-links{display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;margin:0;
-    background:var(--card);border:1px solid var(--line-strong);border-radius:10px;
+    background:var(--card);border:1px solid var(--line-strong);border-radius:8px;
     box-shadow:var(--shadow-hover);padding:8px;flex-direction:column;align-items:stretch;white-space:normal}
   .nav-links.open{display:flex}
   .nav-links a{padding:11px 12px}
@@ -317,6 +317,8 @@ body[data-theme="dark"] footer{background:rgba(0,0,0,.25)}
 body[data-theme="dark"] .waitlist input{background:#100d0b;color:var(--ink)}
 body[data-theme="dark"] .doc code.inline,body[data-theme="dark"] .step code{background:var(--bg2)}
 body[data-theme="dark"] .btn,body[data-theme="dark"] .nav-links a.btn,body[data-theme="dark"] .waitlist button{color:#171310}
+body[data-theme="dark"]{--accent:#e8a04c; --accent-strong:#f0b46a}
+body[data-theme="dark"] .plan-flag{color:#171310}
 
 /* ---------- scroll reveal ---------- */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
@@ -325,7 +327,7 @@ body[data-theme="dark"] .btn,body[data-theme="dark"] .nav-links a.btn,body[data-
 /* ---------- use cases ---------- */
 .uc-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:26px 0 30px}
 .uc-tabs button{background:transparent;border:1px solid var(--line-strong);color:var(--ink);
-  padding:10px 22px;border-radius:8px;font-family:inherit;font-size:13.5px;font-weight:600;
+  padding:10px 22px;border-radius:6px;font-family:inherit;font-size:13.5px;font-weight:600;
   cursor:pointer;transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
 .uc-tabs button:hover{background:rgba(31,28,25,.05)}
 .uc-tabs button.active{background:transparent;color:var(--accent-strong);border-color:var(--accent);box-shadow:none}
@@ -336,7 +338,7 @@ body[data-theme="dark"] .btn,body[data-theme="dark"] .nav-links a.btn,body[data-
 .uc-term{background:var(--code-bg);color:#d9d3c6;border-radius:var(--radius);padding:22px;
   font-family:var(--font-mono);font-size:13px;line-height:1.75;box-shadow:var(--shadow);text-align:left}
 .uc-prompt{color:#fff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-  border-radius:8px;padding:10px 14px;margin-bottom:14px;overflow-x:auto;white-space:nowrap}
+  border-radius:6px;padding:10px 14px;margin-bottom:14px;overflow-x:auto;white-space:nowrap}
 .uc-out b{color:var(--accent-bright);font-weight:600}
 
 /* ---------- announcements ---------- */

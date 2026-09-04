@@ -17,8 +17,8 @@
   --success-bright:#34d399;
 
   /* shape */
-  --radius:10px;
-  --radius-s:8px;
+  --radius:8px;
+  --radius-s:6px;
   --pill:999px;
 
   /* elevation (light) */
