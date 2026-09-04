@@ -316,6 +316,9 @@ body[data-theme="light"] #topbar{background:rgba(255,253,248,.88)}
 /* light theme: flat, borders only, no shadows */
 body[data-theme="light"] .ws-card,body[data-theme="light"] #toast,
 body[data-theme="light"] #servers-pop{box-shadow:none !important}
+body[data-theme="light"] .winput,body[data-theme="light"] .wselect,
+body[data-theme="light"] .side-search input{background:#fff;color:var(--afg)}
+body[data-theme="light"] .switch em{background:rgba(30,27,27,.2)}
 body[data-theme="light"] #new-session{background:#221d1a;color:#fff}
 body[data-theme="light"] .side-search input,body[data-theme="light"] #model-pick{background:#fff;color:var(--afg)}
 body[data-theme="light"] .sess.active{background:rgba(188,91,52,.14)}
