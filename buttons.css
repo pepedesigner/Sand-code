@@ -1,0 +1,85 @@
+/* Sandcode button system — ONE spec for every button.
+   Shape, size, type and motion are identical everywhere; only the fill
+   changes per context (marketing = ink, workspace = clay) via --btn-bg/--btn-fg.
+   Roles: primary (default) / ghost / danger / small / icon.
+   Deliberately outside this spec: segmented tabs (.tabs), toggle switches,
+   list rows, plain text links. */
+
+/* ---------- base: every button shares this ---------- */
+.sbtn,
+.btn, .wbtn, #send-btn, #new-session, .copy,
+.nav-links a.btn, .menu-btn, #menu-side, .theme-btn, #toTop,
+.waitlist button, .uc-tabs button, .zen-banner a.cta,
+#detail-toggle, #copy-link-btn, #share-btn,
+.d-share button, #unshare-btn {
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:40px;padding:0 20px;border-radius:6px;
+  font-family:var(--font-sans);font-size:13.5px;font-weight:600;letter-spacing:.01em;line-height:1.2;
+  border:1.5px solid transparent;cursor:pointer;text-decoration:none;white-space:nowrap;
+  box-shadow:none;
+  transition:transform var(--t-fast) var(--ease),background-color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease),color var(--t-fast) var(--ease),filter var(--t-fast) var(--ease);
+}
+.sbtn:active,
+.btn:active, .wbtn:active, #send-btn:active, #new-session:active, .copy:active,
+.nav-links a.btn:active, .menu-btn:active, #menu-side:active, .theme-btn:active, #toTop:active,
+.waitlist button:active, .uc-tabs button:active, .zen-banner a.cta:active,
+#detail-toggle:active, #copy-link-btn:active, #share-btn:active,
+.d-share button:active, #unshare-btn:active { transform:scale(.97); }
+.sbtn:disabled,
+.btn:disabled, .wbtn:disabled, #send-btn:disabled,
+.waitlist button:disabled, .uc-tabs button:disabled { opacity:.45;cursor:not-allowed;transform:none; }
+
+/* ---------- primary (context fill) ---------- */
+.sbtn-primary,
+.btn:not(.light),
+.wbtn:not(.ghost):not(.danger),
+#send-btn, #new-session, #share-btn,
+.nav-links a.btn, .menu-btn, #menu-side,
+.waitlist button, .zen-banner a.cta {
+  background-color:var(--btn-bg);border-color:var(--btn-bg);color:var(--btn-fg);
+}
+.sbtn-primary:hover,
+.btn:not(.light):hover,
+.wbtn:not(.ghost):not(.danger):hover,
+#send-btn:hover, #new-session:hover, #share-btn:hover,
+.nav-links a.btn:hover, .menu-btn:hover, #menu-side:hover,
+.waitlist button:hover, .zen-banner a.cta:hover {
+  transform:translateY(-1px);filter:brightness(1.08);
+}
+
+/* ---------- ghost ---------- */
+.sbtn-ghost,
+.btn.light, .wbtn.ghost, .uc-tabs button,
+#detail-toggle, #copy-link-btn, .d-share button, #unshare-btn,
+.theme-btn, #toTop {
+  background-color:transparent;border-color:var(--line-strong);color:inherit;
+}
+.sbtn-ghost:hover,
+.btn.light:hover, .wbtn.ghost:hover, .uc-tabs button:hover,
+#detail-toggle:hover, #copy-link-btn:hover, .d-share button:hover, #unshare-btn:hover,
+.theme-btn:hover, #toTop:hover {
+  transform:translateY(-1px);border-color:var(--accent);
+}
+
+/* ---------- danger ---------- */
+.sbtn-danger, .wbtn.danger {
+  background-color:transparent;border-color:rgba(248,113,113,.55);color:var(--red);
+}
+.sbtn-danger:hover, .wbtn.danger:hover { transform:translateY(-1px);border-color:var(--red); }
+
+/* ---------- small ---------- */
+.sbtn-sm, .copy, .d-share button { min-height:32px;padding:0 12px;font-size:12.5px; }
+
+/* ---------- icon (square, not round) ---------- */
+.sbtn-icon, .theme-btn, #menu-side { width:36px;height:36px;min-height:0;padding:0; }
+#toTop { width:40px;height:40px;min-height:0;padding:0;font-size:17px; }
+
+/* ---------- context fills ---------- */
+body { --btn-bg:#1f1c19; --btn-fg:#ffffff; }
+body[data-theme="dark"] { --btn-bg:#f0e9dc; --btn-fg:#171310; }
+#app { --btn-bg:var(--accent); --btn-fg:#fff8f2; }
+
+/* ---------- documented exceptions (must stay distinct) ---------- */
+.zen-banner a.cta { background-color:#fff;border-color:#fff;color:#111; }
+.plan.featured .btn { background-color:#fff;border-color:#fff;color:#111; }
+.plan.featured .btn:hover { background-color:var(--accent-bright);border-color:var(--accent-bright); }
