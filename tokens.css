@@ -8,11 +8,11 @@
   --font-display:"Newsreader",Georgia,"Times New Roman",serif;
 
   /* brand */
-  --accent:#1e6b4e;
-  --accent-strong:#134e38;
-  --accent-soft:rgba(30,107,78,.1);
-  --accent-bright:#4cc08a;
-  --accent-bright-soft:rgba(76,192,138,.14);
+  --accent:#bc5b34;
+  --accent-strong:#9c4a29;
+  --accent-soft:rgba(188,91,52,.1);
+  --accent-bright:#e8a04c;
+  --accent-bright-soft:rgba(232,160,76,.14);
   --success:#2e9e5b;
   --success-bright:#34d399;
 

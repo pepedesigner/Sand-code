@@ -15,7 +15,7 @@
 <body>
 <header class="site-header">
 <div class="wrap nav">
-<a class="logo" href="./index.html"><span>SAND</span>CODE</a>
+<a class="logo" href="./index.html"><span>SAND</span>CODE<i>*</i></a>
 <button class="menu-btn" id="menu-btn" type="button">Open menu</button>
 <nav class="nav-links" id="nav-links">
 <a href="https://github.com/pepedesigner/Sand-code" target="_blank" rel="noopener">GitHub</a>
@@ -132,11 +132,11 @@
 <button data-uctab="upgrade" type="button">Upgrade deps</button>
 </div>
 <div class="uc-panel active" data-ucpanel="onboard">
-<div><h3>Code onboarding</h3><p class="sub" style="margin:0">Maps entire codebases in seconds — structure, dependencies, conventions.</p><p><a class="btn light" href="./docs.html">How it works</a></p></div>
+<div><h3>Code onboarding</h3><p class="sub" style="margin:0">Maps entire codebases in seconds — structure, dependencies, conventions.</p><p><a class="btn light" href="./workspace.html">Open in Workspace</a></p></div>
 <div class="uc-term"><div class="uc-prompt">$ sandcode "How is auth handled here?"</div><div class="uc-out"><span class="green">⏺</span> I'll map the auth flow across 6 files.<br><br>Auth lives in <b>src/middleware/auth.ts</b>: <b>verifyToken()</b> checks JWTs, <b>limitByIP()</b> throttles anonymous calls. Routes compose them in <b>server.ts</b>.</div></div>
 </div>
 <div class="uc-panel" data-ucpanel="issues">
-<div><h3>Turn issues into PRs</h3><p class="sub" style="margin:0">Reads the issue, reproduces it, fixes, tests, opens the PR.</p><p><a class="btn light" href="./docs.html">See workflows</a></p></div>
+<div><h3>Turn issues into PRs</h3><p class="sub" style="margin:0">Reads the issue, reproduces it, fixes, tests, opens the PR.</p><p><a class="btn light" href="./download.html">Install Sandcode</a></p></div>
 <div class="uc-term"><div class="uc-prompt">$ sandcode run "Fix #412: double-charge in checkout"</div><div class="uc-out"><span class="green">⏺</span> Reproduced with a failing test.<br><span class="green">⏺</span> Edited <b>checkout.ts</b> +12 −3.<br><span class="green">✓</span> 31 pass · 0 fail — PR #413 opened.</div></div>
 </div>
 <div class="uc-panel" data-ucpanel="edits">
@@ -144,15 +144,15 @@
 <div class="uc-term"><div class="uc-prompt">$ sandcode "Migrate to the new provider API"</div><div class="uc-out"><span class="green">⏺</span> Renamed across <b>14 files</b>, updated imports.<br><span class="green">⏺</span> Codemod + manual pass on edge cases.<br><span class="green">✓</span> Types clean, suite green.</div></div>
 </div>
 <div class="uc-panel" data-ucpanel="debug">
-<div><h3>Debug production</h3><p class="sub" style="margin:0">Correlates deploys, logs, and traces to find the culprit fast.</p><p><a class="btn light" href="./docs.html">See workflows</a></p></div>
+<div><h3>Debug production</h3><p class="sub" style="margin:0">Correlates deploys, logs, and traces to find the culprit fast.</p><p><a class="btn light" href="./workspace.html">Replay in Workspace</a></p></div>
 <div class="uc-term"><div class="uc-prompt">$ sandcode "Why is checkout 500ing since 14:20?"</div><div class="uc-out"><span class="green">⏺</span> Traced to deploy <b>1.4.2</b> — migration lock held.<br><span class="green">⏺</span> Rolled back, re-ran migration offline.<br><span class="green">✓</span> Error rate back to zero.</div></div>
 </div>
 <div class="uc-panel" data-ucpanel="review">
-<div><h3>Review PRs</h3><p class="sub" style="margin:0">Line-by-line review with your taste: races, N+1s, missing indexes.</p><p><a class="btn light" href="./docs.html">Read docs</a></p></div>
+<div><h3>Review PRs</h3><p class="sub" style="margin:0">Line-by-line review with your taste: races, N+1s, missing indexes.</p><p><a class="btn light" href="./download.html">Get the extension</a></p></div>
 <div class="uc-term"><div class="uc-prompt">$ sandcode review pr/418</div><div class="uc-out"><span class="green">⏺</span> 12 comments, <b>3 blocking</b>: race, N+1, missing index.<br><span class="green">⏺</span> Suggested fixes inline with tests.<br><span class="green">✓</span> Rest looks good to merge.</div></div>
 </div>
 <div class="uc-panel" data-ucpanel="upgrade">
-<div><h3>Upgrade dependencies</h3><p class="sub" style="margin:0">Major bumps without the dread — codemod, fix, verify.</p><p><a class="btn light" href="./docs.html">Read docs</a></p></div>
+<div><h3>Upgrade dependencies</h3><p class="sub" style="margin:0">Major bumps without the dread — codemod, fix, verify.</p><p><a class="btn light" href="./zen.html">Try Zen models</a></p></div>
 <div class="uc-term"><div class="uc-prompt">$ sandcode "Bump React 18 → 19"</div><div class="uc-out"><span class="green">⏺</span> Ran codemod across <b>9 files</b>.<br><span class="green">⏺</span> Fixed 6 breakages, updated types.<br><span class="green">✓</span> Suite green on the first try.</div></div>
 </div>
 </section>
@@ -190,7 +190,7 @@
 
 <footer>
 <div class="wrap fcols">
-<div class="fbrand"><a class="logo" href="./index.html"><span>SAND</span>CODE</a><p>The open source AI coding agent for terminal, IDE, and desktop.</p></div>
+<div class="fbrand"><a class="logo" href="./index.html"><span>SAND</span>CODE<i>*</i></a><p>The open source AI coding agent for terminal, IDE, and desktop.</p></div>
 <div><b>Products</b><a href="./docs.html">Docs</a><a href="./go.html">Go</a><a href="./zen.html">Zen</a><a href="./download.html">Download</a><a href="./workspace.html">Workspace</a></div>
 <div><b>Resources</b><a href="./enterprise.html">Enterprise</a><a href="./go.html">Pricing</a><a href="./download.html">Changelog</a><a href="./docs.html">Get started</a></div>
 <div><b>Connect</b><a href="https://github.com/pepedesigner/Sand-code">GitHub</a><a href="./zen.html">Discord</a><a href="./enterprise.html">X</a></div>

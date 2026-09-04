@@ -13,7 +13,7 @@ body{
   font-family:var(--font-sans);
   font-size:15.5px; line-height:1.65;
   -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-  background-image:radial-gradient(1000px 380px at 50% -120px,rgba(30,107,78,.1),transparent 65%);
+  background-image:radial-gradient(1000px 380px at 50% -120px,rgba(188,91,52,.1),transparent 65%);
   background-attachment:fixed;
 }
 ::selection{background:var(--ink);color:#fff}
@@ -45,6 +45,7 @@ h1 em,h2 em{font-style:italic;color:var(--accent)}
 .logo{font-family:var(--font-display);font-weight:600;letter-spacing:.06em;font-size:17px;text-decoration:none;
   flex:none;color:var(--ink)}
 .logo span{color:var(--accent)}
+.logo i{font-style:normal;color:var(--accent);margin-left:1px}
 .menu-btn{display:none;margin-left:auto;background:transparent;border:1px solid var(--line-strong);
   padding:8px 14px;border-radius:var(--pill);cursor:pointer;font:inherit;font-size:13px;font-weight:600;flex:none}
 .nav-links{display:flex;gap:2px;margin-left:auto;align-items:center;flex:none;flex-wrap:nowrap;white-space:nowrap}
@@ -88,7 +89,7 @@ h1{font-size:clamp(40px,6.2vw,72px);line-height:1.06;margin:0 0 20px}
 .terminal{border:1px solid var(--line-strong);background:var(--night-deep);color:#e8e8e8;margin:26px auto 0;max-width:860px;
   border-radius:22px;box-shadow:var(--shadow-hover);overflow:hidden;text-align:left;position:relative}
 .terminal::before{content:"";position:absolute;inset:-60px -40px auto;height:120px;z-index:-1;
-  background:radial-gradient(closest-side,rgba(30,107,78,.28),transparent);filter:blur(10px)}
+  background:radial-gradient(closest-side,rgba(188,91,52,.28),transparent);filter:blur(10px)}
 .term-bar{display:flex;gap:7px;align-items:center;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.09)}
 .dot{width:11px;height:11px;border-radius:50%;background:#57534e;flex:none}
 .dot:nth-child(1){background:#f87171}.dot:nth-child(2){background:#fbbf24}.dot:nth-child(3){background:#34d399}
@@ -150,7 +151,7 @@ section.block .eyebrow::before{counter-increment:sec;content:"0" counter(sec);ma
 .zen-banner{border:1px solid var(--line-strong);background:linear-gradient(140deg,var(--night),var(--night-deep) 72%);
   color:#fff;padding:56px 32px;margin:40px 0;border-radius:26px;box-shadow:var(--shadow);position:relative;overflow:hidden;text-align:center}
 .zen-banner::after{content:"";position:absolute;width:480px;height:480px;right:-160px;top:-160px;
-  background:radial-gradient(circle,rgba(30,107,78,.4),transparent 65%);pointer-events:none}
+  background:radial-gradient(circle,rgba(188,91,52,.4),transparent 65%);pointer-events:none}
 .zen-banner h2{position:relative;color:#fff}
 .zen-banner p{position:relative}
 .zen-banner a.cta{position:relative;display:inline-block;margin-top:16px;background:#fff;color:#111;
@@ -312,4 +313,4 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,253,
 /* ---------- announcements ---------- */
 .tagrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .tag{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);
-  background:var(--accent-soft);border:1px solid rgba(30,107,78,.3);padding:3px 10px;border-radius:var(--pill)}
+  background:var(--accent-soft);border:1px solid rgba(188,91,52,.3);padding:3px 10px;border-radius:var(--pill)}
