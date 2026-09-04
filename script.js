@@ -89,10 +89,26 @@ function initTerm(){
   tick();
 }
 document.addEventListener('DOMContentLoaded', ()=>{
-  initTabs(); initMenu(); initWaitlist(); initTerm(); initCopyBtn(); initUsecase();
+  initTheme(); initTabs(); initMenu(); initWaitlist(); initTerm(); initCopyBtn(); initUsecase();
   // GSAP when available, legacy IO reveal as fallback (also covers no-JS-safe default)
   if (!initMotion()) initReveal();
 });
+// theme: light default, dark on toggle; preference shared with workspace
+function setTheme(t){
+  document.body.dataset.theme = t;
+  var b = document.getElementById('theme-btn');
+  if(b) b.textContent = (t === 'dark') ? '☀' : '☾';
+  try{ localStorage.setItem('sandcode-theme', t); }catch(e){}
+}
+function initTheme(){
+  var t = 'light';
+  try{ t = localStorage.getItem('sandcode-theme') || 'light'; }catch(e){}
+  setTheme(t);
+  var b = document.getElementById('theme-btn');
+  if(b) b.addEventListener('click', function(){
+    setTheme(document.body.dataset.theme === 'dark' ? 'light' : 'dark');
+  });
+}
 function initCopyBtn(){
   const btn = document.getElementById('copy-btn');
   if(btn) btn.addEventListener('click', copyCmd);
