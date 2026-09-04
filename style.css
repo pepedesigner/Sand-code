@@ -319,6 +319,12 @@ body[data-theme="dark"] .doc code.inline,body[data-theme="dark"] .step code{back
 body[data-theme="dark"] .btn,body[data-theme="dark"] .nav-links a.btn,body[data-theme="dark"] .waitlist button{color:#171310}
 body[data-theme="dark"]{--accent:#e8a04c; --accent-strong:#f0b46a}
 body[data-theme="dark"] .plan-flag{color:#171310}
+/* light theme: flat, borders only, no shadows */
+body[data-theme="light"] .badge,body[data-theme="light"] .install,body[data-theme="light"] .terminal,
+body[data-theme="light"] .card,body[data-theme="light"] .stat,body[data-theme="light"] .t,
+body[data-theme="light"] .plan,body[data-theme="light"] .compare,body[data-theme="light"] .waitlist,
+body[data-theme="light"] .zen-banner,body[data-theme="light"] .doc,body[data-theme="light"] .sidebar,
+body[data-theme="light"] .uc-term,body[data-theme="light"] .nav-links.open{box-shadow:none !important}
 
 /* ---------- scroll reveal ---------- */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
