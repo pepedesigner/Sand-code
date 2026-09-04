@@ -316,6 +316,7 @@ body[data-theme="dark"] .fcols a{color:#d8d0bf}
 body[data-theme="dark"] footer{background:rgba(0,0,0,.25)}
 body[data-theme="dark"] .waitlist input{background:#100d0b;color:var(--ink)}
 body[data-theme="dark"] .doc code.inline,body[data-theme="dark"] .step code{background:var(--bg2)}
+body[data-theme="dark"] .btn,body[data-theme="dark"] .nav-links a.btn,body[data-theme="dark"] .waitlist button{color:#171310}
 
 /* ---------- scroll reveal ---------- */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
