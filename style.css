@@ -13,8 +13,6 @@ body{
   font-family:var(--font-sans);
   font-size:15.5px; line-height:1.65;
   -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-  background-image:radial-gradient(1000px 380px at 50% -120px,rgba(188,91,52,.1),transparent 65%);
-  background-attachment:fixed;
 }
 ::selection{background:var(--ink);color:#fff}
 code,pre,.cmd,.terminal,.term-body{font-family:var(--font-mono)}
@@ -47,10 +45,10 @@ h1 em,h2 em{font-style:italic;color:var(--accent)}
 .logo span{color:var(--accent)}
 .logo i{font-style:normal;color:var(--accent);margin-left:1px}
 .menu-btn{display:none;margin-left:auto;background:transparent;border:1px solid var(--line-strong);
-  padding:8px 14px;border-radius:var(--pill);cursor:pointer;font:inherit;font-size:13px;font-weight:600;flex:none}
+  padding:8px 14px;border-radius:8px;cursor:pointer;font:inherit;font-size:13px;font-weight:600;flex:none}
 .nav-links{display:flex;gap:2px;margin-left:auto;align-items:center;flex:none;flex-wrap:nowrap;white-space:nowrap}
 .nav-links a{position:relative;text-decoration:none;font-size:14px;font-weight:500;color:#4a443d;
-  padding:9px 12px;border-radius:var(--pill);transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
+  padding:9px 12px;border-radius:8px;transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
 .nav-links a:not(.btn):hover{background:rgba(31,28,25,.06);color:var(--ink)}
 .nav-links a:not(.btn).active{background:var(--ink);color:#fff}
 .nav-links a.btn{background:var(--ink);color:#fff;padding:10px 20px;margin-left:10px;font-weight:600;
@@ -81,15 +79,13 @@ h1{font-size:clamp(40px,6.2vw,72px);line-height:1.06;margin:0 0 20px}
 .cmd{display:flex;align-items:center;gap:12px;background:var(--code-bg);color:var(--code-fg);
   padding:16px;font-size:13.5px;overflow-x:auto}
 .cmd code{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.copy{margin-left:auto;background:#f1ecec;color:var(--night-deep);border:0;padding:7px 14px;border-radius:var(--pill);
+.copy{margin-left:auto;background:#f1ecec;color:var(--night-deep);border:0;padding:7px 14px;border-radius:8px;
   cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;flex:none;transition:transform var(--t-fast) var(--ease)}
 .copy:hover{transform:translateY(-1px)}.copy:active{transform:scale(.97)}
 
 /* ---------- terminal product frame ---------- */
 .terminal{border:1px solid var(--line-strong);background:var(--night-deep);color:#e8e8e8;margin:26px auto 0;max-width:860px;
-  border-radius:22px;box-shadow:var(--shadow-hover);overflow:hidden;text-align:left;position:relative}
-.terminal::before{content:"";position:absolute;inset:-60px -40px auto;height:120px;z-index:-1;
-  background:radial-gradient(closest-side,rgba(188,91,52,.28),transparent);filter:blur(10px)}
+  border-radius:14px;box-shadow:var(--shadow-hover);overflow:hidden;text-align:left;position:relative}
 .term-bar{display:flex;gap:7px;align-items:center;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.09)}
 .dot{width:11px;height:11px;border-radius:50%;background:#57534e;flex:none}
 .dot:nth-child(1){background:#f87171}.dot:nth-child(2){background:#fbbf24}.dot:nth-child(3){background:#34d399}
@@ -133,7 +129,7 @@ section.block .eyebrow::before{counter-increment:sec;content:"0" counter(sec);ma
 .feat p b{color:var(--ink);font-weight:650}
 
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
-.stat{border:1px solid var(--line-strong);background:linear-gradient(160deg,var(--night),var(--night-deep));
+.stat{border:1px solid var(--line-strong);background:var(--night);
   color:#fff;padding:34px 10px;border-radius:var(--radius);box-shadow:var(--shadow)}
 .stat strong{font-family:var(--font-display);font-weight:500;font-size:44px;display:block;letter-spacing:0}
 .stat{font-size:13px;color:#cfc9bd}
@@ -148,23 +144,21 @@ section.block .eyebrow::before{counter-increment:sec;content:"0" counter(sec);ma
 .faq p{color:var(--muted);margin:10px 0 2px 24px;font-size:14.5px}
 
 /* ---------- banners ---------- */
-.zen-banner{border:1px solid var(--line-strong);background:linear-gradient(140deg,var(--night),var(--night-deep) 72%);
-  color:#fff;padding:56px 32px;margin:40px 0;border-radius:26px;box-shadow:var(--shadow);position:relative;overflow:hidden;text-align:center}
-.zen-banner::after{content:"";position:absolute;width:480px;height:480px;right:-160px;top:-160px;
-  background:radial-gradient(circle,rgba(188,91,52,.4),transparent 65%);pointer-events:none}
+.zen-banner{border:1px solid var(--line-strong);background:var(--night-deep);
+  color:#fff;padding:56px 32px;margin:40px 0;border-radius:16px;box-shadow:var(--shadow);position:relative;overflow:hidden;text-align:center}
 .zen-banner h2{position:relative;color:#fff}
 .zen-banner p{position:relative}
 .zen-banner a.cta{position:relative;display:inline-block;margin-top:16px;background:#fff;color:#111;
-  padding:13px 28px;text-decoration:none;font-weight:700;border-radius:var(--pill);
+  padding:13px 28px;text-decoration:none;font-weight:700;border-radius:8px;
   transition:transform var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease)}
 .zen-banner a.cta:hover{transform:translateY(-2px);box-shadow:0 12px 28px -10px rgba(255,255,255,.4)}
 .waitlist{border:1px solid var(--line);background:var(--card);padding:40px 32px;
   border-radius:var(--radius);box-shadow:var(--shadow);margin:36px 0;text-align:center}
 .waitlist form{display:flex;gap:10px;margin:18px auto 0;max-width:520px;flex-wrap:wrap}
-.waitlist input{flex:1;min-width:220px;padding:14px 18px;border:1px solid var(--line-strong);border-radius:var(--pill);
+.waitlist input{flex:1;min-width:220px;padding:14px 18px;border:1px solid var(--line-strong);border-radius:8px;
   font-family:inherit;font-size:14px;background:#fff}
 .waitlist input:focus{border-color:var(--accent);outline:2px solid var(--accent-soft)}
-.waitlist button{padding:14px 28px;background:var(--ink);color:#fff;border:1px solid var(--ink);border-radius:var(--pill);
+.waitlist button{padding:14px 28px;background:var(--ink);color:#fff;border:1px solid var(--ink);border-radius:8px;
   font-family:inherit;font-weight:700;cursor:pointer;transition:transform var(--t-fast) var(--ease),background var(--t-fast) var(--ease)}
 .waitlist button:hover{transform:translateY(-1px);background:var(--accent-strong)}
 
@@ -198,7 +192,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,253,
 /* ---------- misc grids ---------- */
 .dl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;text-align:left}
 .btn{display:inline-block;background:var(--ink);color:#fff;padding:12px 26px;
-  text-decoration:none;font-weight:600;font-size:14px;margin:8px 8px 0 0;border-radius:var(--pill);
+  text-decoration:none;font-weight:600;font-size:14px;margin:8px 8px 0 0;border-radius:8px;
   transition:transform var(--t-fast) var(--ease),background var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease)}
 .btn:hover{transform:translateY(-2px);background:var(--accent-strong);box-shadow:var(--shadow)}
 .btn.light{background:transparent;color:var(--ink);border:1px solid var(--line-strong);box-shadow:none}
@@ -228,7 +222,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,253,
 
 /* ---------- pricing (Go) ---------- */
 .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px;text-align:left}
-.plan{position:relative;border:1px solid var(--line);background:var(--card);border-radius:20px;
+.plan{position:relative;border:1px solid var(--line);background:var(--card);border-radius:14px;
   box-shadow:var(--shadow);padding:30px 28px;display:flex;flex-direction:column;
   transition:transform var(--t-med) var(--ease),box-shadow var(--t-med) var(--ease)}
 .plan:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover)}
@@ -241,7 +235,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,253,
 .plan ul{list-style:none;margin:20px 0 0;padding:20px 0 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px;font-size:13.5px;color:#3d3835}
 .plan ul li{padding-left:24px;position:relative}
 .plan ul li::before{content:"✓";position:absolute;left:0;color:var(--success);font-weight:800}
-.plan.featured{background:linear-gradient(160deg,var(--night),var(--night-deep) 80%);border-color:var(--night);color:#fff}
+.plan.featured{background:var(--night);border-color:var(--night);color:#fff}
 .plan.featured .price small,.plan.featured .tagline{color:#b9b2a4}
 .plan.featured .credits{color:var(--accent-bright)}
 .plan.featured .btn{background:#fff;color:#111}
@@ -271,7 +265,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,253,
   section.block{padding:52px 0}
   .menu-btn{display:block}
   .nav-links{display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;margin:0;
-    background:var(--card);border:1px solid var(--line-strong);border-radius:16px;
+    background:var(--card);border:1px solid var(--line-strong);border-radius:10px;
     box-shadow:var(--shadow-hover);padding:8px;flex-direction:column;align-items:stretch;white-space:normal}
   .nav-links.open{display:flex}
   .nav-links a{padding:11px 12px}
@@ -296,7 +290,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,253,
 /* ---------- use cases ---------- */
 .uc-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:26px 0 30px}
 .uc-tabs button{background:transparent;border:1px solid var(--line-strong);color:var(--ink);
-  padding:10px 22px;border-radius:var(--pill);font-family:inherit;font-size:13.5px;font-weight:600;
+  padding:10px 22px;border-radius:8px;font-family:inherit;font-size:13.5px;font-weight:600;
   cursor:pointer;transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
 .uc-tabs button:hover{background:rgba(31,28,25,.05)}
 .uc-tabs button.active{background:var(--ink);color:#fff}
@@ -307,7 +301,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,253,
 .uc-term{background:var(--code-bg);color:#d9d3c6;border-radius:var(--radius);padding:22px;
   font-family:var(--font-mono);font-size:13px;line-height:1.75;box-shadow:var(--shadow);text-align:left}
 .uc-prompt{color:#fff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-  border-radius:10px;padding:10px 14px;margin-bottom:14px;overflow-x:auto;white-space:nowrap}
+  border-radius:8px;padding:10px 14px;margin-bottom:14px;overflow-x:auto;white-space:nowrap}
 .uc-out b{color:var(--accent-bright);font-weight:600}
 
 /* ---------- announcements ---------- */
