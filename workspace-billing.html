@@ -1,40 +1,22 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sandcode Workspace — Billing</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./fonts.css">
 <link rel="stylesheet" href="./tokens.css?v=3">
 <link rel="stylesheet" href="./workspace.css?v=3">
-<link rel="stylesheet" href="./buttons.css"><link rel="icon" href="data:,"></head>
+<link rel="stylesheet" href="./buttons.css"><link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<meta name="description" content="Sandcode Workspace billing — credit balance, top-ups, and invoices (mock demo).">
+<meta property="og:title" content="Sandcode Workspace — Billing">
+<meta property="og:description" content="Sandcode Workspace billing — credit balance, top-ups, and invoices (mock demo).">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary"></head>
 <body>
+<script>try{var t=localStorage.getItem('sandcode-theme');if(t)document.body.dataset.theme=t}catch(e){}</script>
 <div id="app">
-  <aside id="side">
-    <div class="side-top">
-      <a class="mini-logo" href="./index.html"><span>SAND</span>CODE<i>*</i></a>
-      <span class="env-pill"><span class="pulse"></span>local:4096</span>
-    </div>
-    <nav class="ws-nav">
-      <span>Workspace</span>
-      <a href="./workspace-overview.html">Overview</a>
-      <a href="./workspace-go.html">Go</a>
-      <a href="./workspace-usage.html">Usage</a>
-      <a href="./workspace-billing.html" class="active">Billing</a>
-      <a href="./workspace-keys.html">Keys</a>
-      <a href="./workspace-members.html">Members</a>
-      <a href="./workspace-settings.html">Settings</a>
-    </nav>
-    <div class="side-foot">
-      <a class="back-site" href="./index.html">← Back to site</a>
-    </div>
-  </aside>
+  <aside id="side"></aside>
   <div id="side-scrim" hidden></div>
   <div class="main">
-    <header id="topbar">
-      <button id="menu-side" type="button" aria-label="Menu">☰</button>
-      <div class="crumbs"><span>acme</span><span class="sep">/</span><span id="crumb-sess">Billing</span></div>
-      <div class="top-actions"><button id="theme-btn" class="theme-btn" type="button" title="Toggle theme" aria-label="Toggle theme">☾</button><span class="avatar">Q</span></div>
-    </header>
+    <header id="topbar"></header>
     <div class="ws-page"><div class="ws-inner">
       <h1>Billing</h1>
       <p class="ws-sub">Balance, top-ups and invoices · mock data.</p>
@@ -54,9 +36,8 @@
   </div>
 </div>
 <div id="toast" hidden></div>
-<script src="./i18n-dict-a.js"></script>
-<script src="./i18n-dict-b.js"></script>
-<script src="./i18n-dict-c.js"></script>
+<script src="./chrome.js"></script>
 <script src="./i18n.js"></script>
+<script src="./common.js"></script>
 <script src="./workspace-pages.js?v=3"></script>
 </body></html>

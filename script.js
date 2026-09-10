@@ -21,40 +21,45 @@ function initTabs(){
 function copyCmd(){
   const code = document.getElementById('install-cmd');
   const btn = document.getElementById('copy-btn');
-  const done = ()=>{
-    if(btn){ const t=btn.textContent; btn.textContent='Copied!'; setTimeout(()=>btn.textContent=t,1200); }
-  };
   if(!code) return;
   const text = code.textContent;
-  try{
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text, done));
-    }else{
-      fallbackCopy(text, done);
+  const done = ()=>{
+    if(btn){
+      const ok = btn.querySelector('.copy-ok');
+      const ico = btn.querySelector('.copy-ico');
+      const label = btn.querySelector('.copy-label');
+      if(ok) ok.style.display = '';
+      if(ico) ico.style.display = 'none';
+      if(label) label.textContent = 'Copied';
+      setTimeout(()=>{
+        if(ok) ok.style.display = 'none';
+        if(ico) ico.style.display = '';
+        if(label) label.textContent = 'Copy';
+      },1200);
     }
-  }catch(e){
-    fallbackCopy(text, done);
-  }
-}
-function fallbackCopy(text, done){
-  try{
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    done();
-  }catch(e){ /* ignore */ }
+  };
+  Sand.copyText(text).then(done).catch(()=>{ /* ignore */ });
 }
 // expose for inline onclick + addEventListener both work
 window.copyCmd = copyCmd;
 function initMenu(){
   const btn = document.getElementById('menu-btn');
   const links = document.getElementById('nav-links');
-  if(btn && links) btn.addEventListener('click', ()=>links.classList.toggle('open'));
+  if(!btn || !links) return;
+  const setOpen = (open)=>{
+    links.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    const label = open ? 'Close menu' : 'Open menu';
+    if(btn.textContent !== label) btn.textContent = label;
+  };
+  btn.addEventListener('click', ()=>setOpen(!links.classList.contains('open')));
+  links.addEventListener('click', (e)=>{ if(e.target && e.target.tagName === 'A') setOpen(false); });
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && links.classList.contains('open')) setOpen(false); });
+  document.addEventListener('click', (e)=>{
+    if(!links.classList.contains('open')) return;
+    if(links.contains(e.target) || btn.contains(e.target)) return;
+    setOpen(false);
+  });
 }
 function initWaitlist(){
   const f = document.getElementById('waitlist-form');
@@ -66,49 +71,49 @@ function initWaitlist(){
     f.reset();
   });
 }
-// fake terminal typing
+// fake terminal typing (static final state under prefers-reduced-motion).
+// Input lines are plain; prompts and output lines are tinted for input/output
+// distinction. One-time type-on only — never loops.
 function initTerm(){
   const el = document.getElementById('term-typing');
   if(!el) return;
   const lines = [
-    '$ cd my-project',
-    '$ sandcode',
-    '> Analyzing project… AGENTS.md created',
-    '> How can I help? _'
+    ['$', 'cd my-project', ''],
+    ['$', 'sandcode', ''],
+    ['>', 'Analyzing project… AGENTS.md created', ''],
+    ['>', 'How can I help?', '']
   ];
+  const finalHtml = lines.map((l)=>{
+    const p = l[0] === '>'
+      ? '<span class="out-text">&gt;</span>'
+      : '<span class="prompt">$</span>';
+    const text = l[0] === '>' ? l[1] : '<span class="cmd-text">'+l[1]+'</span>';
+    return p + ' ' + text;
+  }).join('\n');
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    el.innerHTML = finalHtml;
+    return;
+  }
   let li=0, ci=0, out='';
   function tick(){
     if(li>=lines.length) return;
     const line = lines[li];
     ci++;
-    out = lines.slice(0,li).join('\n') + '\n' + line.slice(0,ci);
-    el.textContent = out.trim();
-    if(ci>=line.length){ li++; ci=0; setTimeout(tick,700); }
-    else setTimeout(tick, 28);
+    out = lines.slice(0,li).map((l)=>{
+      const p = l[0] === '>' ? '&gt; ' : '$ ';
+      return p + l[1];
+    }).join('\n') + '\n' + (line[0]==='>' ? '&gt; ' : '$ ') + line[1].slice(0,ci);
+    el.innerHTML = out;
+    if(ci>=line[1].length){ li++; ci=0; setTimeout(tick,520); }
+    else setTimeout(tick, 26);
   }
   tick();
 }
 document.addEventListener('DOMContentLoaded', ()=>{
-  initTheme(); initTabs(); initMenu(); initWaitlist(); initTerm(); initCopyBtn(); initUsecase();
+  Sand.initTheme(); initTabs(); initMenu(); initWaitlist(); initTerm(); initCopyBtn(); initUsecase();
   // GSAP when available, legacy IO reveal as fallback (also covers no-JS-safe default)
   if (!initMotion()) initReveal();
 });
-// theme: light default, dark on toggle; preference shared with workspace
-function setTheme(t){
-  document.body.dataset.theme = t;
-  var b = document.getElementById('theme-btn');
-  if(b) b.textContent = (t === 'dark') ? '☀' : '☾';
-  try{ localStorage.setItem('sandcode-theme', t); }catch(e){}
-}
-function initTheme(){
-  var t = 'light';
-  try{ t = localStorage.getItem('sandcode-theme') || 'light'; }catch(e){}
-  setTheme(t);
-  var b = document.getElementById('theme-btn');
-  if(b) b.addEventListener('click', function(){
-    setTheme(document.body.dataset.theme === 'dark' ? 'light' : 'dark');
-  });
-}
 function initCopyBtn(){
   const btn = document.getElementById('copy-btn');
   if(btn) btn.addEventListener('click', copyCmd);

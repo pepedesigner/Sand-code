@@ -5,31 +5,19 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sandcode | The open source AI coding agent</title>
 <meta name="description" content="Sandcode — the open source AI coding agent for terminal, IDE, and desktop. Free models included, or bring Claude, GPT, Gemini, and 75+ more.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./fonts.css">
 <link rel="stylesheet" href="./tokens.css?v=3">
 <link rel="stylesheet" href="./style.css?v=3">
 <link rel="stylesheet" href="./buttons.css">
-<link rel="icon" href="data:,">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<meta property="og:title" content="Sandcode | The open source AI coding agent">
+<meta property="og:description" content="Sandcode — the open source AI coding agent for terminal, IDE, and desktop. Free models included, or bring Claude, GPT, Gemini, and 75+ more.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
 </head>
 <body>
-<header class="site-header">
-<div class="wrap nav">
-<a class="logo" href="./index.html"><span>SAND</span>CODE<i>*</i></a>
-<button class="menu-btn" id="menu-btn" type="button" aria-label="Menu">Open menu</button>
-<nav class="nav-links" id="nav-links">
-<a href="https://github.com/pepedesigner/Sand-code" target="_blank" rel="noopener">GitHub</a>
-<a href="./index.html" class="active">Home</a>
-<a href="./docs.html">Docs</a>
-<a href="./go.html">Go</a>
-<a href="./zen.html">Zen</a>
-<a href="./enterprise.html">Enterprise</a>
-<a href="./workspace-overview.html">Workspace</a>
-<button id="theme-btn" class="theme-btn" type="button" title="Toggle theme" aria-label="Toggle theme">☾</button>
-<a class="btn" href="./download.html">Get Sandcode</a></nav>
-</div>
-</header>
+<script>try{var t=localStorage.getItem('sandcode-theme');if(t)document.body.dataset.theme=t}catch(e){}</script>
+<header class="site-header"></header>
 
 <main class="wrap">
 <div class="hero home">
@@ -46,13 +34,12 @@
 <button data-k="brew" type="button">brew</button>
 <button data-k="paru" type="button">paru</button>
 </div>
-<div class="cmd"><code id="install-cmd">curl -fsSL https://sandcode.ai/install | bash</code><button class="copy" id="copy-btn" type="button">Copy</button></div>
+<div class="cmd"><span class="prompt" aria-hidden="true">$</span><code id="install-cmd">curl -fsSL https://sandcode.ai/install | bash</code><button class="copy" id="copy-btn" type="button"><svg class="copy-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="copy-ok" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:none"><polyline points="20 6 9 17 4 12"/></svg><span class="copy-label">Copy</span></button></div>
 </div>
 
 <div class="terminal">
-<div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span style="margin-left:8px;font-size:12px" class="dim">sandcode — zsh</span></div>
-<div class="term-body"><pre id="term-typing" style="margin:0;white-space:pre-wrap">$ sandcode</pre>
-<div style="margin-top:14px" class="dim">Product demo video placeholder — animated terminal preview above.</div>
+<div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tname">session.ts</span><span class="tlang">TypeScript</span></div>
+<div class="term-body"><pre id="term-typing" style="margin:0;white-space:pre-wrap"></pre>
 </div>
 </div>
 <div class="scroll-hint" aria-hidden="true"><span></span></div>
@@ -163,7 +150,7 @@
 
 <div class="zen-banner">
 <h2 style="margin:0">Run it all from the <em>Workspace.</em></h2>
-<p style="color:#cfcecd">Plan, usage, billing, keys, and team — one dark console, no backend needed for the demo.</p>
+<p style="color:var(--muted)">Plan, usage, billing, keys, and team — one dark console, no backend needed for the demo.</p>
 <a class="cta" href="./workspace-overview.html">Open Workspace →</a>
 </div>
 
@@ -185,7 +172,7 @@
 
 <div class="zen-banner">
 <h2 style="margin:0">Access reliable optimized models for coding agents</h2>
-<p style="color:#cfcecd">Sand Zen gives you a handpicked set of AI models tested and benchmarked specifically for coding agents.</p>
+<p style="color:var(--muted)">Sand Zen gives you a handpicked set of AI models tested and benchmarked specifically for coding agents.</p>
 <a class="cta" href="./zen.html">Learn about Zen →</a>
 </div>
 
@@ -198,21 +185,12 @@
 
 </main>
 
-<footer>
-<div class="wrap fcols">
-<div class="fbrand"><a class="logo" href="./index.html"><span>SAND</span>CODE<i>*</i></a><p>The open source AI coding agent for terminal, IDE, and desktop.</p></div>
-<div><b>Products</b><a href="./docs.html">Docs</a><a href="./go.html">Go</a><a href="./zen.html">Zen</a><a href="./download.html">Download</a><a href="./workspace-overview.html">Workspace</a></div>
-<div><b>Resources</b><a href="./enterprise.html">Enterprise</a><a href="./go.html">Pricing</a><a href="./download.html">Changelog</a><a href="./docs.html">Get started</a></div>
-<div><b>Connect</b><a href="https://github.com/pepedesigner/Sand-code">GitHub</a><a href="./zen.html">Discord</a><a href="./enterprise.html">X</a></div>
-</div>
-<div class="wrap fbase"><span>©2026 Sandcode</span><span>Demo site inspired by opencode.ai. All trademarks belong to their respective owners.</span><span style="margin-left:auto">English</span></div>
-</footer>
+<footer></footer>
 <script src="./vendor/gsap.min.js?v=3"></script>
 <script src="./vendor/ScrollTrigger.min.js?v=3"></script>
-<script src="./i18n-dict-a.js"></script>
-<script src="./i18n-dict-b.js"></script>
-<script src="./i18n-dict-c.js"></script>
+<script src="./chrome.js"></script>
 <script src="./i18n.js"></script>
+<script src="./common.js"></script>
 <script src="./script.js?v=3"></script>
 </body>
 </html>

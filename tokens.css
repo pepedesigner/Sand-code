@@ -1,47 +1,101 @@
-/* Sandcode design tokens — Claude-inspired editorial theme.
-   Cream paper, warm ink, terracotta accent, serif display + Inter body.
-   style.css (marketing) and workspace.css (dark app) both build on these. */
+/* Sandcode design tokens — Terminal Dark theme.
+   Dark-first: layered near-black surfaces, hairline borders, syntax-palette
+   accents. style.css (marketing) and workspace.css (dark app) both build on
+   these. Light mode is a separate re-derivation via body[data-theme="light"]. */
 :root{
   /* type */
   --font-sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-  --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
-  --font-display:"Newsreader",Georgia,"Times New Roman",serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
+  --font-display:"Newsreader",Georgia,"Times New Roman",serif;  /* elegant serif for headings */
 
-  /* brand */
-  --accent:#bc5b34;
-  --accent-strong:#9c4a29;
-  --accent-soft:rgba(188,91,52,.1);
-  --accent-bright:#e8a04c;
-  --accent-bright-soft:rgba(232,160,76,.14);
-  --success:#2e9e5b;
-  --success-bright:#34d399;
+  /* brand accents = the syntax palette; syntax-func leads the UI */
+  --accent:#82AAFF;                          /* syntax-func — primary UI accent */
+  --accent-strong:#0A0B0D;                   /* accent-inverted foreground  */
+  --accent-soft:rgba(130,170,255,.12);       /* quiet accent wash           */
+  --accent-bright:#C792EA;                   /* syntax-keyword — secondary   */
+  --accent-bright-soft:rgba(199,146,234,.14);
+  --success:#C3E88D;                         /* syntax-string — success state */
+  --success-bright:#C3E88D;
+  --red:#F07178;                             /* syntax-error — destructive    */
+  --green:#C3E88D;
 
   /* shape */
   --radius:8px;
   --radius-s:6px;
   --pill:999px;
 
-  /* elevation (light) */
-  --shadow:0 1px 2px rgba(31,28,25,.05),0 16px 40px -20px rgba(31,28,25,.25);
-  --shadow-hover:0 2px 4px rgba(31,28,25,.06),0 24px 56px -20px rgba(31,28,25,.32);
-  /* elevation (dark app) */
-  --shadow-app:0 12px 32px rgba(0,0,0,.35);
-  --shadow-pop:0 16px 40px rgba(0,0,0,.5);
-
-  /* motion */
-  --ease:cubic-bezier(.2,.7,.3,1);
+  /* motion — precise, functional */
+  --ease:cubic-bezier(.16,1,.3,1);
   --t-fast:.15s;
   --t-med:.22s;
 
   /* layout */
   --max:1080px;
-  --header-h:68px;
+  --header-h:64px;
 
-  /* marketing surfaces */
-  --paper:#f4f0e8;
-  --paper-deep:#eae4d6;
-  --paper-ink:#1f1c19;
-  /* shared night surfaces (terminal, stats, banners, featured plans) */
-  --night:#28211c;
-  --night-deep:#151110;
+  /* ---- dark (primary design) :root == default ---- */
+  --bg:#0A0B0D;            /* bg-base     canvas          */
+  --bg2:#101216;           /* bg-surface  raised surfaces  */
+  --bg3:#16181D;           /* bg-elevated nav/popovers     */
+  --ink:#E6E8EB;           /* text-primary                 */
+  --muted:#9BA1AC;         /* text-secondary               */
+  --line:#1E2127;          /* border-subtle hairlines      */
+  --line-strong:#2A2E37;   /* border-strong                */
+  --card:#101216;          /* surface tiles                */
+  --night:#16181D;         /* elevated panels              */
+  --night-deep:#0A0B0D;    /* deepest layer                */
+  --paper:#0A0B0D;         /* marketing canvas (alias)     */
+  --paper-deep:#101216;
+  --paper-ink:#E6E8EB;
+
+  /* code surfaces */
+  --code-bg:#0D0F12;       /* code block canvas            */
+  --code-fg:#E6E8EB;
+  /* accents that always sit on the dark code canvas (dark in both themes) */
+  --code-bright:#C792EA;   /* syntax-keyword in code boxes  */
+  --code-success:#C3E88D;  /* syntax-string / prompt in box */
+  --code-muted:#9BA1AC;    /* secondary text in code boxes  */
+
+  /* elevation — depth from lightness + hairlines, NOT shadows */
+  --shadow:none;
+  --shadow-hover:none;
+  --shadow-app:0 10px 30px rgba(0,0,0,.35);
+  --shadow-pop:0 16px 40px rgba(0,0,0,.5);
+
+  color-scheme:dark;
+}
+
+/* ---- light: re-derived, not an inversion ---- */
+body[data-theme="light"]{
+  --bg:#F7F8FA;            /* light canvas (#F7F8FA, not #FFF) */
+  --bg2:#FFFFFF;
+  --bg3:#EEF0F4;
+  --ink:#1A1C20;           /* text-primary (not #000)          */
+  --muted:#4B5158;
+  --line:#DDE0E6;          /* hairline                          */
+  --line-strong:#C3C8D0;
+  --card:#FFFFFF;
+  --night:#EEF0F4;
+  --night-deep:#E4E7EC;
+  --paper:#F7F8FA;
+  --paper-deep:#FFFFFF;
+  --paper-ink:#1A1C20;
+
+  --code-bg:#101418;
+  --code-fg:#E6E8EB;       /* code blocks stay dark on light mode */
+
+  /* re-picked syntax accents that pass on light surfaces */
+  --accent:#3B6AF0;        /* syntax-func (deeper for contrast) */
+  --accent-strong:#0A0B0D;
+  --accent-soft:rgba(59,106,240,.12);
+  --accent-bright:#9B50C9;
+  --accent-bright-soft:rgba(155,80,201,.12);
+  --success:#2E8B57;
+  --success-bright:#2E8B57;
+  --red:#D64550;
+
+  --shadow:0 1px 2px rgba(20,22,26,.05),0 10px 28px -12px rgba(20,22,26,.18);
+  --shadow-hover:0 2px 4px rgba(20,22,26,.06),0 16px 36px -12px rgba(20,22,26,.22);
+
+  color-scheme:light;
 }

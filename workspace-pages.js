@@ -1,5 +1,8 @@
 /* Sandcode workspace sub-pages — mock interactions (no backend).
-   Every init is guarded by element presence so one file serves all pages. */
+   Every init is guarded by element presence so one file serves all pages.
+   Rows are built with DOM APIs (never innerHTML with user input), and the
+   keys table uses event delegation so dynamically added rows behave exactly
+   like the static ones. Theme/clipboard helpers come from common.js. */
 (function () {
   function $(id) { return document.getElementById(id); }
   var toastTimer = null;
@@ -11,43 +14,27 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { el.hidden = true; }, 2000);
   }
-  function copyText(t, msg) {    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(t).catch(function () {});
-      }
-    } catch (e) {}
+  function copyText(t, msg) {
+    Sand.copyText(t).catch(function () {});
     toast(msg || 'Copied to clipboard.');
   }
 
-  // theme: light default, dark on toggle; preference shared with marketing site
-  function setTheme(t) {
-    document.body.dataset.theme = t;
-    var b = $('theme-btn');
-    if (b) b.textContent = (t === 'dark') ? '☀' : '☾';
-    try { localStorage.setItem('sandcode-theme', t); } catch (e) {}
-  }
-  function initTheme() {
-    var t = 'light';
-    try { t = localStorage.getItem('sandcode-theme') || 'light'; } catch (e) {}
-    setTheme(t);
-    var b = $('theme-btn');
-    if (b) b.addEventListener('click', function () {
-      setTheme(document.body.dataset.theme === 'dark' ? 'light' : 'dark');
-    });
-  }
-
   document.addEventListener('DOMContentLoaded', function () {
-    initTheme();
+    Sand.initTheme();
+
     // mobile sidebar
     var menu = $('menu-side'), side = $('side'), scrim = $('side-scrim');
     if (menu && side) {
       menu.addEventListener('click', function () {
-        side.classList.add('open');
-        if (scrim) scrim.hidden = false;
+        var open = !side.classList.contains('open');
+        side.classList.toggle('open', open);
+        menu.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (scrim) scrim.hidden = !open;
       });
       if (scrim) scrim.addEventListener('click', function () {
         side.classList.remove('open');
         scrim.hidden = true;
+        menu.setAttribute('aria-expanded', 'false');
       });
     }
 
@@ -76,26 +63,25 @@
       });
     }
 
-    // keys: copy / regenerate / revoke / create
-    document.querySelectorAll('[data-copy]').forEach(function (b) {
-      b.addEventListener('click', function () { copyText(b.dataset.copy, 'Key copied.'); });
-    });
-    document.querySelectorAll('[data-regen]').forEach(function (b) {
-      b.addEventListener('click', function () {
+    // keys + referral: delegated copy / regenerate / revoke — one document-level
+    // listener covers static rows, created rows, and the members referral button
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('button') : null;
+      if (!b) return;
+      if (b.hasAttribute('data-copy')) {
+        copyText(b.getAttribute('data-copy'), 'Key copied.');
+      } else if (b.hasAttribute('data-regen')) {
         var row = b.closest('tr');
         var cell = row && row.querySelector('td.mono');
-        var fresh = 'sk-sand-••••' + Math.random().toString(16).slice(2, 6);
-        if (cell) cell.textContent = fresh;
-        b.dataset.copy = 'sk-sand-mock-' + fresh.slice(-4) + '-key';
+        var tag = Math.random().toString(16).slice(2, 6);
+        if (cell) cell.textContent = 'sk-sand-••••' + tag;
+        b.setAttribute('data-copy', 'sk-sand-mock-' + tag + '-key');
         toast('Key regenerated. Old value stopped working.');
-      });
-    });
-    document.querySelectorAll('[data-revoke]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        var row = b.closest('tr');
-        if (row) row.remove();
+      } else if (b.hasAttribute('data-revoke')) {
+        var dead = b.closest('tr');
+        if (dead) dead.remove();
         toast('Key revoked.');
-      });
+      }
     });
     var create = $('key-create');
     if (create) {
@@ -103,36 +89,54 @@
         var tb = document.querySelector('#keys-table tbody');
         if (!tb) return;
         var tag = Math.random().toString(16).slice(2, 6);
+        function cell(cls, text) {
+          var c = document.createElement('td');
+          if (cls) c.className = cls;
+          if (text) c.textContent = text;
+          return c;
+        }
+        function act(label, attr, value, cls) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'wbtn ' + cls;
+          b.textContent = label;
+          b.setAttribute(attr, value === null ? '' : value);
+          return b;
+        }
+        var actions = cell('num');
+        actions.append(
+          act('Copy', 'data-copy', 'sk-sand-mock-' + tag + '-key', 'ghost'),
+          act('Regenerate', 'data-regen', null, 'ghost'),
+          act('Revoke', 'data-revoke', null, 'danger')
+        );
         var tr = document.createElement('tr');
-        tr.innerHTML = '<td>New key</td><td class="mono">sk-sand-••••' + tag + '</td><td>never</td>' +
-          '<td class="num"><button class="wbtn ghost" data-copy="sk-sand-mock-' + tag + '-key" type="button">Copy</button> ' +
-          '<button class="wbtn ghost" data-regen type="button">Regenerate</button> ' +
-          '<button class="wbtn danger" data-revoke type="button">Revoke</button></td>';
+        tr.append(cell(null, 'New key'), cell('mono', 'sk-sand-••••' + tag), cell(null, 'never'), actions);
         tb.prepend(tr);
-        tr.querySelector('[data-copy]').addEventListener('click', function (e) {
-          copyText(e.target.dataset.copy, 'Key copied.');
-        });
-        tr.querySelector('[data-regen]').addEventListener('click', function () { toast('Key regenerated.'); });
-        tr.querySelector('[data-revoke]').addEventListener('click', function () {
-          tr.remove();
-          toast('Key revoked.');
-        });
         toast('Key created — copy it now.');
       });
     }
 
-    // members: invite + role change
+    // members: invite (DOM-built — user input never goes through innerHTML)
     var invite = $('invite-btn');
     if (invite) {
       invite.addEventListener('click', function () {
         var input = $('invite-email');
         var email = input ? input.value.trim() : '';
-        if (!email || email.indexOf('@') < 0) { toast('Enter a valid email.'); return; }
+        if (!email || email.indexOf('@') < 1) { toast('Enter a valid email.'); return; }
         var tb = document.querySelector('#members-table tbody');
         if (tb) {
-          var tr = document.createElement('tr');
           var name = email.split('@')[0];
-          tr.innerHTML = '<td><b>' + name + '</b> · ' + email.replace(/</g, '&lt;') + '</td><td>Invited</td><td>just now</td>';
+          var tdName = document.createElement('td');
+          var b = document.createElement('b');
+          b.textContent = name;
+          tdName.appendChild(b);
+          tdName.appendChild(document.createTextNode(' · ' + email));
+          var tdRole = document.createElement('td');
+          tdRole.textContent = 'Invited';
+          var tdWhen = document.createElement('td');
+          tdWhen.textContent = 'just now';
+          var tr = document.createElement('tr');
+          tr.append(tdName, tdRole, tdWhen);
           tb.appendChild(tr);
         }
         if (input) input.value = '';
