@@ -71,46 +71,96 @@ function initWaitlist(){
     f.reset();
   });
 }
-// fake terminal typing (static final state under prefers-reduced-motion).
-// Input lines are plain; prompts and output lines are tinted for input/output
-// distinction. One-time type-on only — never loops.
+// fake terminal session — one-time type-on, never loops.
+// Lines are lists of [cssClass, text] segments, so colour survives the
+// animation. Command lines type character by character; output lines stream in
+// whole, which keeps the timeline short even though the session is long.
+// Under reduced motion the finished session is rendered immediately.
 function initTerm(){
   const el = document.getElementById('term-typing');
   if(!el) return;
-  const lines = [
-    ['$', 'cd my-project', ''],
-    ['$', 'sandcode', ''],
-    ['>', 'Analyzing project… AGENTS.md created', ''],
-    ['>', 'How can I help?', '']
+
+  const cmd = (seg)=>({ type:true, seg:seg });
+  const out = (seg)=>({ type:false, seg:seg });
+  const L = [
+    cmd([['t-prompt','$ '],['t-cmd','cd my-project']]),
+    cmd([['t-prompt','$ '],['t-cmd','sandcode']]),
+    out([['t-ok','⏺ '],['t-dim','Reading '],['t-file','AGENTS.md'],['t-dim',' · conventions loaded']]),
+    out([['t-ok','⏺ '],['t-dim','Indexed '],['t-num','1,284'],['t-dim',' files · '],['t-num','12'],['t-dim',' packages · '],['t-file','TypeScript']]),
+    out([['t-ok','⏺ '],['t-dim','Language servers ready · '],['t-file','tsserver'],['t-dim',', '],['t-file','eslint']]),
+    out([['t-key','▸ '],['t-strong','How can I help?']]),
+    out([]),
+    cmd([['t-prompt','$ '],['t-cmd','sandcode '],['t-key','"Add rate limiting to the auth API"']]),
+    out([['t-ok','⏺ '],['t-dim','Planning — '],['t-num','2'],['t-dim',' steps']]),
+    out([['t-ok','⏺ '],['t-dim','Edit '],['t-file','src/middleware/rate-limit.ts'],['t-add','  +38'],['t-del','  −0']]),
+    out([['t-ok','⏺ '],['t-dim','Edit '],['t-file','src/routes/auth.ts'],['t-add','  +6'],['t-del','  −2']]),
+    out([['t-ok','✓ '],['t-dim','Tests '],['t-num','42'],['t-dim',' passed · '],['t-num','0'],['t-dim',' failed · 1.8s']]),
+    out([['t-ok','✓ '],['t-strong','Ready'],['t-dim',' — '],['t-num','2'],['t-dim',' files changed, '],['t-num','1'],['t-dim',' commit']])
   ];
-  const finalHtml = lines.map((l)=>{
-    const p = l[0] === '>'
-      ? '<span class="out-text">&gt;</span>'
-      : '<span class="prompt">$</span>';
-    const text = l[0] === '>' ? l[1] : '<span class="cmd-text">'+l[1]+'</span>';
-    return p + ' ' + text;
-  }).join('\n');
+
+  const segLen = (line)=> line.seg.reduce((n, s)=> n + s[1].length, 0);
+
+  // one line, clipped to `budget` characters (null = the whole line)
+  function lineDom(line, budget){
+    const d = document.createElement('div');
+    d.className = 't-line';
+    let left = budget === null ? Infinity : budget;
+    for(const seg of line.seg){
+      if(left <= 0) break;
+      const take = Math.min(left, seg[1].length);
+      if(take > 0){
+        const s = document.createElement('span');
+        s.className = seg[0];
+        s.textContent = seg[1].slice(0, take);
+        d.appendChild(s);
+        left -= take;
+      }
+      if(take < seg[1].length) break;
+    }
+    return d;
+  }
+  // the first `full` lines, plus the in-progress line clipped to `ci` chars
+  function render(full, ci, caret){
+    const frag = document.createDocumentFragment();
+    for(let i = 0; i < Math.min(full, L.length); i++) frag.appendChild(lineDom(L[i], null));
+    if(full < L.length){
+      const cur = lineDom(L[full], ci);
+      if(caret){
+        const c = document.createElement('span');
+        c.className = 't-caret';
+        cur.appendChild(c);
+      }
+      frag.appendChild(cur);
+    }
+    el.replaceChildren(frag);
+  }
+
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    el.innerHTML = finalHtml;
+    render(L.length, 0, false);
     return;
   }
-  let li=0, ci=0, out='';
-  function tick(){
-    if(li>=lines.length) return;
-    const line = lines[li];
-    ci++;
-    out = lines.slice(0,li).map((l)=>{
-      const p = l[0] === '>' ? '&gt; ' : '$ ';
-      return p + l[1];
-    }).join('\n') + '\n' + (line[0]==='>' ? '&gt; ' : '$ ') + line[1].slice(0,ci);
-    el.innerHTML = out;
-    if(ci>=line[1].length){ li++; ci=0; setTimeout(tick,520); }
-    else setTimeout(tick, 26);
+
+  let li = 0, ci = 0;
+  render(0, 0, true);
+  function step(){
+    if(li >= L.length){ render(L.length, 0, false); return; }
+    const len = segLen(L[li]);
+    if(len === 0){                        // blank spacer line
+      li++; ci = 0; render(li, 0, true);
+      setTimeout(step, 70);
+    } else if(L[li].type){                // command line: type it out
+      ci++; render(li, ci, true);
+      if(ci >= len){ li++; ci = 0; render(li, 0, true); setTimeout(step, 280); }
+      else setTimeout(step, 16 + Math.random() * 20);
+    } else {                              // output line: stream it in whole
+      li++; ci = 0; render(li, 0, true);
+      setTimeout(step, 120);
+    }
   }
-  tick();
+  step();
 }
 document.addEventListener('DOMContentLoaded', ()=>{
-  Sand.initTheme(); initTabs(); initMenu(); initWaitlist(); initTerm(); initCopyBtn(); initUsecase();
+  Sand.initTheme(); initTabs(); initMenu(); initWaitlist(); initTerm(); initCopyBtn(); initUsecase(); initHeroDots();
   // GSAP when available, legacy IO reveal as fallback (also covers no-JS-safe default)
   if (!initMotion()) initReveal();
 });
@@ -149,6 +199,175 @@ function initUsecase(){
       panels.forEach((p)=>p.classList.toggle('active', p.dataset.ucpanel === b.dataset.uctab));
     });
   });
+}
+// interactive dot grid behind the hero headline
+// (progressive enhancement: no canvas → nothing is added; reduced motion →
+// a static grid is drawn and nothing animates)
+function initHeroDots(){
+  const host = document.querySelector('.hero[data-hero-dots]');
+  if(!host || !document.createElement('canvas').getContext) return;
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const GAP = 24;       // grid pitch, px
+  const BASE_R = 1.35;  // resting dot radius
+  const HOT_R = 3;      // radius at the cursor
+  const REACH = 150;    // cursor influence radius
+  const TAU = Math.PI * 2;
+
+  const canvas = document.createElement('canvas');
+  canvas.className = 'hero-dots';
+  canvas.setAttribute('aria-hidden', 'true');
+  host.insertBefore(canvas, host.firstChild);
+
+  const ctx = canvas.getContext('2d');
+  // static grid lives in an offscreen layer: each frame only the few dots near
+  // the cursor are redrawn on top, instead of the whole grid every frame.
+  const base = document.createElement('canvas');
+  const bctx = base.getContext('2d');
+
+  let w = 0, h = 0, cols = 0, rows = 0, ox = 0, oy = 0, dpr = 1;
+  let heat = new Float32Array(1);
+  let dotColor = '#9BA1AC', hotColor = '#82AAFF';
+  let px = -1e5, py = -1e5, hovering = false, raf = 0, pending = 0;
+
+  function readColors(){
+    const cs = getComputedStyle(document.body);
+    dotColor = cs.getPropertyValue('--muted').trim() || dotColor;
+    hotColor = cs.getPropertyValue('--accent').trim() || hotColor;
+  }
+
+  function drawBase(){
+    base.width = canvas.width;
+    base.height = canvas.height;
+    bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    bctx.clearRect(0, 0, w, h);
+    bctx.fillStyle = dotColor;
+    bctx.globalAlpha = 0.46;
+    for(let r = 0; r < rows; r++){
+      for(let c = 0; c < cols; c++){
+        bctx.beginPath();
+        bctx.arc(ox + c * GAP, oy + r * GAP, BASE_R, 0, TAU);
+        bctx.fill();
+      }
+    }
+    bctx.globalAlpha = 1;
+  }
+
+  function measure(){
+    const rect = host.getBoundingClientRect();
+    // run down to the terminal frame; the mask fades the grid out long before
+    // it, so an opaque panel never cuts a hard edge across the dots
+    const stop = host.querySelector('.terminal') || host.querySelector('.install');
+    let limit = rect.height;
+    if(stop){
+      // offsetTop is the layout position, so an in-flight entrance tween
+      // (GSAP translates the card by 28px) can't skew the measurement
+      limit = (stop.offsetParent === host)
+        ? stop.offsetTop
+        : stop.getBoundingClientRect().top - rect.top;
+    }
+    w = document.documentElement.clientWidth;
+    h = Math.max(240, Math.round(Math.min(rect.height, limit)));
+    canvas.style.left = (-rect.left) + 'px';
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    cols = Math.ceil(w / GAP) + 1;
+    rows = Math.ceil(h / GAP) + 1;
+    ox = (w - (cols - 1) * GAP) / 2;
+    oy = (h - (rows - 1) * GAP) / 2;
+    heat = new Float32Array(cols * rows);
+    drawBase();
+    paint(true);
+  }
+
+  // eases each dot toward the cursor's influence, then composites base + lit dots
+  function paint(reset){
+    const reach2 = REACH * REACH;
+    let active = 0;
+    for(let r = 0; r < rows; r++){
+      const y = oy + r * GAP, row = r * cols;
+      for(let c = 0; c < cols; c++){
+        const i = row + c;
+        let target = 0;
+        if(hovering){
+          const dx = ox + c * GAP - px, dy = y - py;
+          const d2 = dx * dx + dy * dy;
+          if(d2 < reach2){
+            const t = 1 - Math.sqrt(d2) / REACH;
+            target = t * t;
+          }
+        }
+        let v = reset ? target : heat[i] + (target - heat[i]) * 0.16;
+        if(target === 0 && v < 0.004) v = 0;
+        heat[i] = v;
+        if(v > 0.01) active++;
+      }
+    }
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    ctx.drawImage(base, 0, 0, w, h);
+    if(active){
+      ctx.fillStyle = hotColor;
+      for(let r = 0; r < rows; r++){
+        const y = oy + r * GAP, row = r * cols;
+        for(let c = 0; c < cols; c++){
+          const v = heat[row + c];
+          if(v <= 0.01) continue;
+          const x = ox + c * GAP, rr = BASE_R + (HOT_R - BASE_R) * v;
+          ctx.globalAlpha = 0.09 * v;                       // soft halo
+          ctx.beginPath(); ctx.arc(x, y, rr * 3.2, 0, TAU); ctx.fill();
+          ctx.globalAlpha = 0.9 * v;                        // lit core
+          ctx.beginPath(); ctx.arc(x, y, rr, 0, TAU); ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1;
+    }
+    return active;
+  }
+
+  // the loop parks itself once the cursor leaves and every dot has faded out
+  function tick(){
+    raf = 0;
+    if(paint(false) || hovering) raf = requestAnimationFrame(tick);
+  }
+  function kick(){ if(!raf && !reduce) raf = requestAnimationFrame(tick); }
+
+  function onMove(e){
+    if(e.pointerType === 'touch') return;
+    const rect = host.getBoundingClientRect();
+    px = e.clientX;
+    py = e.clientY - rect.top;
+    hovering = py >= -REACH && py <= h + REACH && px >= -REACH && px <= w + REACH;
+    kick();
+  }
+
+  function schedule(){
+    if(pending) return;
+    pending = requestAnimationFrame(()=>{ pending = 0; measure(); });
+  }
+
+  readColors();
+  measure();
+  window.addEventListener('resize', schedule, {passive:true});
+  // the hero's height settles late (webfonts, headline wrapping, entrance
+  // tweens) — watch the element itself instead of guessing when to re-measure
+  if(window.ResizeObserver) new ResizeObserver(schedule).observe(host);
+  else if(document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+
+  if(!reduce){
+    host.addEventListener('pointermove', onMove, {passive:true});
+    host.addEventListener('pointerleave', ()=>{ hovering = false; kick(); }, {passive:true});
+  }
+  // theme switches change --muted/--accent under us — rebuild with the new tokens
+  if(window.MutationObserver){
+    new MutationObserver(()=>{ readColors(); measure(); })
+      .observe(document.body, {attributes:true, attributeFilter:['data-theme']});
+  }
 }
 // scroll-driven FX: progress bar, auto-hiding header, h2 blur-rise,
 // hero scroll-hint fade, back-to-top. Targets avoid existing tweens.

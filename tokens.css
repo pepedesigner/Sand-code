@@ -55,6 +55,9 @@
   --code-bright:#C792EA;   /* syntax-keyword in code boxes  */
   --code-success:#C3E88D;  /* syntax-string / prompt in box */
   --code-muted:#9BA1AC;    /* secondary text in code boxes  */
+  --code-accent:#82AAFF;   /* syntax-func — paths in code   */
+  --code-warn:#E3B341;     /* syntax-number — counts in code */
+  --code-error:#F07178;    /* syntax-error — diff deletions  */
 
   /* elevation — depth from lightness + hairlines, NOT shadows */
   --shadow:none;
