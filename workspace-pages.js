@@ -1,4 +1,4 @@
-/* Sandcode workspace sub-pages — mock interactions (no backend).
+/* Sandcode Console sub-pages — mock interactions (no backend).
    Every init is guarded by element presence so one file serves all pages.
    Rows are built with DOM APIs (never innerHTML with user input), and the
    keys table uses event delegation so dynamically added rows behave exactly
@@ -15,8 +15,10 @@
     toastTimer = setTimeout(function () { el.hidden = true; }, 2000);
   }
   function copyText(t, msg) {
-    Sand.copyText(t).catch(function () {});
-    toast(msg || 'Copied to clipboard.');
+    Sand.copyText(t).then(
+      function () { toast(msg || 'Copied to clipboard.'); },
+      function () { toast('Copy failed.'); }
+    );
   }
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -53,17 +55,17 @@
       }).join('');
     }
 
-    // billing: top-up bumps the balance
+    // billing: top-up bumps the wallet balance
     var topup = $('topup-btn'), bal = $('balance-val');
     if (topup && bal) {
       topup.addEventListener('click', function () {
         var cur = parseFloat(bal.textContent.replace(/[^0-9.]/g, '')) || 0;
         bal.textContent = '$' + (cur + 20).toFixed(2);
-        toast('$20 added — top-ups never expire.');
+        toast('$20 added to your wallet — overflow is covered.');
       });
     }
 
-    // keys + referral: delegated copy / regenerate / revoke — one document-level
+    // keys + referral: delegated copy / rotate / revoke — one document-level
     // listener covers static rows, created rows, and the members referral button
     document.addEventListener('click', function (e) {
       var b = e.target.closest ? e.target.closest('button') : null;
@@ -74,9 +76,9 @@
         var row = b.closest('tr');
         var cell = row && row.querySelector('td.mono');
         var tag = Math.random().toString(16).slice(2, 6);
-        if (cell) cell.textContent = 'sk-sand-••••' + tag;
-        b.setAttribute('data-copy', 'sk-sand-mock-' + tag + '-key');
-        toast('Key regenerated. Old value stopped working.');
+        if (cell) cell.textContent = 'sb_live_••••' + tag;
+        b.setAttribute('data-copy', 'sb_live_mock_' + tag + '_key');
+        toast('Key rotated. The old value stopped working.');
       } else if (b.hasAttribute('data-revoke')) {
         var dead = b.closest('tr');
         if (dead) dead.remove();
@@ -105,12 +107,12 @@
         }
         var actions = cell('num');
         actions.append(
-          act('Copy', 'data-copy', 'sk-sand-mock-' + tag + '-key', 'ghost'),
-          act('Regenerate', 'data-regen', null, 'ghost'),
+          act('Copy', 'data-copy', 'sb_live_mock_' + tag + '_key', 'ghost'),
+          act('Rotate', 'data-regen', null, 'ghost'),
           act('Revoke', 'data-revoke', null, 'danger')
         );
         var tr = document.createElement('tr');
-        tr.append(cell(null, 'New key'), cell('mono', 'sk-sand-••••' + tag), cell(null, 'never'), actions);
+        tr.append(cell(null, 'New key'), cell('mono', 'sb_live_••••' + tag), cell(null, 'never'), actions);
         tb.prepend(tr);
         toast('Key created — copy it now.');
       });
@@ -133,10 +135,13 @@
           tdName.appendChild(document.createTextNode(' · ' + email));
           var tdRole = document.createElement('td');
           tdRole.textContent = 'Invited';
+          var tdCap = document.createElement('td');
+          tdCap.className = 'num';
+          tdCap.textContent = '$3/day';
           var tdWhen = document.createElement('td');
           tdWhen.textContent = 'just now';
           var tr = document.createElement('tr');
-          tr.append(tdName, tdRole, tdWhen);
+          tr.append(tdName, tdRole, tdCap, tdWhen);
           tb.appendChild(tr);
         }
         if (input) input.value = '';
@@ -147,16 +152,14 @@
       s.addEventListener('change', function () { toast('Role updated to ' + s.value + '.'); });
     });
 
-    // settings: save + leave
+    // settings: save + purge + leave
     var save = $('ws-save');
     if (save) save.addEventListener('click', function () { toast('Settings saved (mock — nothing stored).'); });
+    var purge = $('ws-purge');
+    if (purge) purge.addEventListener('click', function () { toast('Nothing to delete — retention is off.'); });
+    var share = $('share-savings');
+    if (share) share.addEventListener('click', function () { toast('Share card generated — it contains no code content.'); });
     var leave = $('ws-leave');
     if (leave) leave.addEventListener('click', function () { toast('This is a demo — you are staying.'); });
-
-    // go: manage / top-up
-    var manage = $('go-manage');
-    if (manage) manage.addEventListener('click', function () { toast('Billing portal would open here (mock).'); });
-    var gtop = $('go-topup');
-    if (gtop) gtop.addEventListener('click', function () { toast('$20 top-up added (mock).'); });
   });
 })();

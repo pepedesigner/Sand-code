@@ -1,22 +1,29 @@
 /* Sandcode i18n engine — EN ⇄ 中文, dictionary-driven, zero HTML edits.
    - Toggle is auto-injected into marketing navs + workspace topbars.
-   - Dictionaries (i18n-dict-*.js) lazy-load on first switch to 中文, so page
-     loads don't pay for ~530 entries nobody reads in EN mode.
+   - Dictionaries (i18n-dict-*.js) lazily load on the first switch to 中文, so
+     page loads don't pay for ~540 entries nobody reads in EN mode. Pages with
+     中文 stored preload them from an inline bootstrap, which also gates the
+     document so it never paints English first.
    - Static text nodes, placeholder/title/aria-label attrs and <title> swap.
-   - MutationObserver picks up dynamically rendered strings (toasts, rows…);
-     writes made by this engine are suppressed while applying, so the observer
-     never re-triggers itself.
+   - The MutationObserver translates only the subtrees a mutation actually
+     touched, coalesced on a short trailing debounce. A whole-document re-walk
+     would otherwise run continuously: the hero terminal rewrites its DOM every
+     ~16ms and the stat counters every frame.
    - Original EN strings are stored on the text node itself (GC-friendly —
-     no strong registry that keeps detached nodes alive).
+   no strong registry that keeps detached nodes alive).
    - Unmapped nodes stay English. Persisted in localStorage. */
 (function () {
   var KEY = 'sandcode-lang';
   var ATTRS = ['placeholder', 'title', 'aria-label'];
   var DICT_FILES = ['i18n-dict-a.js', 'i18n-dict-b.js', 'i18n-dict-c.js'];
+  var GATE = 'i18n-pending'; // set by the inline bootstrap, cleared here
+  var DEBOUNCE = 120;
   var origAttr = new WeakMap(); // Element -> {attr: original EN}
   var _origTitle = document.title; // captured at parse time (static EN)
   var applying = false; // suppress observer while this engine writes
   var dictPromise = null;
+  var queued = null; // Set of nodes whose subtree needs (re)translating
+  var timer = null;
 
   function dict() { return window.__I18N || {}; }
   function norm(s) { return s.replace(/\s+/g, ' ').trim(); }
@@ -32,7 +39,11 @@
       DICT_FILES.forEach(function (src) {
         var s = document.createElement('script');
         s.src = './' + src;
-        s.onload = s.onerror = function () { if (--left === 0) resolve(); };
+        s.onload = function () { if (--left === 0) resolve(); };
+        s.onerror = function () {
+          console.warn('[sandcode] i18n dictionary failed to load:', src);
+          if (--left === 0) resolve();
+        };
         document.head.appendChild(s);
       });
     });
@@ -72,26 +83,50 @@
       })(els[i]);
     }
   }
+
+  // text nodes under `root` (a text node root yields itself)
+  function eachText(root, fn) {
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    var n;
+    while ((n = walker.nextNode())) {
+      var p = n.parentElement;
+      if (p && (p.tagName === 'SCRIPT' || p.tagName === 'STYLE')) continue;
+      fn(n);
+    }
+  }
+
+  // observer callbacks are microtasks — they run before this timer clears the flag
+  function unlock() { setTimeout(function () { applying = false; }, 0); }
+
+  function translate(root, l) {
+    eachText(root, function (t) { swapTextNode(t, l); });
+    if (root.nodeType === 1) swapAttrs(root, l);
+  }
+
   function applyLang(l) {
     applying = true;
     try {
-      var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-      var nodes = [];
-      var n;
-      while ((n = walker.nextNode())) {
-        var p = n.parentElement;
-        if (p && (p.tagName === 'SCRIPT' || p.tagName === 'STYLE')) continue;
-        nodes.push(n);
-      }
-      nodes.forEach(function (t) { swapTextNode(t, l); });
+      translate(document.body, l);
       swapAttrs(document, l);
       var titleKey = norm(_origTitle);
       if (l === 'zh' && dict()[titleKey] !== undefined) document.title = dict()[titleKey];
       else document.title = _origTitle;
-    } finally {
-      // observer callbacks are microtasks — they run before this timer clears the flag
-      setTimeout(function () { applying = false; }, 0);
-    }
+    } finally { unlock(); }
+  }
+
+  function flush() {
+    timer = null;
+    var nodes = queued;
+    queued = null;
+    if (!nodes || lang() !== 'zh') return;
+    applying = true;
+    try {
+      nodes.forEach(function (n) {
+        // the terminal replaces its whole subtree every frame — detached nodes
+        // are stale, so translating them would only burn time
+        if (n.isConnected) translate(n, 'zh');
+      });
+    } finally { unlock(); }
   }
 
   // button (auto-injected so no HTML edits are needed)
@@ -122,25 +157,39 @@
     paintButton(lang());
   }
 
-  // keep dynamically added content translated (self-writes are ignored via `applying`)
-  var scheduled = false;
+  // keep dynamically added content translated — only the changed subtrees.
+  // `applying` means the records came from our own writes, so they are ignored.
   function observe() {
     if (!('MutationObserver' in window) || !document.body) return;
-    new MutationObserver(function () {
-      if (applying || scheduled) return;
-      scheduled = true;
-      requestAnimationFrame(function () {
-        scheduled = false;
-        if (lang() === 'zh' && !applying) applyLang('zh');
-      });
+    new MutationObserver(function (records) {
+      if (applying || lang() !== 'zh') return;
+      for (var i = 0; i < records.length; i++) {
+        var r = records[i];
+        if (r.type === 'characterData') {
+          if (!queued) queued = new Set();
+          queued.add(r.target);
+          continue;
+        }
+        for (var j = 0; j < r.addedNodes.length; j++) {
+          if (!queued) queued = new Set();
+          queued.add(r.addedNodes[j]);
+        }
+      }
+      if (!queued) return;
+      clearTimeout(timer);
+      timer = setTimeout(flush, DEBOUNCE);
     }).observe(document.body, {childList: true, subtree: true, characterData: true});
   }
+
+  // the inline bootstrap hides the page until the dictionaries land, so 中文
+  // visitors never see an English first paint
+  function ungated() { document.documentElement.classList.remove(GATE); }
 
   document.addEventListener('DOMContentLoaded', function () {
     injectButton();
     observe();
-    if (lang() === 'zh') loadDicts().then(function () { applyLang('zh'); });
-    else applyLang('en');
+    if (lang() === 'zh') loadDicts().then(function () { applyLang('zh'); ungated(); });
+    else { applyLang('en'); ungated(); }
     document.documentElement.lang = lang() === 'zh' ? 'zh-CN' : 'en';
   });
 })();

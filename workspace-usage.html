@@ -1,41 +1,59 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sandcode Workspace — Usage</title>
+<title>SandCode Console — Usage</title>
 <link rel="stylesheet" href="./fonts.css?v=4">
 <link rel="stylesheet" href="./tokens.css?v=4">
 <link rel="stylesheet" href="./workspace.css?v=4">
-<link rel="stylesheet" href="./buttons.css?v=4"><link rel="icon" type="image/svg+xml" href="./favicon.svg">
-<meta name="description" content="Sandcode Workspace usage — daily spend, requests, and per-model breakdown (mock demo).">
-<meta property="og:title" content="Sandcode Workspace — Usage">
-<meta property="og:description" content="Sandcode Workspace usage — daily spend, requests, and per-model breakdown (mock demo).">
+<link rel="stylesheet" href="./buttons.css?v=4">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="preload" as="font" type="font/woff2" href="./fonts/inter-normal-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="./fonts/newsreader-normal-latin.woff2" crossorigin>
+<meta name="description" content="SandCode Console usage — daily spend, per-model and per-client breakdown (mock demo).">
+<meta property="og:title" content="SandCode Console — Usage">
+<meta property="og:description" content="SandCode Console usage — daily spend, per-model and per-client breakdown (mock demo).">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"></head>
+<meta name="twitter:card" content="summary"><meta name="robots" content="noindex">
+<link rel="canonical" href="https://sandcode.ai/workspace-usage.html">
+<meta property="og:url" content="https://sandcode.ai/workspace-usage.html">
+<meta property="og:site_name" content="SandCode">
+</head>
 <body>
-<script>try{var t=localStorage.getItem('sandcode-theme');if(t)document.body.dataset.theme=t}catch(e){}</script>
+<script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
+<script>try{if((localStorage.getItem('sandcode-lang')||'en')==='zh'){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
 <div id="app">
   <aside id="side"></aside>
   <div id="side-scrim" hidden></div>
-  <div class="main">
+  <main class="main">
     <header id="topbar"></header>
     <div class="ws-page"><div class="ws-inner">
       <h1>Usage</h1>
-      <p class="ws-sub">Last 14 days · per-model breakdown · mock data.</p>
+      <p class="ws-sub">Last 14 days · per-model and per-client · mock data.</p>
       <div class="ws-grid">
-        <div class="ws-card"><h3>Spend · 14d</h3><div class="big">$47.20</div><p>vs $51.90 previous period</p></div>
-        <div class="ws-card"><h3>Requests · 14d</h3><div class="big">12.4K</div><p>8.1M tokens · 96% tool-call success</p></div>
+        <div class="ws-card"><h2>Spend · 14d</h2><div class="big">$47.20</div><p>vs $51.90 previous period</p></div>
+        <div class="ws-card"><h2>Requests · 14d</h2><div class="big">12.4K</div><p>8.1M tokens · 96% tool-call success</p></div>
       </div>
-      <div class="ws-card" style="margin-bottom:14px"><h3>Daily spend</h3><div class="dbars" id="daily-bars"></div>
+      <div class="ws-card" style="margin-bottom:14px"><h2>Daily spend</h2><div class="dbars" id="daily-bars"></div>
         <div class="urow" style="margin-top:8px"><span>Aug 22</span><span>Sep 4</span></div></div>
-      <div class="ws-card"><h3>By model</h3>
-        <table class="utable"><thead><tr><th>Model</th><th class="num">Requests</th><th class="num">Tokens</th><th class="num">Cost</th></tr></thead>
-        <tbody><tr><td>Claude Sonnet</td><td class="num">6,104</td><td class="num">4.2M</td><td class="num">$24.10</td></tr>
-        <tr><td>GPT-5.2</td><td class="num">3,208</td><td class="num">2.1M</td><td class="num">$13.60</td></tr>
-        <tr><td>Gemini 3 Pro</td><td class="num">1,930</td><td class="num">1.4M</td><td class="num">$7.90</td></tr>
-        <tr><td>Open models</td><td class="num">1,158</td><td class="num">0.4M</td><td class="num">$1.60</td></tr></tbody></table></div>
+      <div class="ws-grid">
+        <div class="ws-card"><h2>By model</h2>
+          <table class="utable"><thead><tr><th>Model</th><th class="num">Requests</th><th class="num">Tokens</th><th class="num">Cost</th></tr></thead>
+          <tbody><tr><td><code>deepseek-v4.1-flash</code></td><td class="num">6,104</td><td class="num">4.2M</td><td class="num">$24.10</td></tr>
+          <tr><td><code>tencent/hy3</code></td><td class="num">3,208</td><td class="num">2.1M</td><td class="num">$13.60</td></tr>
+          <tr><td><code>minimax-m3</code></td><td class="num">1,930</td><td class="num">1.4M</td><td class="num">$7.90</td></tr>
+          <tr><td><code>deepseek-v4.1-pro</code></td><td class="num">640</td><td class="num">0.3M</td><td class="num">$1.20</td></tr>
+          <tr><td><code>z-ai/glm-5.2</code></td><td class="num">380</td><td class="num">0.1M</td><td class="num">$0.40</td></tr></tbody></table></div>
+        <div class="ws-card"><h2>By client</h2>
+          <table class="utable"><thead><tr><th>Client</th><th class="num">Requests</th><th class="num">Share</th></tr></thead>
+          <tbody><tr><td>Cursor</td><td class="num">7,100</td><td class="num">57%</td></tr>
+          <tr><td>Claude Code</td><td class="num">3,240</td><td class="num">26%</td></tr>
+          <tr><td>Antigravity</td><td class="num">1,320</td><td class="num">11%</td></tr>
+          <tr><td>OpenCode</td><td class="num">740</td><td class="num">6%</td></tr></tbody></table>
+          <p style="margin-top:10px;font-size:12px;color:var(--adim)">One account, one pool. Every client draws on the same quota and the same 5-request concurrency limit.</p></div>
+      </div>
     </div></div>
-  </div>
+  </main>
 </div>
-<div id="toast" hidden></div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
 <script src="./chrome.js?v=4"></script>
 <script src="./i18n.js?v=4"></script>
 <script src="./common.js?v=4"></script>

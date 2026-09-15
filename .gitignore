@@ -1,3 +1,8 @@
 node_modules/
 .DS_Store
 .commandcode/
+
+# Remotion render output — large binaries, distribute via GitHub Releases
+remotion/out/
+remotion/poster.png
+remotion/preview.gif

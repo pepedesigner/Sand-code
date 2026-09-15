@@ -1,55 +1,173 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sandcode Docs | Intro</title>
+<title>SandCode Docs | Intro</title>
 <link rel="stylesheet" href="./fonts.css?v=4">
 <link rel="stylesheet" href="./tokens.css?v=4">
 <link rel="stylesheet" href="./style.css?v=4">
-<link rel="stylesheet" href="./buttons.css?v=4"><link rel="icon" type="image/svg+xml" href="./favicon.svg">
-<meta name="description" content="Sandcode docs — install, configure, initialize, and daily usage of the open source AI coding agent.">
-<meta property="og:title" content="Sandcode Docs | Intro">
-<meta property="og:description" content="Sandcode docs — install, configure, initialize, and daily usage of the open source AI coding agent.">
+<link rel="stylesheet" href="./buttons.css?v=4">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="preload" as="font" type="font/woff2" href="./fonts/inter-normal-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="./fonts/newsreader-normal-latin.woff2" crossorigin>
+<meta name="description" content="SandCode docs — install the CLI, point any client at the gateway, wire up MCP tools and the local harness, and understand limits and retention.">
+<meta property="og:title" content="SandCode Docs | Intro">
+<meta property="og:description" content="SandCode docs — install the CLI, point any client at the gateway, wire up MCP tools and the local harness, and understand limits and retention.">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"></head>
+<meta name="twitter:card" content="summary"><link rel="canonical" href="https://sandcode.ai/docs.html">
+<meta property="og:url" content="https://sandcode.ai/docs.html">
+<meta property="og:site_name" content="SandCode">
+</head>
 <body>
-<script>try{var t=localStorage.getItem('sandcode-theme');if(t)document.body.dataset.theme=t}catch(e){}</script>
+<script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
+<script>try{if((localStorage.getItem('sandcode-lang')||'en')==='zh'){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
 <header class="site-header"></header>
 <main class="wrap docs-layout">
 <aside class="sidebar">
 <b>Docs</b>
-<a class="active" href="./docs.html">Intro</a>
-<a href="./docs.html#install">Install</a>
+<a class="active" href="./docs.html" aria-current="page">Intro</a>
+<a href="./docs.html#quickstart">Quickstart</a>
 <a href="./docs.html#configure">Configure</a>
-<a href="./docs.html#usage">Usage</a>
-<a href="./zen.html">Zen</a>
-<a href="./go.html">Go</a>
-<a href="./download.html">TUI / CLI / Web / IDE</a>
+<a href="./docs.html#models">Models</a>
+<a href="./docs.html#tools">Tools</a>
+<a href="./docs.html#harness">Harness</a>
+<a href="./docs.html#rules">Rules &amp; Skills</a>
+<a href="./docs.html#migrate">Migrate</a>
+<a href="./docs.html#rewards">Rewards</a>
+<a href="./docs.html#status">Status &amp; traces</a>
+<a href="./docs.html#errors">Errors &amp; limits</a>
+<a href="./docs.html#data">Data &amp; retention</a>
+<a href="./pricing.html">Plans</a>
 <a href="./enterprise.html">Enterprise</a>
 </aside>
 <article class="doc">
 <h1>Intro</h1>
-<p>Get started with Sandcode. <b>Sandcode</b> is an open source AI coding agent. Terminal, desktop, IDE extension.</p>
-<h2 id="install">Install</h2>
+<p><b>SandCode</b> is flat-rate coding compute for agent clients. The gateway speaks both the OpenAI and Anthropic wire formats, so any client that accepts a custom base URL can draw on your pool — with search, scrape and a local verification harness layered on top.</p>
+
+<h2 id="quickstart">Quickstart</h2>
+<p>Install the CLI, then run the setup wizard. It detects every client on your machine, links your account, writes the endpoint and injects the MCP tools.</p>
 <pre>curl -fsSL https://sandcode.ai/install | bash
-# node
-npm install -g sandcode-ai
-# brew
-brew install sandcode/tap/sandcode
-# arch
-paru -S sandcode</pre>
+# or
+npm i -g sandbase-ai
+brew install sandbase/tap/sandbase
+paru -S sandbase</pre>
+<pre>sandbase setup</pre>
+<p>Setup asks before touching any config file, and every credential it writes is a short-lived, revocable token — never a long-lived secret sitting in a file that may be synced or committed. It finishes by running one live request, a search for the current version of a dependency, so your first task is a real one and you can watch the meters move.</p>
+
 <h2 id="configure">Configure</h2>
-<p>Run <code class="inline">/connect</code> in TUI, pick a provider, paste API key. New users recommended <a href="./zen.html">Sand Zen</a>.</p>
-<pre>/connect
-# → select sandcode → https://sandcode.ai/auth → paste key</pre>
-<h2 id="initialize">Initialize</h2>
-<pre>cd /path/to/project
-sandcode
-/init  # analyze project, create AGENTS.md (commit it)</pre>
-<h2 id="usage">Usage</h2>
-<p><code class="inline">How is authentication handled in @packages/functions/src/api/index.ts</code> — press <code class="inline">@</code> to fuzzy-find files.</p>
-<p>Press <code class="inline">TAB</code> for Plan mode, <code class="inline">/undo</code> / <code class="inline">/redo</code> to step back and forward, <code class="inline">/share</code> for a session link.</p>
-<h2>Customize</h2>
-<p>Themes, keybinds, formatters, commands, MCP, LSP, agents, and rules are all supported — this is a condensed reference.</p>
-<p style="color:var(--muted)">Last updated: Sep 3, 2026 · Sandcode docs</p>
+<p>Point your client at the unified base URL and authenticate with a key from the <a href="./workspace-keys.html">Console</a>.</p>
+<pre>Base URL   https://api.sandbase.ai/v1
+Auth       Authorization: Bearer sb_live_&lt;key&gt;
+
+POST /v1/chat/completions        # OpenAI-compatible
+POST /v1/messages                # Anthropic-compatible
+POST /v1/messages/count_tokens   # required by Claude Code</pre>
+<pre>curl https://api.sandbase.ai/v1/chat/completions \
+  -H "Authorization: Bearer sb_live_xxx" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepseek/deepseek-v4.1-flash",
+       "messages":[{"role":"user","content":"hi"}]}'</pre>
+<p>The Anthropic side is a full implementation, not a shim: streaming events, stop_reason, thinking blocks with a stable signature, multimodal content and token counting are all mapped. The token-counting endpoint is not optional — Claude Code calls it to budget context, and a client that gets an error here behaves strangely.</p>
+<p>Rotate or revoke keys at any time. Keys are bound to the account, a device fingerprint and your concurrency limit:</p>
+<pre>sandbase auth rotate</pre>
+
+<h2 id="models">Models</h2>
+<p>Eight models, priced at upstream list rate with prompt-caching discounts passed through 1:1. Six draw on the full monthly pool; the two flagship reasoning models sit behind a smaller monthly sub-quota so long-thinking arbitrage cannot eat the shared pool.</p>
+<p><a href="./zen.html">See the full model matrix →</a></p>
+
+<h2 id="tools">Tools</h2>
+<p>Search and scrape are injected as MCP tools during setup, so the agent can look things up mid-task instead of inventing an API.</p>
+<div class="compare">
+<table>
+<thead><tr><th>Tool</th><th>Backing APIs</th><th>Standard quota</th></tr></thead>
+<tbody>
+<tr><td>Search</td><td>cloudsway/search, exa/search</td><td>500 calls/month</td></tr>
+<tr><td>Scrape</td><td>firecrawl/scrape, exa/contents</td><td>500 calls/month</td></tr>
+<tr><td>GitHub</td><td>sandbase/github</td><td>Not counted against the quota</td></tr>
+</tbody>
+</table>
+</div>
+<p>Limits: 30 tool calls per minute with at most 2 in flight. Beyond the included quota, calls are billed at $0.02 each. Setup writes these entries into the MCP config of every client it finds.</p>
+
+<h2 id="harness">Harness</h2>
+<p>The harness is a local MCP server installed on your machine. It never runs on our side, because the gateway has no access to your filesystem, tests or Git repository.</p>
+<div class="compare">
+<table>
+<thead><tr><th>Capability</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td>Syntax check</td><td>Validates the change as it lands. Clients with a pre-write hook can block it; others verify immediately after and roll back on failure.</td></tr>
+<tr><td>Test hooks</td><td>Runs the relevant tests after each edit — pytest, jest or cargo test.</td></tr>
+<tr><td>Self-heal</td><td>Feeds the failure back to the model for up to 3 rounds.</td></tr>
+<tr><td>Rollback</td><td>If it still fails, the Git working tree is restored so a bad edit cannot spread.</td></tr>
+</tbody>
+</table>
+</div>
+<p>It needs explicit consent at setup, reads your project directory only for the checks above, and reports back only usage metadata. Turn it off whenever you like:</p>
+<pre>sandbase harness off</pre>
+<p>Sandbox isolation of the local environment stays your responsibility.</p>
+
+<h2 id="rules">Rules &amp; Skills Sync</h2>
+<p>Project conventions live in one file you version and review, then compile out to each client's native format.</p>
+<pre># .sandbase/rules.md is the source of truth
+sandbase rules sync
+# -> .cursorrules, CLAUDE.md, opencode.json</pre>
+<p>Because the rules are declarative and committed, they can be reviewed in a diff and shared across a team — unlike preferences learned into an opaque model.</p>
+
+<h2 id="migrate">Migrate</h2>
+<p>Coming from another agent? The migration command scans local config for OpenCode or Command Code, backs it up, and rewrites it to use your SandCode credentials. A successful migration ends on a share card carrying your invite code.</p>
+<pre>sandbase migrate --from opencode
+sandbase migrate --from commandcode</pre>
+
+<h2 id="rewards">Rewards</h2>
+<p>Invite rewards are paid in PAYG credit, so they never reduce your monthly quota pool.</p>
+<div class="compare">
+<table>
+<thead><tr><th>Programme</th><th>Reward</th><th>Limits</th></tr></thead>
+<tbody>
+<tr><td>Two-way invite</td><td>$5 PAYG credit to each side</td><td>Granted once the invitee subscribes and completes their first paid month</td></tr>
+<tr><td>Invite monthly cap</td><td>10 effective invites</td><td>Per account, per month</td></tr>
+<tr><td>Invite lifetime cap</td><td>$50 in rewards</td><td>Per account; rewards expire with the month they were issued</td></tr>
+<tr><td>Open-source maintainers</td><td>$15/month of quota</td><td>Three months, for verified maintainers of active projects</td></tr>
+</tbody>
+</table>
+</div>
+<p>Rewards are granted only for genuine new users on their first paid month. A spike in invalid invites, or referral cost crossing the daily budget guardrail, triggers a manual review rather than a payout.</p>
+
+<h2 id="status">Status &amp; traces</h2>
+<p>Check your windows and meters from the terminal, or inspect a session in detail.</p>
+<pre>sandbase status
+sandbase trace --last</pre>
+<p>The status command shows the 6h window, the reasoning sub-quota, separate search and scrape meters, harness state and the PAYG wallet balance. The trace command shows per-request tokens, cache hit ratio, tool latency and decision steps for sessions you have opted into tracing.</p>
+
+<h2 id="errors">Errors &amp; limits</h2>
+<div class="compare">
+<table>
+<thead><tr><th>Situation</th><th>Status</th><th>Response</th></tr></thead>
+<tbody>
+<tr><td>Monthly pool exhausted</td><td>402</td><td>Retry hint plus a top-up link</td></tr>
+<tr><td>6h or weekly window exhausted</td><td>402</td><td>The time the window releases</td></tr>
+<tr><td>Burst rate limit hit</td><td>429</td><td>Retry-After header</td></tr>
+<tr><td>More than 5 concurrent requests</td><td>429</td><td>Retry-After: 1</td></tr>
+<tr><td>All upstreams unavailable</td><td>503</td><td>Degraded notice, survival tier engaged</td></tr>
+</tbody>
+</table>
+</div>
+<p>Quota exhaustion is deliberately 402, never 429. Clients retry 429 automatically, so signalling "out of quota" that way would create a retry storm rather than telling you to top up. If every upstream fails, requests fall back to the free survival tier — the preview model at 3 requests per minute, capped at 60 per day — which is not covered by the SLA.</p>
+
+<h2 id="data">Data &amp; retention</h2>
+<p>Requests are never used for training. Retention is tiered rather than absolute — a full session trace and "nothing is ever stored" cannot both be true, so we are specific about each class of data.</p>
+<div class="compare">
+<table>
+<thead><tr><th>Data</th><th>Default</th><th>Kept for</th></tr></thead>
+<tbody>
+<tr><td>Token ledger and call metadata</td><td>Stored (required for billing)</td><td>24 months</td></tr>
+<tr><td>Tool-call records (query, URL)</td><td>Stored, you can turn it off</td><td>90 days</td></tr>
+<tr><td>Prompt content and model output</td><td>Not stored</td><td>7 days if you opt in</td></tr>
+<tr><td>Thinking chain and decision trace</td><td>Not stored</td><td>7 days if you opt in (Pro and Team)</td></tr>
+<tr><td>Code snippets for dependency checks</td><td>In memory only</td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+<p>Anything you opt into is redacted before storage, can be deleted in one action, and can be excluded from specific regions. Enterprise customers can request data-residency options and a DPA.</p>
+<p style="color:var(--muted)">Last updated: Sep 15, 2026 · SandCode docs</p>
 </article>
 </main>
 <footer></footer>

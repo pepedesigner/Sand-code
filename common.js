@@ -2,21 +2,40 @@
    site (script.js) and the workspace app (workspace-pages.js). Exposed as
    window.Sand; Sand.initTheme() must run after chrome.js has mounted. */
 (function () {
-  // theme: dark default, light on toggle; preference shared across pages
-  function setTheme(t) {
+  var KEY = 'sandcode-theme';
+  var LIGHT_MQ = '(prefers-color-scheme: light)';
+
+  // theme: follows the OS until the visitor picks one, then that choice wins
+  // and is shared across pages. Dark is the fallback when matchMedia is absent.
+  function systemTheme() {
+    return (window.matchMedia && window.matchMedia(LIGHT_MQ).matches) ? 'light' : 'dark';
+  }
+  function storedTheme() {
+    try { return localStorage.getItem(KEY); } catch (e) { return null; }
+  }
+  function paint(t) {
     document.body.dataset.theme = t;
     var b = document.getElementById('theme-btn');
     if (b) b.textContent = (t === 'dark') ? '☀' : '☾';
-    try { localStorage.setItem('sandcode-theme', t); } catch (e) {}
+  }
+  function current() { return document.body.dataset.theme || 'dark'; }
+  function setTheme(t) {
+    try { localStorage.setItem(KEY, t); } catch (e) {}
+    paint(t);
   }
   function initTheme() {
-    var t = 'dark';
-    try { t = localStorage.getItem('sandcode-theme') || 'dark'; } catch (e) {}
-    setTheme(t);
+    paint(storedTheme() || systemTheme());
     var b = document.getElementById('theme-btn');
     if (b) b.addEventListener('click', function () {
-      setTheme(document.body.dataset.theme === 'dark' ? 'light' : 'dark');
+      setTheme(current() === 'dark' ? 'light' : 'dark');
     });
+    // keep following the OS while the visitor has not chosen explicitly
+    if (window.matchMedia) {
+      var mq = window.matchMedia(LIGHT_MQ);
+      var onChange = function () { if (!storedTheme()) paint(systemTheme()); };
+      if (mq.addEventListener) mq.addEventListener('change', onChange);
+      else if (mq.addListener) mq.addListener(onChange);
+    }
   }
 
   // clipboard with execCommand fallback; resolves on success, rejects on failure

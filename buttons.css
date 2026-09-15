@@ -3,15 +3,15 @@
    changes per context (marketing = inverted ink, workspace = accent) via
    --btn-bg/--btn-fg. Roles: primary (default) / ghost / danger / small / icon.
    Deliberately outside this spec: segmented tabs (.tabs), toggle switches,
-   list rows, plain text links. */
+   list rows, plain text links.
+   This file loads last and owns shape/size/type/state for the selectors below;
+   style.css and workspace.css must not redeclare those properties. */
 
 /* ---------- base: every button shares this ---------- */
-.sbtn,
-.btn, .wbtn, #send-btn, #new-session, .copy,
+.btn, .wbtn, .copy,
 .nav-links a.btn, .menu-btn, #menu-side, .theme-btn, #toTop,
 .waitlist button, .uc-tabs button, .zen-banner a.cta,
-#detail-toggle, #copy-link-btn, #share-btn,
-.d-share button, #unshare-btn {
+.d-share button {
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   min-height:40px;padding:0 20px;border-radius:6px;
   font-family:var(--font-sans);font-size:13.5px;font-weight:600;letter-spacing:.01em;line-height:1.2;
@@ -19,60 +19,54 @@
   box-shadow:none;
   transition:transform var(--t-fast) var(--ease),background-color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease),color var(--t-fast) var(--ease),filter var(--t-fast) var(--ease);
 }
-.sbtn:active,
-.btn:active, .wbtn:active, #send-btn:active, #new-session:active, .copy:active,
+.btn:active, .wbtn:active, .copy:active,
 .nav-links a.btn:active, .menu-btn:active, #menu-side:active, .theme-btn:active, #toTop:active,
 .waitlist button:active, .uc-tabs button:active, .zen-banner a.cta:active,
-#detail-toggle:active, #copy-link-btn:active, #share-btn:active,
-.d-share button:active, #unshare-btn:active { transform:scale(.97); }
-.sbtn:disabled,
-.btn:disabled, .wbtn:disabled, #send-btn:disabled,
+.d-share button:active { transform:scale(.97); }
+.btn:disabled, .wbtn:disabled,
 .waitlist button:disabled, .uc-tabs button:disabled { opacity:.45;cursor:not-allowed;transform:none; }
 
 /* ---------- primary (context fill) ---------- */
-.sbtn-primary,
 .btn:not(.light),
 .wbtn:not(.ghost):not(.danger),
-#send-btn, #new-session, #share-btn,
 .nav-links a.btn, .menu-btn, #menu-side,
 .waitlist button, .zen-banner a.cta {
   background-color:var(--btn-bg);border-color:var(--btn-bg);color:var(--btn-fg);
 }
-.sbtn-primary:hover,
 .btn:not(.light):hover,
 .wbtn:not(.ghost):not(.danger):hover,
-#send-btn:hover, #new-session:hover, #share-btn:hover,
 .nav-links a.btn:hover, .menu-btn:hover, #menu-side:hover,
 .waitlist button:hover, .zen-banner a.cta:hover {
   transform:translateY(-1px);filter:brightness(1.06);
 }
 
 /* ---------- ghost ---------- */
-.sbtn-ghost,
 .btn.light, .wbtn.ghost, .uc-tabs button,
-#detail-toggle, #copy-link-btn, .d-share button, #unshare-btn,
+.d-share button,
 .theme-btn, #toTop {
   background-color:transparent;border-color:var(--line-strong);color:inherit;
 }
-.sbtn-ghost:hover,
 .btn.light:hover, .wbtn.ghost:hover, .uc-tabs button:hover,
-#detail-toggle:hover, #copy-link-btn:hover, .d-share button:hover, #unshare-btn:hover,
+.d-share button:hover,
 .theme-btn:hover, #toTop:hover {
   transform:translateY(-1px);border-color:var(--accent);
 }
 
 /* ---------- danger ---------- */
-.sbtn-danger, .wbtn.danger {
+.wbtn.danger {
   background-color:transparent;border-color:rgba(240,113,120,.55);color:var(--red);
 }
-.sbtn-danger:hover, .wbtn.danger:hover { transform:translateY(-1px);border-color:var(--red); }
+.wbtn.danger:hover { transform:translateY(-1px);border-color:var(--red); }
 
 /* ---------- small ---------- */
-.sbtn-sm, .copy, .d-share button { min-height:32px;padding:0 12px;font-size:12.5px; }
+.copy, .d-share button { min-height:32px;padding:0 12px;font-size:12.5px; }
 
 /* ---------- icon (square, not round) ---------- */
-.sbtn-icon, .theme-btn, #menu-side { width:36px;height:36px;min-height:0;padding:0; }
-#toTop { width:40px;height:40px;min-height:0;padding:0;font-size:17px; }
+.theme-btn, #menu-side { width:36px;height:36px;min-height:0;padding:0; }
+/* #toTop is created hidden and revealed with .show — it owns the fade as well,
+   otherwise the base transition would override it and the button would pop in. */
+#toTop { width:40px;height:40px;min-height:0;padding:0;font-size:17px;
+  transition:opacity .25s var(--ease),transform .25s var(--ease),background-color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease); }
 
 /* ---------- context fills ---------- */
 /* marketing: solid light button on dark canvas (the one bright element) */

@@ -1,45 +1,75 @@
 #!/usr/bin/env node
 /* Sandcode i18n dictionary check — no dependencies.
-   The dictionary keys must match DOM/JS text exactly, so any copy edit can
-   silently orphan a key (stays English). This script catches that:
+   The engine matches a key against a whole normalized text node (or a
+   placeholder/title/aria-label value, or a JS string literal), so this lint
+   has to do the same: exact lookup, never substring containment. Substring
+   matching passed any short key ("The", "Run", "Date") that happened to occur
+   inside unrelated copy, which hid real orphans.
      1. orphan keys   — dictionary keys that no longer appear anywhere
      2. duplicate keys — same key defined in more than one dict file
-   Usage: node check-i18n.js   (exit 1 when orphans found) */
+   Usage: node check-i18n.js   (exit 1 when findings exist) */
 'use strict';
 const fs = require('fs');
+const path = require('path');
 
-const DICTS = ['i18n-dict-a.js', 'i18n-dict-b.js', 'i18n-dict-c.js'];
-const HTML = fs.readdirSync('.').filter(f => f.endsWith('.html'));
-const JS = ['chrome.js', 'script.js', 'workspace-pages.js', 'common.js'];
-const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', nbsp: ' ', '#39': "'", middot: '·', times: '×', hellip: '…', larr: '←', rarr: '→' };
+const ROOT = __dirname;
+const isDict = f => /^i18n-dict-.*\.js$/.test(f);
+const DICTS = fs.readdirSync(ROOT).filter(isDict).sort();
+const HTML = fs.readdirSync(ROOT).filter(f => f.endsWith('.html'));
+// every root script whose string literals end up in the DOM, minus the
+// dictionaries themselves (self-references would mask orphans)
+const JS = fs.readdirSync(ROOT).filter(f =>
+  f.endsWith('.js') && !isDict(f) && f !== 'check-i18n.js' && f !== 'i18n.js');
+// attributes the engine translates, plus `content` for <meta>
+const attrRe = () => /(?:data-toast|placeholder|title|aria-label|content)="([^"]*)"/g;
 
-const norm = s => s.replace(/&(#39|amp|lt|gt|quot|nbsp|middot|times|hellip|larr|rarr);/g, (_, e) => ENTITIES[e]).replace(/\s+/g, ' ').trim();
+const NAMED = {
+  amp: '&', lt: '<', gt: '>', quot: '"', nbsp: ' ', middot: '·', times: '×',
+  hellip: '…', larr: '←', rarr: '→', '#39': "'"
+};
+const decode = (whole, body) => {
+  if (body[0] === '#') {
+    const hex = body[1] === 'x' || body[1] === 'X';
+    return String.fromCodePoint(parseInt(hex ? body.slice(2) : body.slice(1), hex ? 16 : 10));
+  }
+  return Object.prototype.hasOwnProperty.call(NAMED, body) ? NAMED[body] : whole;
+};
+// the same normalization the engine applies before a dictionary lookup
+const norm = s => s.replace(/&(#\d+|#x[0-9a-f]+|[a-z]+);/gi, decode).replace(/\s+/g, ' ').trim();
 
-// ---- collect dictionary keys (first quoted string of each `key: value` entry) ----
+// ---- collect every string the engine could look up ----
+const snippets = new Set();
+const add = s => { const n = norm(s); if (n) snippets.add(n); };
+
+// markup (real HTML, or an HTML fragment a script builds — chrome.js emits the
+// nav, footer, sidebar and topbar as strings): text nodes + translated attrs
+const addMarkup = src => {
+  for (const m of src.matchAll(/>([^<>]+)</g)) add(m[1]);
+  for (const m of src.matchAll(attrRe())) add(m[1]);
+};
+
+for (const f of HTML) addMarkup(fs.readFileSync(path.join(ROOT, f), 'utf8'));
+for (const f of JS) {
+  const src = fs.readFileSync(path.join(ROOT, f), 'utf8');
+  for (const m of src.matchAll(/'([^'\n]*)'|"([^"\n]*)"/g)) {
+    const lit = m[1] !== undefined ? m[1] : m[2];
+    add(lit);        // the literal itself (toast copy, row labels, …)
+    addMarkup(lit);  // …or markup built from it
+  }
+}
+
+// ---- collect dictionary keys (single- or double-quoted, one per line) ----
 const keys = new Map(); // key -> [files]
 for (const f of DICTS) {
-  const src = fs.readFileSync(f, 'utf8');
-  const re = /^\s*'((?:[^'\\]|\\.)+)'\s*:/gm; // anchored per line — keys start the line
+  const src = fs.readFileSync(path.join(ROOT, f), 'utf8');
+  const re = /^\s*(?:'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)")\s*:/gm; // keys start the line
   let m;
   while ((m = re.exec(src)) !== null) {
-    const key = m[1].replace(/\\'/g, "'");
+    const key = (m[1] !== undefined ? m[1] : m[2]).replace(/\\(['"\\])/g, '$1');
     if (!keys.has(key)) keys.set(key, []);
     keys.get(key).push(f);
   }
 }
-
-// ---- build haystack of site text ----
-const hay = [];
-for (const f of HTML) {
-  const src = fs.readFileSync(f, 'utf8');
-  for (const m of src.matchAll(/>([^<>]+)</g)) hay.push(m[1]);                                    // text nodes
-  for (const m of src.matchAll(/(?:data-toast|placeholder|title|aria-label|content)="([^"]*)"/g)) hay.push(m[1]); // attrs
-}
-for (const f of JS) {
-  const src = fs.readFileSync(f, 'utf8');
-  for (const m of src.matchAll(/'([^'\n]+)'|"([^"\n]+)"/g)) hay.push(m[1] || m[2]);               // string literals
-}
-const haystack = hay.map(norm).join('\n');
 
 // ---- report ----
 let bad = 0;
@@ -47,7 +77,7 @@ const dupes = [...keys.entries()].filter(([, v]) => v.length > 1);
 for (const [key, files] of dupes) console.warn(`DUPLICATE  "${key}"  in ${files.join(', ')}`);
 if (dupes.length) bad++;
 
-const orphans = [...keys.keys()].filter(k => !haystack.includes(k));
+const orphans = [...keys.keys()].filter(k => !snippets.has(k));
 for (const k of orphans) console.warn(`ORPHAN     "${k}"  (defined in ${(keys.get(k)).join(', ')})`);
 if (orphans.length) bad++;
 

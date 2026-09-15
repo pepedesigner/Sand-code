@@ -3,28 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sandcode | The open source AI coding agent</title>
-<meta name="description" content="Sandcode — the open source AI coding agent for terminal, IDE, and desktop. Free models included, or bring Claude, GPT, Gemini, and 75+ more.">
+<title>SandCode | Flat-rate coding compute for every agent</title>
+<meta name="description" content="SandCode is flat-rate coding compute for every agent client. $9.9/mo for a $70 model pool, bundled search and scrape, and a local verification harness — never hard-capped.">
 <link rel="stylesheet" href="./fonts.css?v=4">
 <link rel="stylesheet" href="./tokens.css?v=4">
 <link rel="stylesheet" href="./style.css?v=4">
 <link rel="stylesheet" href="./buttons.css?v=4">
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-<meta property="og:title" content="Sandcode | The open source AI coding agent">
-<meta property="og:description" content="Sandcode — the open source AI coding agent for terminal, IDE, and desktop. Free models included, or bring Claude, GPT, Gemini, and 75+ more.">
+<link rel="preload" as="font" type="font/woff2" href="./fonts/inter-normal-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="./fonts/newsreader-normal-latin.woff2" crossorigin>
+<meta property="og:title" content="SandCode | Flat-rate coding compute for every agent">
+<meta property="og:description" content="SandCode is flat-rate coding compute for every agent client. $9.9/mo for a $70 model pool, bundled search and scrape, and a local verification harness — never hard-capped.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://sandcode.ai/">
+<meta property="og:url" content="https://sandcode.ai/">
+<meta property="og:site_name" content="SandCode">
 </head>
 <body>
-<script>try{var t=localStorage.getItem('sandcode-theme');if(t)document.body.dataset.theme=t}catch(e){}</script>
+<script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
+<script>try{if((localStorage.getItem('sandcode-lang')||'en')==='zh'){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
 <header class="site-header"></header>
 
 <main class="wrap">
 <div class="hero home" data-hero-dots>
-<div class="badge">New &nbsp;·&nbsp; Desktop Tabs are here for macOS / Windows / Linux &nbsp;<a href="./download.html">Download now →</a></div>
-<h1>The <em>open-source</em> AI coding agent</h1>
-<p class="sub">Free models included, or connect any model from any provider — including Claude, GPT, Gemini, and more.</p>
-<div class="hero-ctas"><a class="btn" href="./download.html">Get Sandcode</a><a class="btn light" href="./docs.html">Read documentation</a></div>
+<div class="badge">New &nbsp;·&nbsp; A rolling 6h window, daily burst and PAYG overflow — never hard-capped &nbsp;<a href="./pricing.html">See how →</a></div>
+<h1>Flat-rate compute for<br><em>every</em> agent client.</h1>
+<p class="sub">$9.9/mo buys a $70 model pool, 1,000 bundled search and scrape calls, and a local verification harness — shared across Cursor, Claude Code and OpenCode.</p>
+<div class="hero-ctas"><a class="btn" href="./download.html">Install SandCode</a><a class="btn light" href="./docs.html">Read documentation</a></div>
 
 <div class="install">
 <div class="tabs">
@@ -34,11 +40,11 @@
 <button data-k="brew" type="button">brew</button>
 <button data-k="paru" type="button">paru</button>
 </div>
-<div class="cmd"><span class="prompt" aria-hidden="true">$</span><code id="install-cmd">curl -fsSL https://sandcode.ai/install | bash</code><button class="copy" id="copy-btn" type="button"><svg class="copy-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="copy-ok" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:none"><polyline points="20 6 9 17 4 12"/></svg><span class="copy-label">Copy</span></button></div>
+<div class="cmd"><span class="prompt" aria-hidden="true">$</span><code id="install-cmd">curl -fsSL https://sandcode.ai/install | bash</code><button class="copy" id="copy-btn" type="button"><svg class="copy-ico" aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="copy-ok" aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:none"><polyline points="20 6 9 17 4 12"/></svg><span class="copy-label">Copy</span></button></div>
 </div>
 
 <div class="terminal">
-<div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tname">session.ts</span><span class="tlang">TypeScript</span></div>
+<div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tname">sandbase setup</span><span class="tlang">4 steps</span></div>
 <div class="term-body"><pre id="term-typing" style="margin:0;white-space:pre-wrap"></pre>
 </div>
 </div>
@@ -46,74 +52,70 @@
 </div>
 
 <div class="logos">
-<p>Trusted by developers at</p>
-<div class="logo-row"><span>Acme</span><span>NORTHWIND</span><span>Finch</span><span>HEXDAB</span><span>Quantia</span><span>LOOMLY</span><span>Datawise</span><span>VERTEX</span></div>
+<p>Works with the clients you already use</p>
+<div class="logo-row"><span>Cursor</span><span>Claude Code</span><span>OpenCode</span><span>Antigravity</span><span>VS Code</span><span>Zed</span><span>Aider</span><span>Cline</span></div>
 </div>
 
 <section class="block">
-<div class="eyebrow">Why Sandcode</div>
-<h2>What is Sandcode?</h2>
-<p class="sub">Sandcode is an open source agent that helps you write code in your terminal, IDE, or desktop.</p>
+<div class="eyebrow">Why SandCode</div>
+<h2>What is SandCode?</h2>
+<p class="sub">Six things developers keep hitting with per-token billing — and what we do instead.</p>
 <div class="features">
 <div class="feat">
-<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/></svg>
-<p><b>Any model.</b> 75+ providers — Claude, GPT, Gemini, local models. Free ones included.</p>
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M7 8h10M7 16h10"/></svg>
+<p><b>A flat $9.9, not a meter.</b> A $70 model pool you spend down at list price. No per-token invoice, no bracing before you press enter.</p>
 </div>
 <div class="feat">
-<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></svg>
-<p><b>Any editor.</b> Terminal, desktop app, IDE extensions.</p>
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
+<p><b>Never hard-capped.</b> A rolling 6h window, a daily burst that lifts its ceiling, then your PAYG wallet takes over. The agent keeps working.</p>
 </div>
 <div class="feat">
-<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg>
-<p><b>LSP enabled.</b> Loads the right language servers automatically.</p>
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+<p><b>Eyes on the world.</b> 500 search and 500 scrape calls a month, injected over MCP. The agent checks the docs instead of inventing an API.</p>
 </div>
 <div class="feat">
-<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>
-<p><b>Multi-session.</b> Parallel agents, same project.</p>
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg>
+<p><b>No client lock-in.</b> One command writes the endpoint into Cursor, Claude Code and OpenCode. Same key, same pool, everywhere.</p>
 </div>
 <div class="feat">
-<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a5 5 0 007.1 0l2-2a5 5 0 00-7.1-7.1l-1 1"/><path d="M14 10a5 5 0 00-7.1 0l-2 2a5 5 0 007.1 7.1l1-1"/></svg>
-<p><b>Share links.</b> Share any session for review or debugging.</p>
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
+<p><b>Verified edits.</b> A local harness syntax-checks the change, runs your pytest, jest or cargo tests, retries three times, then rolls back on failure.</p>
 </div>
 <div class="feat">
-<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg>
-<p><b>GitHub Copilot.</b> Bring your Copilot seat.</p>
-</div>
-<div class="feat">
-<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-8 8H4l2-3a8 8 0 1115-5z"/></svg>
-<p><b>ChatGPT Plus / Pro.</b> Bring your OpenAI plan.</p>
-</div>
-<div class="feat">
-<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
-<p><b>Privacy first.</b> Nothing stored. <a href="./enterprise.html">Learn more →</a></p>
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+<p><b>Protocols that hold.</b> Thinking tags become native thinking blocks, malformed tool JSON is repaired, and quota exhaustion returns 402 — not a retry storm.</p>
 </div>
 </div>
 <p><a class="btn" href="./docs.html">Read docs</a></p>
 </section>
 
 <section class="block">
-<h2>The open source AI coding agent</h2>
-<p class="sub">With over <b>195,000</b> GitHub stars, <b>950</b> contributors, and over <b>13,000</b> commits, Sandcode is used and trusted by over <b>16M</b> developers every month. (Sample figures.)</p>
+<h2>Eight models. Three clouds. <em>One pool.</em></h2>
+<p class="sub">A small, tuned lineup beats a long catalogue. Every model is scored on real agent traces before it ships.</p>
 <div class="stats">
-<div class="stat"><strong data-count="195" data-suffix="K">195K</strong>GitHub Stars</div>
-<div class="stat"><strong data-count="950" data-suffix="">950</strong>Contributors</div>
-<div class="stat"><strong data-count="16" data-suffix="M">16M</strong>Monthly Devs</div>
+<div class="stat"><strong data-count="8" data-suffix="">8</strong>Curated models</div>
+<div class="stat"><strong data-count="3" data-suffix="+">3+</strong>Upstream clouds</div>
+<div class="stat"><strong data-count="80" data-suffix="ms">80ms</strong>Silent failover</div>
 </div>
+<p class="sub" style="margin-top:18px"><a class="btn light" href="./zen.html">See the lineup</a></p>
 </section>
 
 <section class="block">
-<div class="eyebrow">Loved by developers</div>
-<h2>What developers <em>are saying</em></h2>
-<div class="testimonials">
-<div class="t"><b>Dax R.</b><p>“Sandcode Zen has been life changing, truly a no-brainer.”</p><span class="sub" style="margin:0">ex-CEO, Terminal Products</span></div>
-<div class="t"><b>Jay V.</b><p>“4 out of 5 people on our team love using Zen.”</p><span class="sub" style="margin:0">Founder, multiple startups</span></div>
-<div class="t"><b>David H.</b><p>“With Zen I know all the models are tested and perfect for coding agents.”</p><span class="sub" style="margin:0">ex-Head of Design</span></div>
+<div class="eyebrow">Pricing</div>
+<h2>Pick a plan. <em>Cancel anytime.</em></h2>
+<p class="sub">Quota resets monthly and does not roll over — that is what keeps the price flat.</p>
+<div class="grid">
+<div class="card"><b>Standard · $9.9/mo</b><p>$70 pool · 6h $15 / week $35 / month $70 · 1,000 tool calls · first month $4.9.</p></div>
+<div class="card"><b>Pro · $24.9/mo</b><p>$175 pool · 6h $40 / week $88 / month $175 · 2,500 tool calls · priority nodes.</p></div>
+<div class="card"><b>Team · $24.9/seat/mo</b><p>$175 per seat into one shared pool, 5-seat minimum, and buy five seats to get a sixth free.</p></div>
+<div class="card"><b>Provider · PAYG</b><p>No monthly fee, zero markup. The same wallet catches your subscription overflow.</p></div>
 </div>
+<p><a class="btn" href="./pricing.html">Compare plans</a></p>
 </section>
 
 <section class="block">
 <div class="eyebrow">Use cases</div>
-<h2>What could you do with <em>Sandcode?</em></h2>
+<h2>What could you do with <em>SandCode?</em></h2>
 <div class="uc-tabs">
 <button data-uctab="onboard" class="active" type="button">Onboard fast</button>
 <button data-uctab="issues" type="button">Issues to PRs</button>
@@ -123,63 +125,77 @@
 <button data-uctab="upgrade" type="button">Upgrade deps</button>
 </div>
 <div class="uc-panel active" data-ucpanel="onboard">
-<div><h3>Code onboarding</h3><p class="sub" style="margin:0">Maps entire codebases in seconds — structure, dependencies, conventions.</p><p><a class="btn light" href="./workspace-overview.html">Open in Workspace</a></p></div>
-<div class="uc-term"><div class="uc-prompt">$ sandcode "How is auth handled here?"</div><div class="uc-out"><span class="green">⏺</span> I'll map the auth flow across 6 files.<br><br>Auth lives in <b>src/middleware/auth.ts</b>: <b>verifyToken()</b> checks JWTs, <b>limitByIP()</b> throttles anonymous calls. Routes compose them in <b>server.ts</b>.</div></div>
+<div><h3>Code onboarding</h3><p class="sub" style="margin:0">Maps entire codebases in seconds — structure, dependencies, conventions.</p><p><a class="btn light" href="./workspace-overview.html">Open the Console</a></p></div>
+<div class="uc-term"><div class="uc-prompt">$ sandbase "How is auth handled here?"</div><div class="uc-out"><span class="green">⏺</span> I'll map the auth flow across 6 files.<br><br>Auth lives in <b>src/middleware/auth.ts</b>: <b>verifyToken()</b> checks JWTs, <b>limitByIP()</b> throttles anonymous calls. Routes compose them in <b>server.ts</b>.</div></div>
 </div>
 <div class="uc-panel" data-ucpanel="issues">
-<div><h3>Turn issues into PRs</h3><p class="sub" style="margin:0">Reads the issue, reproduces it, fixes, tests, opens the PR.</p><p><a class="btn light" href="./download.html">Install Sandcode</a></p></div>
-<div class="uc-term"><div class="uc-prompt">$ sandcode run "Fix #412: double-charge in checkout"</div><div class="uc-out"><span class="green">⏺</span> Reproduced with a failing test.<br><span class="green">⏺</span> Edited <b>checkout.ts</b> +12 −3.<br><span class="green">✓</span> 31 pass · 0 fail — PR #413 opened.</div></div>
+<div><h3>Turn issues into PRs</h3><p class="sub" style="margin:0">Reads the issue, reproduces it, fixes, tests, opens the PR.</p><p><a class="btn light" href="./download.html">Install SandCode</a></p></div>
+<div class="uc-term"><div class="uc-prompt">$ sandbase run "Fix #412: double-charge in checkout"</div><div class="uc-out"><span class="green">⏺</span> Reproduced with a failing test.<br><span class="green">⏺</span> Edited <b>checkout.ts</b> +12 −3.<br><span class="green">✓</span> 31 pass · 0 fail — PR #413 opened.</div></div>
 </div>
 <div class="uc-panel" data-ucpanel="edits">
 <div><h3>Make powerful edits</h3><p class="sub" style="margin:0">Multi-file refactors that work — verified end to end.</p><p><a class="btn light" href="./docs.html">Read docs</a></p></div>
-<div class="uc-term"><div class="uc-prompt">$ sandcode "Migrate to the new provider API"</div><div class="uc-out"><span class="green">⏺</span> Renamed across <b>14 files</b>, updated imports.<br><span class="green">⏺</span> Codemod + manual pass on edge cases.<br><span class="green">✓</span> Types clean, suite green.</div></div>
+<div class="uc-term"><div class="uc-prompt">$ sandbase "Migrate to the new provider API"</div><div class="uc-out"><span class="green">⏺</span> Renamed across <b>14 files</b>, updated imports.<br><span class="green">⏺</span> Codemod + manual pass on edge cases.<br><span class="green">✓</span> Types clean, suite green.</div></div>
 </div>
 <div class="uc-panel" data-ucpanel="debug">
-<div><h3>Debug production</h3><p class="sub" style="margin:0">Correlates deploys, logs, and traces to find the culprit fast.</p><p><a class="btn light" href="./workspace-overview.html">Replay in Workspace</a></p></div>
-<div class="uc-term"><div class="uc-prompt">$ sandcode "Why is checkout 500ing since 14:20?"</div><div class="uc-out"><span class="green">⏺</span> Traced to deploy <b>1.4.2</b> — migration lock held.<br><span class="green">⏺</span> Rolled back, re-ran migration offline.<br><span class="green">✓</span> Error rate back to zero.</div></div>
+<div><h3>Debug production</h3><p class="sub" style="margin:0">Correlates deploys, logs, and traces to find the culprit fast.</p><p><a class="btn light" href="./workspace-plan.html">Replay in the Console</a></p></div>
+<div class="uc-term"><div class="uc-prompt">$ sandbase "Why is checkout 500ing since 14:20?"</div><div class="uc-out"><span class="green">⏺</span> Traced to deploy <b>1.4.2</b> — migration lock held.<br><span class="green">⏺</span> Rolled back, re-ran migration offline.<br><span class="green">✓</span> Error rate back to zero.</div></div>
 </div>
 <div class="uc-panel" data-ucpanel="review">
-<div><h3>Review PRs</h3><p class="sub" style="margin:0">Line-by-line review with your taste: races, N+1s, missing indexes.</p><p><a class="btn light" href="./download.html">Get the extension</a></p></div>
-<div class="uc-term"><div class="uc-prompt">$ sandcode review pr/418</div><div class="uc-out"><span class="green">⏺</span> 12 comments, <b>3 blocking</b>: race, N+1, missing index.<br><span class="green">⏺</span> Suggested fixes inline with tests.<br><span class="green">✓</span> Rest looks good to merge.</div></div>
+<div><h3>Review PRs</h3><p class="sub" style="margin:0">Line-by-line review with your rules: races, N+1s, missing indexes.</p><p><a class="btn light" href="./docs.html">Read the rules docs</a></p></div>
+<div class="uc-term"><div class="uc-prompt">$ sandbase review pr/418</div><div class="uc-out"><span class="green">⏺</span> 12 comments, <b>3 blocking</b>: race, N+1, missing index.<br><span class="green">⏺</span> Suggested fixes inline with tests.<br><span class="green">✓</span> Rest looks good to merge.</div></div>
 </div>
 <div class="uc-panel" data-ucpanel="upgrade">
-<div><h3>Upgrade dependencies</h3><p class="sub" style="margin:0">Major bumps without the dread — codemod, fix, verify.</p><p><a class="btn light" href="./zen.html">Try Zen models</a></p></div>
-<div class="uc-term"><div class="uc-prompt">$ sandcode "Bump React 18 → 19"</div><div class="uc-out"><span class="green">⏺</span> Ran codemod across <b>9 files</b>.<br><span class="green">⏺</span> Fixed 6 breakages, updated types.<br><span class="green">✓</span> Suite green on the first try.</div></div>
+<div><h3>Upgrade dependencies</h3><p class="sub" style="margin:0">Major bumps without the dread — the harness catches what breaks.</p><p><a class="btn light" href="./zen.html">See the models</a></p></div>
+<div class="uc-term"><div class="uc-prompt">$ sandbase "Bump React 18 → 19"</div><div class="uc-out"><span class="green">⏺</span> Ran codemod across <b>9 files</b>.<br><span class="green">⏺</span> Fixed 6 breakages, updated types.<br><span class="green">✓</span> Suite green on the first try.</div></div>
+</div>
+</section>
+
+<section class="block">
+<div class="eyebrow">Transparency</div>
+<h2>Numbers you can <em>check.</em></h2>
+<div class="grid">
+<div class="card"><b>Published list price</b><p>Every model's input, output and cache-read rate is on the models page. Your pool is drawn down at exactly those numbers.</p></div>
+<div class="card"><b>Reproducible benchmarks</b><p>Our comparison methodology is published so you can rerun it, rather than trusting a marketing chart.</p></div>
+<div class="card"><b>1:1 cache passthrough</b><p>Cache reads bill at upstream rate, never marked up. The discount is yours, not ours.</p></div>
+<div class="card"><b>Declarative rules</b><p>Project conventions live in a file you version and review — auditable and shareable across a team.</p></div>
 </div>
 </section>
 
 <div class="zen-banner">
-<h2 style="margin:0">Run it all from the <em>Workspace.</em></h2>
-<p style="color:var(--muted)">Plan, usage, billing, keys, and team — one dark console, no backend needed for the demo.</p>
-<a class="cta" href="./workspace-overview.html">Open Workspace →</a>
+<h2 style="margin:0">Run it all from the <em>Console.</em></h2>
+<p style="color:var(--muted)">Windows, reasoning sub-quota, cache savings, tool water meters and live traces — one screen.</p>
+<a class="cta" href="./workspace-overview.html">Open the Console →</a>
 </div>
 
 <section class="block">
-<h2>Built for privacy first</h2>
-<p class="sub">Zero retention by default — nothing stored, nothing trained on. <a href="./enterprise.html">Privacy →</a></p>
+<h2>Stored on <em>your</em> terms</h2>
+<p class="sub">Your prompts are not used for training. Billing metadata is kept for 24 months, tool-call records for 90 days, and prompt content is not stored unless you opt in — in which case it is redacted and deleted after 7 days. <a href="./enterprise.html">Data policy →</a></p>
 </section>
 
 <section class="block">
 <h2>FAQ</h2>
 <div class="faq">
-<details open><summary>What is Sandcode?</summary><p>An open source AI coding agent that runs in your terminal, IDE, or desktop — reading, editing, and shipping code with you.</p></details>
-<details><summary>How do I use Sandcode?</summary><p>Install with <code>curl -fsSL https://sandcode.ai/install | bash</code>, open your project, run <code>sandcode</code>, then <code>/init</code> to generate an AGENTS.md.</p></details>
-<details><summary>How much does Sandcode cost?</summary><p>The core is free and open source. Zen and Go plans are usage-based, starting at $1–$20 with caps and instant cancel.</p></details>
-<details><summary>What about data and privacy?</summary><p>Zero retention by default — your code is never used for training. Teams get SSO, audit logs, and private deployment.</p></details>
-<details><summary>Is Sandcode open source?</summary><p>Yes. Star it, open issues, and send PRs — all welcome.</p></details>
+<details open><summary>What is SandCode?</summary><p>Flat-rate coding compute for agent clients. $9.9/mo buys a $70 model pool, bundled search and scrape, and a local verification harness — usable from any client that accepts a custom base URL.</p></details>
+<details><summary>How do I get started?</summary><p>Install with <code>curl -fsSL https://sandcode.ai/install | bash</code>, then run <code>sandbase setup</code>. It detects your clients, links your account and injects the endpoints and MCP tools in one pass.</p></details>
+<details><summary>Does the daily burst raise my monthly quota?</summary><p>No. It only raises the ceiling of the current 6h window — $15 to $20 on Standard. Spend still counts against the monthly pool, which never changes.</p></details>
+<details><summary>Can unused quota roll over to next month?</summary><p>No. Quota is monthly and resets at the end of the cycle. Rollover would make compute cost unpredictable, and the flat price depends on it staying predictable.</p></details>
+<details><summary>Why does running out return 402 and not 429?</summary><p>Clients retry automatically on 429. Using it for "out of quota" would cause a retry storm and burn compute. 402 stops the client and tells you to top up or wait.</p></details>
+<details><summary>Does the local harness read my code?</summary><p>It runs on your machine and reports only token usage metadata back. It is installed with explicit consent, and <code>sandbase harness off</code> turns it off at any time.</p></details>
+<details><summary>Is there a referral reward?</summary><p>Yes. When someone you invite subscribes and completes their first paid month, you both get $5 in PAYG credit — capped at 10 effective invites a month and $50 lifetime per account.</p></details>
+<details><summary>Do rewards eat into my monthly quota?</summary><p>No. Rewards are PAYG wallet balance, spent like a top-up. They never touch the monthly quota pool.</p></details>
 </div>
 </section>
 
 <div class="zen-banner">
-<h2 style="margin:0">Access reliable optimized models for coding agents</h2>
-<p style="color:var(--muted)">Sand Zen gives you a handpicked set of AI models tested and benchmarked specifically for coding agents.</p>
-<a class="cta" href="./zen.html">Learn about Zen →</a>
+<h2 style="margin:0">Eight tuned models, one transparent price list</h2>
+<p style="color:var(--muted)">Sand Zen is the curated pool behind every SandCode plan — with cache reads passed through 1:1.</p>
+<a class="cta" href="./zen.html">See the lineup →</a>
 </div>
 
 <div class="waitlist">
-<h2 style="margin:0">Be the first to know when we release new products</h2>
+<h2 style="margin:0">Be the first to know when we release new models</h2>
 <p class="sub" style="margin:8px 0 0">Join the waitlist for early access.</p>
-<form id="waitlist-form"><input required type="email" placeholder="you@example.com"><button type="submit">Subscribe</button></form>
+<form id="waitlist-form"><input required type="email" name="email" aria-label="Email address" placeholder="you@example.com"><button type="submit">Subscribe</button></form>
 <p id="waitlist-msg" style="font-weight:700"></p>
 </div>
 

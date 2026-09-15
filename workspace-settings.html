@@ -1,41 +1,59 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sandcode Workspace — Settings</title>
+<title>SandCode Console — Settings</title>
 <link rel="stylesheet" href="./fonts.css?v=4">
 <link rel="stylesheet" href="./tokens.css?v=4">
 <link rel="stylesheet" href="./workspace.css?v=4">
-<link rel="stylesheet" href="./buttons.css?v=4"><link rel="icon" type="image/svg+xml" href="./favicon.svg">
-<meta name="description" content="Sandcode Workspace settings — profile, session sharing, and danger zone (mock demo).">
-<meta property="og:title" content="Sandcode Workspace — Settings">
-<meta property="og:description" content="Sandcode Workspace settings — profile, session sharing, and danger zone (mock demo).">
+<link rel="stylesheet" href="./buttons.css?v=4">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="preload" as="font" type="font/woff2" href="./fonts/inter-normal-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="./fonts/newsreader-normal-latin.woff2" crossorigin>
+<meta name="description" content="SandCode Console settings — region and data residency, opt-in retention, and alerts (mock demo).">
+<meta property="og:title" content="SandCode Console — Settings">
+<meta property="og:description" content="SandCode Console settings — region and data residency, opt-in retention, and alerts (mock demo).">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"></head>
+<meta name="twitter:card" content="summary"><meta name="robots" content="noindex">
+<link rel="canonical" href="https://sandcode.ai/workspace-settings.html">
+<meta property="og:url" content="https://sandcode.ai/workspace-settings.html">
+<meta property="og:site_name" content="SandCode">
+</head>
 <body>
-<script>try{var t=localStorage.getItem('sandcode-theme');if(t)document.body.dataset.theme=t}catch(e){}</script>
+<script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
+<script>try{if((localStorage.getItem('sandcode-lang')||'en')==='zh'){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
 <div id="app">
   <aside id="side"></aside>
   <div id="side-scrim" hidden></div>
-  <div class="main">
+  <main class="main">
     <header id="topbar"></header>
     <div class="ws-page"><div class="ws-inner">
       <h1>Settings</h1>
       <p class="ws-sub">Workspace preferences · mock data, nothing is stored.</p>
-      <div class="ws-card" style="margin-bottom:14px"><h3>General</h3>
+      <div class="ws-card" style="margin-bottom:14px"><h2>General</h2>
         <label class="wlabel" for="ws-name">Workspace name</label>
         <input class="winput" id="ws-name" value="acme" maxlength="32">
-        <label class="wlabel" for="ws-region">Region</label>
+        <label class="wlabel" for="ws-region">Data region</label>
         <select class="wselect" id="ws-region"><option>US (default)</option><option>EU</option><option>Singapore</option></select>
+        <p style="margin-top:10px;font-size:12px;color:var(--adim)">Region decides where data is stored. Residency terms and excluded regions are part of the DPA on Enterprise.</p>
         <div class="btnrow"><button class="wbtn" id="ws-save" type="button">Save changes</button></div></div>
-      <div class="ws-card" style="margin-bottom:14px"><h3>Session sharing</h3>
-        <label class="radio-card"><input type="radio" name="share" checked data-toast="Sharing: manual"><span><b>Manual</b><small>Share only when /share is used. Default.</small></span></label>
-        <label class="radio-card"><input type="radio" name="share" data-toast="Sharing: auto"><span><b>Auto</b><small>Every new session is shared automatically.</small></span></label>
-        <label class="radio-card"><input type="radio" name="share" data-toast="Sharing: disabled"><span><b>Disabled</b><small>/share stops working workspace-wide.</small></span></label></div>
-      <div class="ws-card"><h3>Danger zone</h3><p>Leaving removes your access to shared credits and sessions.</p>
+      <div class="ws-card" style="margin-bottom:14px"><h2>Retention</h2>
+        <div class="switchrow"><div>Prompt and output retention<small>Off by default. When on, content is redacted and deleted after 7 days.</small></div>
+          <label class="switch"><input type="checkbox" data-toast="Prompt retention off" aria-label="Prompt and output retention"><em></em></label></div>
+        <div class="switchrow"><div>Session traces<small>Thinking chains and decision trees, 7-day TTL. Pro and Team.</small></div>
+          <label class="switch"><input type="checkbox" data-toast="Session traces off" aria-label="Session traces"><em></em></label></div>
+        <div class="switchrow"><div>Tool-call records<small>Search queries and URLs, kept 90 days.</small></div>
+          <label class="switch"><input type="checkbox" checked data-toast="Tool records on" aria-label="Tool-call records"><em></em></label></div>
+        <div class="btnrow"><button class="wbtn ghost" id="ws-purge" type="button">Delete retained data</button></div></div>
+      <div class="ws-card" style="margin-bottom:14px"><h2>Alerts</h2>
+        <div class="switchrow"><div>Email<small>At 80% and 95% of the monthly pool.</small></div>
+          <label class="switch"><input type="checkbox" checked data-toast="Email alerts on" aria-label="Email alerts"><em></em></label></div>
+        <div class="switchrow"><div>Discord webhook<small>Posts to a channel when a window or quota threshold trips.</small></div>
+          <label class="switch"><input type="checkbox" data-toast="Discord webhook off" aria-label="Discord webhook"><em></em></label></div></div>
+      <div class="ws-card"><h2>Danger zone</h2><p>Leaving removes your access to the shared pool and any traced sessions.</p>
         <div class="btnrow"><button class="wbtn danger" id="ws-leave" type="button">Leave workspace</button></div></div>
     </div></div>
-  </div>
+  </main>
 </div>
-<div id="toast" hidden></div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
 <script src="./chrome.js?v=4"></script>
 <script src="./i18n.js?v=4"></script>
 <script src="./common.js?v=4"></script>

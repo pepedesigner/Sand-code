@@ -7,6 +7,10 @@
    (dark default; light re-derived via body[data-theme="light"]). This file
    only appends structural styles on top. */
 *{box-sizing:border-box}
+/* the inline bootstrap adds this class when 中文 is the stored language, so the
+   page never paints English first; i18n.js removes it once the dictionary has
+   been applied (the bootstrap also clears it after 2s as a safety net) */
+html.i18n-pending body{visibility:hidden}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--header-h) + 16px);scrollbar-gutter:stable}
 body{
   margin:0; background:var(--bg); color:var(--ink);
@@ -31,36 +35,29 @@ h1 em,h2 em{font-style:italic;color:var(--accent)}
 /* scroll progress + back-to-top + scroll hint */
 .progress{position:fixed;top:0;left:0;right:0;height:2px;background:var(--accent);
   transform:scaleX(0);transform-origin:left;z-index:99}
-#toTop{position:fixed;right:22px;bottom:22px;width:44px;height:44px;border-radius:50%;
-  background:var(--bg3);color:var(--ink);border:1px solid var(--line-strong);font-size:17px;cursor:pointer;
-  opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .25s var(--ease),transform .25s var(--ease);z-index:90}
+/* shape/size/fill live in buttons.css — placement + show/hide only here */
+#toTop{position:fixed;right:22px;bottom:22px;
+  opacity:0;pointer-events:none;transform:translateY(12px);z-index:90}
 #toTop.show{opacity:1;pointer-events:auto;transform:none}
 #toTop:hover{background:var(--line-strong)}
 .scroll-hint{display:flex;justify-content:center;margin-top:26px}
 .scroll-hint span{width:22px;height:22px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
   transform:rotate(45deg);animation:hint 1.8s var(--ease) infinite}
 @keyframes hint{0%{transform:rotate(45deg) translate(0,0);opacity:.9}50%{transform:rotate(45deg) translate(7px,7px);opacity:.35}100%{transform:rotate(45deg) translate(0,0);opacity:.9}}
-body[data-theme="light"] .scroll-hint span{transform:rotate(45deg)}
-@keyframes hint-lite{0%{transform:rotate(45deg) translate(0,0);opacity:.9}50%{transform:rotate(45deg) translate(7px,7px);opacity:.35}100%{transform:rotate(45deg) translate(0,0);opacity:.9}}
 .nav{position:relative;display:flex;align-items:center;gap:16px;min-height:var(--header-h)}
 .logo{font-family:var(--font-mono);font-weight:700;letter-spacing:.06em;font-size:16px;text-decoration:none;
   flex:none;color:var(--ink)}
 .logo span{color:var(--accent)}
 .logo i{font-style:normal;color:var(--accent);margin-left:1px}
-.menu-btn{display:none;margin-left:auto;background:transparent;border:1px solid var(--line-strong);
-  padding:8px 14px;border-radius:6px;cursor:pointer;font:inherit;font-size:13px;font-weight:600;flex:none}
+.menu-btn{margin-left:auto;flex:none}
 .nav-links{display:flex;gap:2px;margin-left:auto;align-items:center;flex:none;flex-wrap:nowrap;white-space:nowrap}
 .nav-links a{position:relative;text-decoration:none;font-size:14px;font-weight:500;color:var(--muted);
   padding:9px 12px;border-radius:6px;transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
 .nav-links a:not(.btn):hover{background:var(--accent-soft);color:var(--ink)}
 .nav-links a:not(.btn).active{background:var(--accent-soft);color:var(--accent);font-weight:700}
-.theme-btn{background:transparent;border:1px solid var(--line-strong);color:var(--ink);
-  width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:14px;flex:none;
-  display:inline-flex;align-items:center;justify-content:center;margin-left:8px}
+.theme-btn{flex:none;margin-left:8px}
 .theme-btn:hover{background:var(--line-strong)}
-.nav-links a.btn{background:var(--ink);color:var(--bg);padding:10px 20px;margin-left:10px;font-weight:600;
-  transition:transform var(--t-fast) var(--ease),background var(--t-fast) var(--ease)}
-.nav-links a.btn:hover{transform:translateY(-1px)}
+.nav-links a.btn{margin-left:10px}
 
 /* ---------- hero ---------- */
 .hero{padding:84px 0 30px;text-align:center}
@@ -97,9 +94,9 @@ h1{font-size:clamp(34px,5.4vw,60px);line-height:1.06;margin:0 0 20px;letter-spac
   padding:16px;font-size:13px;overflow-x:auto;border-top:1px solid var(--line)}
 .cmd code{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cmd .prompt{color:var(--code-success)}   /* stays readable on the dark code canvas */
-.copy{margin-left:auto;background:var(--bg3);color:var(--ink);border:1px solid var(--line-strong);padding:7px 14px;border-radius:6px;
-  cursor:pointer;font-family:var(--font-mono);font-size:11.5px;font-weight:600;flex:none;transition:transform var(--t-fast) var(--ease)}
-.copy:hover{transform:translateY(-1px);border-color:var(--accent)}.copy:active{transform:scale(.97)}
+/* fill is context-specific; shape/size/type come from buttons.css */
+.copy{margin-left:auto;background:var(--bg3);color:var(--ink);flex:none}
+.copy:hover{transform:translateY(-1px);border-color:var(--accent)}
 
 /* ---------- terminal product frame ---------- */
 /* the terminal is a code surface: dark in both themes, like .cmd/.uc-term/.doc pre */
@@ -115,19 +112,18 @@ h1{font-size:clamp(34px,5.4vw,60px);line-height:1.06;margin:0 0 20px;letter-spac
 #term-typing{display:block;min-height:280px;margin:0;white-space:pre-wrap;font-size:13px}
 .t-line{min-height:1.65em;white-space:pre-wrap}
 /* session palette — these sit on the dark code canvas in both themes */
-.t-prompt,.t-ok,.t-add{color:var(--code-success)}
+.t-prompt,.t-ok{color:var(--code-success)}
 .t-cmd{color:var(--code-fg)}
 .t-strong{color:var(--code-fg);font-weight:600}
 .t-dim{color:var(--code-muted)}
 .t-file{color:var(--code-accent)}
 .t-num{color:var(--code-warn)}
 .t-key{color:var(--code-bright)}
-.t-del{color:var(--code-error)}
 .t-caret{display:inline-block;width:7px;height:1.02em;margin-left:2px;vertical-align:-1px;
   background:var(--code-accent);animation:caret 1.05s steps(1,end) infinite}
 @keyframes caret{0%,49%{opacity:1}50%,100%{opacity:0}}
-.green{color:var(--success)}.dim{color:var(--muted)}.yellow{color:#E3B341}
-.prompt{color:var(--success)}.cmd-text{color:var(--ink)}.out-text{color:var(--muted)}
+.green{color:var(--success)}
+.prompt{color:var(--success)}
 
 /* ---------- logo strip ---------- */
 .logos{padding:44px 0 8px;text-align:center;overflow:hidden}
@@ -185,19 +181,13 @@ section.block .eyebrow::before{counter-increment:sec;content:"0" counter(sec);ma
   box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
 .zen-banner h2{position:relative;color:var(--ink)}
 .zen-banner p{position:relative}
-.zen-banner a.cta{position:relative;display:inline-block;margin-top:16px;background:var(--ink);color:var(--bg);
-  padding:13px 28px;text-decoration:none;font-weight:600;border-radius:6px;
-  transition:transform var(--t-fast) var(--ease),background var(--t-fast) var(--ease)}
-.zen-banner a.cta:hover{transform:translateY(-2px)}
+.zen-banner a.cta{position:relative;margin-top:16px}
 .waitlist{border:1px solid var(--line);background:var(--bg2);padding:40px 32px;
   border-radius:var(--radius);margin:36px 0;text-align:center}
 .waitlist form{display:flex;gap:10px;margin:18px auto 0;max-width:520px;flex-wrap:wrap}
 .waitlist input{flex:1;min-width:220px;padding:14px 18px;border:1px solid var(--line-strong);border-radius:6px;
   font-family:inherit;font-size:14px;background:var(--bg)}
 .waitlist input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
-.waitlist button{padding:14px 28px;background:var(--ink);color:var(--bg);border:1px solid var(--ink);border-radius:6px;
-  font-family:inherit;font-weight:600;cursor:pointer;transition:transform var(--t-fast) var(--ease),background var(--t-fast) var(--ease)}
-.waitlist button:hover{transform:translateY(-1px)}
 
 /* ---------- footer ---------- */
 footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,255,255,.015)}
@@ -208,9 +198,6 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,255,
 .fcols a:hover{color:var(--accent)}
 .fbase{display:flex;gap:16px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--line);
   padding:18px 0 26px;color:var(--muted);font-size:12.5px}
-.foot{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
-.fbase .mono{font-family:var(--font-mono);font-size:11.5px}
-.foot a{text-decoration:none}.foot a:hover{text-decoration:underline}
 
 /* ---------- docs ---------- */
 .docs-layout{display:grid;grid-template-columns:264px 1fr;gap:24px;padding:32px 0;align-items:start;text-align:left}
@@ -225,21 +212,14 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,255,
 .doc h1{font-size:32px}
 .doc h2{font-size:22px;margin-top:30px}
 .doc pre{background:var(--code-bg);color:var(--code-fg);padding:16px;overflow-x:auto;border-radius:var(--radius-s);font-size:13px;line-height:1.6}
-.doc code.inline{background:var(--bg3);padding:2px 7px;border:1px solid var(--line);border-radius:6px;font-size:12.5px}
 
 /* ---------- misc grids ---------- */
 .dl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;text-align:left}
-.btn{display:inline-block;background:var(--ink);color:var(--bg);padding:12px 26px;
-  text-decoration:none;font-weight:600;font-size:14px;margin:8px 8px 0 0;border-radius:6px;
-  transition:transform var(--t-fast) var(--ease),background var(--t-fast) var(--ease)}
-.btn:hover{transform:translateY(-2px)}
-.btn.light{background:transparent;color:var(--ink);border:1px solid var(--line-strong);box-shadow:none}
-.btn.light:hover{background:var(--line);box-shadow:none}
-.testimonials{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px;text-align:left}
-.t{border:1px solid var(--line);background:var(--bg2);padding:26px;border-radius:var(--radius);
-  font-size:14px;display:flex;flex-direction:column;gap:12px}
-.t b{font-size:14px}
-.t p{margin:0;color:var(--muted);font-style:italic}
+/* .btn shape/size/fill/state are owned by buttons.css. Only the inline-flow
+   margin (.doc / .feat / .dl-grid contexts) and the light-button hover wash
+   stay here. */
+.btn{margin:8px 8px 0 0}
+.btn.light:hover{background:var(--line)}
 
 /* ---------- steps (numbered process) ---------- */
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:30px;text-align:left}
@@ -276,7 +256,6 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,255,
 .plan.featured{background:var(--bg3);border-color:var(--line-strong);color:var(--ink);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
 .plan.featured .price small,.plan.featured .tagline{color:var(--muted)}
 .plan.featured .credits{color:var(--accent)}
-.plan.featured .btn{background:var(--ink);color:var(--bg)}
 .plan.featured ul{border-top-color:var(--line-strong)}
 .plan.featured ul li{color:var(--ink)}
 .plan-flag{position:absolute;top:-14px;left:28px;background:var(--accent);color:var(--bg);font-size:11px;
@@ -290,17 +269,40 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,255,
 .compare tbody tr:hover{background:rgba(255,255,255,.025)}
 .compare td:first-child{color:var(--ink);font-weight:600}
 
-@media(max-width:900px){.plans{grid-template-columns:1fr 1fr}.testimonials{grid-template-columns:1fr 1fr}}
+/* ---------- positioning quadrant (pricing) ----------
+   Marketing view of the 2026 landscape: quadrant NAMES only. Per the spec,
+   competitor coordinates are internal-only, so this renders the four cells and
+   highlights where SandCode sits — never a scatter plot of rivals. */
+.quad{margin:34px auto 0;max-width:760px;text-align:left;
+  display:grid;grid-template-columns:auto 1fr;grid-template-rows:1fr auto;gap:10px}
+.quad-y{writing-mode:vertical-rl;transform:rotate(180deg);align-self:center;justify-self:center;
+  font-size:10.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.quad-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
+  border:1px solid var(--line-strong);border-radius:var(--radius);overflow:hidden;background:var(--bg2)}
+.quad-cell{padding:20px 18px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+  display:flex;flex-direction:column;gap:6px;min-height:148px}
+.quad-cell:nth-child(2n){border-right:0}
+.quad-cell:nth-child(n+3){border-bottom:0}
+.quad-cell b{font-size:13.5px;color:var(--ink)}
+.quad-cell p{margin:0;font-size:12.5px;color:var(--muted)}
+.quad-cell .q-tag{font-family:var(--font-mono);font-size:11px;letter-spacing:1px;color:var(--accent)}
+.quad-cell.on{background:var(--bg3);box-shadow:inset 0 0 0 1px var(--accent)}
+.quad-cell.on b{color:var(--accent)}
+.quad-x{grid-column:2;text-align:center;font-size:10.5px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--muted)}
+
+@media(max-width:900px){.plans{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){
   .grid,.stats,.dl-grid,.docs-layout{grid-template-columns:1fr}
   .uc-panel.active{grid-template-columns:1fr}
-  .testimonials{grid-template-columns:1fr}
   .plans{grid-template-columns:1fr}
+  .quad{grid-template-columns:1fr}
+  .quad-y{writing-mode:horizontal-tb;transform:none;justify-self:start}
+  .quad-grid,.quad-x{grid-column:1}
   .fcols{grid-template-columns:1fr 1fr}
   .hero{padding:60px 0 22px}
   .hero h1{white-space:normal;font-size:clamp(32px,10vw,44px)}
   section.block{padding:48px 0}
-  .menu-btn{display:block}
   .nav-links{display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;margin:0;
     background:var(--bg3);border:1px solid var(--line-strong);border-radius:8px;
     padding:8px;flex-direction:column;align-items:stretch;white-space:normal}
@@ -325,7 +327,12 @@ body[data-theme="light"] .site-header{background:rgba(247,248,250,.85)}
 body[data-theme="light"] .badge{box-shadow:var(--shadow)}
 body[data-theme="light"] .tabs{background:var(--bg2)}
 body[data-theme="light"] .cmd{background:var(--code-bg);color:var(--code-fg);border:1px solid var(--line-strong)}
-body[data-theme="light"] .card,body[data-theme="light"] .doc,body[data-theme="light"] .compare{box-shadow:var(--shadow)}
+body[data-theme="light"] .card,body[data-theme="light"] .doc,body[data-theme="light"] .compare,
+body[data-theme="light"] .zen-banner,body[data-theme="light"] .plan.featured{box-shadow:var(--shadow)}
+/* the dark theme tints these surfaces with white; on a light canvas that reads
+   as "invisible", so they flip to a black tint of the same strength */
+body[data-theme="light"] footer{background:rgba(26,28,32,.015)}
+body[data-theme="light"] .compare tbody tr:hover{background:rgba(26,28,32,.025)}
 
 /* ---------- scroll reveal ---------- */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
@@ -333,9 +340,6 @@ body[data-theme="light"] .card,body[data-theme="light"] .doc,body[data-theme="li
 
 /* ---------- use cases ---------- */
 .uc-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:26px 0 30px}
-.uc-tabs button{background:transparent;border:1px solid var(--line-strong);color:var(--ink);
-  padding:10px 22px;border-radius:6px;font-family:inherit;font-size:13.5px;font-weight:600;
-  cursor:pointer;transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
 .uc-tabs button:hover{background:var(--line)}
 .uc-tabs button.active{background:transparent;color:var(--accent);border-color:var(--accent);box-shadow:none}
 .uc-panel{display:none;grid-template-columns:1fr 1.25fr;gap:28px;align-items:center;text-align:left;
@@ -348,9 +352,3 @@ body[data-theme="light"] .card,body[data-theme="light"] .doc,body[data-theme="li
   border-radius:6px;padding:10px 14px;margin-bottom:14px;overflow-x:auto;white-space:nowrap}
 .uc-out b{color:var(--code-bright);font-weight:600}
 .uc-term .green{color:var(--code-success)}
-.uc-term .dim{color:var(--code-muted)}
-
-/* ---------- announcements ---------- */
-.tagrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.tag{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);
-  background:var(--accent-soft);border:1px solid rgba(130,170,255,.35);padding:3px 10px;border-radius:var(--pill)}

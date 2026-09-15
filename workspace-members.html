@@ -1,45 +1,57 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sandcode Workspace — Members</title>
+<title>SandCode Console — Members</title>
 <link rel="stylesheet" href="./fonts.css?v=4">
 <link rel="stylesheet" href="./tokens.css?v=4">
 <link rel="stylesheet" href="./workspace.css?v=4">
-<link rel="stylesheet" href="./buttons.css?v=4"><link rel="icon" type="image/svg+xml" href="./favicon.svg">
-<meta name="description" content="Sandcode Workspace members — roles, invites, and referral rewards (mock demo).">
-<meta property="og:title" content="Sandcode Workspace — Members">
-<meta property="og:description" content="Sandcode Workspace members — roles, invites, and referral rewards (mock demo).">
+<link rel="stylesheet" href="./buttons.css?v=4">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="preload" as="font" type="font/woff2" href="./fonts/inter-normal-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="./fonts/newsreader-normal-latin.woff2" crossorigin>
+<meta name="description" content="SandCode Console members — team seats, roles, per-member daily caps and two-way referral credit (mock demo).">
+<meta property="og:title" content="SandCode Console — Members">
+<meta property="og:description" content="SandCode Console members — team seats, roles, per-member daily caps and two-way referral credit (mock demo).">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"></head>
+<meta name="twitter:card" content="summary"><meta name="robots" content="noindex">
+<link rel="canonical" href="https://sandcode.ai/workspace-members.html">
+<meta property="og:url" content="https://sandcode.ai/workspace-members.html">
+<meta property="og:site_name" content="SandCode">
+</head>
 <body>
-<script>try{var t=localStorage.getItem('sandcode-theme');if(t)document.body.dataset.theme=t}catch(e){}</script>
+<script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
+<script>try{if((localStorage.getItem('sandcode-lang')||'en')==='zh'){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
 <div id="app">
   <aside id="side"></aside>
   <div id="side-scrim" hidden></div>
-  <div class="main">
+  <main class="main">
     <header id="topbar"></header>
     <div class="ws-page"><div class="ws-inner">
       <h1>Members</h1>
-      <p class="ws-sub">Everyone draws from one shared credit bucket · mock data.</p>
+      <p class="ws-sub">Every seat draws on one shared pool · mock data.</p>
       <div class="ws-card" style="margin-bottom:14px">
-        <table class="utable" id="members-table"><thead><tr><th>Member</th><th>Role</th><th>Joined</th></tr></thead>
+        <table class="utable" id="members-table"><thead><tr><th>Member</th><th>Role</th><th>Daily cap</th><th>Joined</th></tr></thead>
         <tbody>
-          <tr><td><b>qumo</b> · owner</td><td>Owner</td><td>May 2026</td></tr>
-          <tr><td><b>jay</b> · jay@acme.dev</td><td><select class="wselect member-role" style="width:auto"><option>Member</option><option>Admin</option></select></td><td>Jun 2026</td></tr>
-          <tr><td><b>dax</b> · dax@acme.dev</td><td><select class="wselect member-role" style="width:auto"><option>Member</option><option>Admin</option></select></td><td>Aug 2026</td></tr>
+          <tr><td><b>alex</b> · owner</td><td>Owner</td><td class="num">no cap</td><td>May 2026</td></tr>
+          <tr><td><b>jay</b> · jay@acme.dev</td><td><select class="wselect member-role" style="width:auto" aria-label="Role"><option>Member</option><option>Admin</option></select></td><td class="num">$3/day</td><td>Jun 2026</td></tr>
+          <tr><td><b>dax</b> · dax@acme.dev</td><td><select class="wselect member-role" style="width:auto" aria-label="Role"><option>Member</option><option>Admin</option></select></td><td class="num">$8/day</td><td>Aug 2026</td></tr>
         </tbody></table>
+        <p style="margin-top:10px;font-size:12px;color:var(--adim)">Seats can also be provisioned from a GitHub Organization, and roles are covered by the workspace audit history.</p>
       </div>
-      <div class="ws-card"><h3>Invite member</h3>
-        <p>Earn <b>$5 Zen credits</b> for every invited member who joins and runs their first session. Credits land in your workspace balance automatically.</p>
+      <div class="ws-card"><h2>Invite and earn</h2>
+        <p>Both sides get <b>$5 in PAYG credit</b> once the invitee subscribes and completes their first paid month. Rewards land in the wallet, so they never eat into the monthly quota pool.</p>
         <div class="d-share" style="margin-top:12px"><code>https://sandcode.ai/r/ACME-8F2K</code><button type="button" data-copy="https://sandcode.ai/r/ACME-8F2K">Copy</button></div>
-        <div class="urow" style="margin-top:10px"><span>2 joined · $10.00 earned</span><span>lifetime</span></div>
+        <div class="urow" style="margin-top:10px"><span>2 effective invites this month of 10 allowed</span><span>$10.00 credited</span></div>
+        <div class="urow" style="margin-top:8px"><span>$40.00 of the $50.00 lifetime cap remaining</span><span>Rewards expire with the month</span></div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
-          <input class="winput" id="invite-email" type="email" placeholder="teammate@acme.dev" style="flex:1;min-width:200px">
+          <input class="winput" id="invite-email" type="email" name="email" aria-label="Teammate email" placeholder="teammate@acme.dev" style="flex:1;min-width:200px">
           <button class="wbtn" id="invite-btn" type="button">Send invite</button>
-        </div></div>
+        </div>
+        <p style="margin-top:10px;font-size:12px;color:var(--adim)"><a href="./workspace-growth.html">Growth</a> shows the K factor, channel CAC and redemption rate.</p>
+      </div>
     </div></div>
-  </div>
+  </main>
 </div>
-<div id="toast" hidden></div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
 <script src="./chrome.js?v=4"></script>
 <script src="./i18n.js?v=4"></script>
 <script src="./common.js?v=4"></script>

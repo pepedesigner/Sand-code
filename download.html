@@ -1,62 +1,69 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sandcode | Download</title>
+<title>SandCode | Install</title>
 <link rel="stylesheet" href="./fonts.css?v=4">
 <link rel="stylesheet" href="./tokens.css?v=4">
 <link rel="stylesheet" href="./style.css?v=4">
-<link rel="stylesheet" href="./buttons.css?v=4"><link rel="icon" type="image/svg+xml" href="./favicon.svg">
-<meta name="description" content="Download Sandcode for terminal, desktop, and IDE extensions on macOS, Windows, and Linux.">
-<meta property="og:title" content="Sandcode | Download">
-<meta property="og:description" content="Download Sandcode for terminal, desktop, and IDE extensions on macOS, Windows, and Linux.">
+<link rel="stylesheet" href="./buttons.css?v=4">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="preload" as="font" type="font/woff2" href="./fonts/inter-normal-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="./fonts/newsreader-normal-latin.woff2" crossorigin>
+<meta name="description" content="Install the SandCode CLI and configure Cursor, Claude Code, OpenCode, Antigravity, VS Code, Zed, Aider or Cline in a single pass.">
+<meta property="og:title" content="SandCode | Install">
+<meta property="og:description" content="Install the SandCode CLI and configure Cursor, Claude Code, OpenCode, Antigravity, VS Code, Zed, Aider or Cline in a single pass.">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"></head>
+<meta name="twitter:card" content="summary"><link rel="canonical" href="https://sandcode.ai/download.html">
+<meta property="og:url" content="https://sandcode.ai/download.html">
+<meta property="og:site_name" content="SandCode">
+</head>
 <body>
-<script>try{var t=localStorage.getItem('sandcode-theme');if(t)document.body.dataset.theme=t}catch(e){}</script>
+<script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
+<script>try{if((localStorage.getItem('sandcode-lang')||'en')==='zh'){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
 <header class="site-header"></header>
 <main class="wrap">
-<div class="hero"><h1>Download Sandcode Desktop</h1>
-<p class="sub">Organize your work and active sessions with tabs. Download the latest to get started.</p></div>
+<div class="hero"><h1>Install once. <em>Every client.</em></h1>
+<p class="sub">One CLI configures Cursor, Claude Code, OpenCode and the rest in a single pass — endpoint, MCP tools and rules included.</p></div>
 
 <section class="block">
 <h2>Terminal</h2>
 <div class="doc">
 <pre>curl -fsSL https://sandcode.ai/install | bash
-npm i -g sandcode-ai
-bun add -g sandcode-ai
-brew install sandcode/tap/sandcode
-paru -S sandcode</pre>
+npm i -g sandbase-ai
+bun add -g sandbase-ai
+brew install sandbase/tap/sandbase
+paru -S sandbase</pre>
 </div>
+<p class="sub" style="margin-top:14px">Then run the setup wizard. It asks before touching any config file:</p>
+<div class="doc"><pre>sandbase setup</pre></div>
 </section>
 
-<section class="block"><h2>Desktop</h2>
+<section class="block"><h2>Clients</h2>
+<p class="sub">SandCode is neutral. It writes to whichever clients you already have installed — nothing is tied to one editor.</p>
 <div class="dl-grid">
-<div class="card"><b>macOS (Apple Silicon)</b><p>.dmg universal</p><a class="btn" href="#">Download</a></div>
-<div class="card"><b>macOS (Intel)</b><p>.dmg x64</p><a class="btn" href="#">Download</a></div>
-<div class="card"><b>Windows (x64)</b><p>.exe nsis installer</p><a class="btn" href="#">Download</a></div>
-<div class="card"><b>Linux (.deb / .rpm)</b><p>x64 deb + rpm</p><a class="btn" href="#">Download .deb</a><a class="btn light" href="#">Download .rpm</a></div>
+<div class="card"><b>Cursor</b><p>OpenAI-compatible endpoint, plus search and scrape written into its MCP config.</p><a class="btn" href="./docs.html#configure">Setup guide</a></div>
+<div class="card"><b>Claude Code</b><p>Anthropic endpoint with the full transpiler, thinking blocks and token counting.</p><a class="btn" href="./docs.html#configure">Setup guide</a></div>
+<div class="card"><b>OpenCode</b><p>Custom provider pointing at the gateway, with the local harness attached.</p><a class="btn" href="./docs.html#configure">Setup guide</a></div>
+<div class="card"><b>Antigravity</b><p>OpenAI-compatible endpoint, detected automatically when installed.</p><a class="btn" href="./docs.html#configure">Setup guide</a></div>
+<div class="card"><b>VS Code</b><p>Works with any agent extension that accepts a custom base URL.</p><a class="btn" href="./docs.html#configure">Setup guide</a></div>
+<div class="card"><b>Zed</b><p>ACP-compatible agent setup against the same pool.</p><a class="btn" href="./docs.html#configure">Setup guide</a></div>
+<div class="card"><b>Aider</b><p>OpenAI-compatible endpoint, no extra configuration beyond the key.</p><a class="btn" href="./docs.html#configure">Setup guide</a></div>
+<div class="card"><b>Cline</b><p>OpenAI-compatible endpoint with search and scrape on tap.</p><a class="btn" href="./docs.html#configure">Setup guide</a></div>
 </div>
-<p class="sub" style="margin-top:12px"><code>brew install --cask sandcode-desktop</code></p>
+<p class="sub" style="font-size:12.5px;margin-top:14px">Client config formats move fast. Setup re-checks the latest release of each client, and a CI probe runs nightly against new versions so a path change ships as a CLI patch.</p>
 </section>
-
-<section class="block"><h2>Extensions</h2>
-<div class="dl-grid">
-<div class="card"><b>VS Code</b><p>Terminal + sidebar agent</p><a class="btn" href="./docs.html">Install</a></div>
-<div class="card"><b>Cursor</b><p>Native integration</p><a class="btn" href="./docs.html">Install</a></div>
-<div class="card"><b>Zed</b><p>ACP support</p><a class="btn" href="./docs.html">Install</a></div>
-<div class="card"><b>Windsurf / VSCodium</b><p>VSIX compatible</p><a class="btn" href="./docs.html">Install</a></div>
-</div></section>
 
 <section class="block"><h2>Integrations</h2>
 <div class="dl-grid">
-<div class="card"><b>GitHub</b><p>PR review, actions, /share link</p><a class="btn" href="./docs.html">Install</a></div>
-<div class="card"><b>GitLab</b><p>MR assistant, CI summary</p><a class="btn" href="./docs.html">Install</a></div>
+<div class="card"><b>GitHub</b><p>The GitHub connector pulls issues, reads pull-request diffs and commits suggestions — and does not count against your tool quota.</p><a class="btn" href="./docs.html#tools">Connector docs</a></div>
+<div class="card"><b>CI</b><p>Use a workspace key in pipelines. Per-request analytics and per-key revocation are built in.</p><a class="btn" href="./workspace-keys.html">Manage keys</a></div>
 </div></section>
 
 <section class="block"><h2>FAQ</h2>
 <div class="faq">
-<details open><summary>What is Sandcode?</summary><p>The open source AI coding agent for terminal, desktop, and IDE.</p></details>
-<details><summary>How much does Sandcode cost?</summary><p>The core is free. Zen starts at $20 pay-as-you-go, Go plans from $1/mo.</p></details>
-<details><summary>Is Sandcode open source?</summary><p>Yes — contributions are welcome.</p></details>
+<details open><summary>Is installing SandCode free?</summary><p>Yes. The CLI and the setup wizard cost nothing. Usage needs a plan — Standard is $9.9/mo, and the PAYG wallet has no monthly fee at all.</p></details>
+<details><summary>Do I need a particular editor?</summary><p>No. Any client that accepts a custom base URL can use your pool, and setup configures each one it finds on your machine.</p></details>
+<details><summary>Which endpoints does it use?</summary><p>An OpenAI-compatible chat-completions endpoint and an Anthropic-compatible messages endpoint, both under https://api.sandbase.ai/v1.</p></details>
+<details><summary>What exactly does setup write to my machine?</summary><p>Client config files (endpoint and MCP entries), a rules file compiled into each client's format, and short-lived revocable tokens. It prompts before the first write, and <code>sandbase harness off</code> disables the local harness.</p></details>
 </div></section>
 </main>
 <footer></footer>

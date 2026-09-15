@@ -1,49 +1,69 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sandcode Workspace — Overview</title>
+<title>SandCode Console — Overview</title>
 <link rel="stylesheet" href="./fonts.css?v=4">
 <link rel="stylesheet" href="./tokens.css?v=4">
 <link rel="stylesheet" href="./workspace.css?v=4">
-<link rel="stylesheet" href="./buttons.css?v=4"><link rel="icon" type="image/svg+xml" href="./favicon.svg">
-<meta name="description" content="Sandcode Workspace overview — plan, spend, top models, and getting started (mock demo).">
-<meta property="og:title" content="Sandcode Workspace — Overview">
-<meta property="og:description" content="Sandcode Workspace overview — plan, spend, top models, and getting started (mock demo).">
+<link rel="stylesheet" href="./buttons.css?v=4">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="preload" as="font" type="font/woff2" href="./fonts/inter-normal-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="./fonts/newsreader-normal-latin.woff2" crossorigin>
+<meta name="description" content="SandCode Console overview — plan, spend, top models and window usage (mock demo).">
+<meta property="og:title" content="SandCode Console — Overview">
+<meta property="og:description" content="SandCode Console overview — plan, spend, top models and window usage (mock demo).">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"></head>
+<meta name="twitter:card" content="summary"><meta name="robots" content="noindex">
+<link rel="canonical" href="https://sandcode.ai/workspace-overview.html">
+<meta property="og:url" content="https://sandcode.ai/workspace-overview.html">
+<meta property="og:site_name" content="SandCode">
+</head>
 <body>
-<script>try{var t=localStorage.getItem('sandcode-theme');if(t)document.body.dataset.theme=t}catch(e){}</script>
+<script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
+<script>try{if((localStorage.getItem('sandcode-lang')||'en')==='zh'){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
 <div id="app">
   <aside id="side"></aside>
   <div id="side-scrim" hidden></div>
-  <div class="main">
+  <main class="main">
     <header id="topbar"></header>
     <div class="ws-page"><div class="ws-inner">
-      <h1>Workspace overview</h1>
-      <p class="ws-sub">acme · GOAT plan · mock data, no backend.</p>
+      <h1>Overview</h1>
+      <p class="ws-sub">Standard plan · mock data, no backend.</p>
       <div class="ws-grid">
-        <div class="ws-card"><h3>Current plan</h3><div class="big">GOAT · $10/mo</div><p>$70 credits included · renews Oct 1</p>
-          <div class="btnrow"><a class="wbtn" style="text-decoration:none" href="./workspace-go.html">Manage Go</a><a class="wbtn ghost" style="text-decoration:none" href="./workspace-billing.html">Billing</a></div></div>
-        <div class="ws-card"><h3>This month</h3><div class="big">$47.20</div><p>12.4K requests · 8.1M tokens across 4 sessions</p>
+        <div class="ws-card"><h2>Current plan</h2><div class="big">Standard · $9.9/mo</div><p>$70 model pool · renews Oct 1</p>
+          <div class="btnrow"><a class="wbtn" style="text-decoration:none" href="./workspace-plan.html">Coding Plan</a><a class="wbtn ghost" style="text-decoration:none" href="./workspace-billing.html">Billing</a></div></div>
+        <div class="ws-card"><h2>This month</h2><div class="big">$47.20</div><p>of $70.00 · 12.4K requests · 8.1M tokens</p>
           <div class="btnrow"><a class="wbtn ghost" style="text-decoration:none" href="./workspace-usage.html">View usage</a></div></div>
       </div>
+      <div class="ws-card" style="margin-bottom:14px"><h2>Windows at a glance</h2>
+        <div class="ubar"><i style="width:32%"></i></div>
+        <div class="urow"><span>6h rolling window · $4.80 of $15.00</span><span>32%</span></div>
+        <div class="ubar"><i style="width:53%"></i></div>
+        <div class="urow"><span>Weekly · $18.40 of $35.00</span><span>53%</span></div>
+        <div class="ubar"><i style="width:67%"></i></div>
+        <div class="urow"><span>Monthly · $47.20 of $70.00</span><span>67%</span></div>
+        <div class="ubar"><i style="width:21%"></i></div>
+        <div class="urow"><span>Reasoning sub-quota · $4.20 of $20.00</span><span>21%</span></div>
+      </div>
       <div class="ws-grid">
-        <div class="ws-card"><h3>Top models</h3>
+        <div class="ws-card"><h2>Top models</h2>
           <table class="utable"><thead><tr><th>Model</th><th class="num">Requests</th><th class="num">Share</th></tr></thead>
-          <tbody><tr><td>Claude Sonnet</td><td class="num">6,104</td><td class="num">49%</td></tr>
-          <tr><td>GPT-5.2</td><td class="num">3,208</td><td class="num">26%</td></tr>
-          <tr><td>Gemini 3 Pro</td><td class="num">1,930</td><td class="num">16%</td></tr>
-          <tr><td>Open models</td><td class="num">1,158</td><td class="num">9%</td></tr></tbody></table></div>
-        <div class="ws-card"><h3>Getting started</h3>
-          <ul class="check"><li>Top up credits before a big run</li>
+          <tbody><tr><td><code>deepseek-v4.1-flash</code></td><td class="num">6,104</td><td class="num">49%</td></tr>
+          <tr><td><code>tencent/hy3</code></td><td class="num">3,208</td><td class="num">26%</td></tr>
+          <tr><td><code>minimax-m3</code></td><td class="num">1,930</td><td class="num">16%</td></tr>
+          <tr><td><code>deepseek-v4.1-pro</code></td><td class="num">640</td><td class="num">5%</td></tr>
+          <tr><td><code>z-ai/glm-5.2</code></td><td class="num">380</td><td class="num">3%</td></tr>
+          <tr><td><code>claude-sonnet-5</code></td><td class="num">138</td><td class="num">1%</td></tr></tbody></table></div>
+        <div class="ws-card"><h2>Getting started</h2>
+          <ul class="check"><li>Run <code>sandbase setup</code> to link your clients</li>
           <li>Create an API key for CI usage</li>
-          <li>Invite members to pool credits</li>
-          <li>Set spend caps in Settings</li></ul>
-          <div class="btnrow"><a class="wbtn ghost" style="text-decoration:none" href="./workspace-usage.html">View usage</a></div></div>
+          <li>Turn on PAYG overflow before a long run</li>
+          <li>Invite members to share the pool</li></ul>
+          <div class="btnrow"><a class="wbtn ghost" style="text-decoration:none" href="./workspace-plan.html">Open Coding Plan</a></div></div>
       </div>
     </div></div>
-  </div>
+  </main>
 </div>
-<div id="toast" hidden></div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
 <script src="./chrome.js?v=4"></script>
 <script src="./i18n.js?v=4"></script>
 <script src="./common.js?v=4"></script>

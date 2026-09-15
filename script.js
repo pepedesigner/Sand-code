@@ -1,10 +1,10 @@
 // Sandcode clone interactions
 const cmds = {
   curl: 'curl -fsSL https://sandcode.ai/install | bash',
-  npm: 'npm i -g sandcode-ai',
-  bun: 'bun add -g sandcode-ai',
-  brew: 'brew install sandcode/tap/sandcode',
-  paru: 'paru -S sandcode'
+  npm: 'npm i -g sandbase-ai',
+  bun: 'bun add -g sandbase-ai',
+  brew: 'brew install sandbase/tap/sandbase',
+  paru: 'paru -S sandbase'
 };
 function initTabs(){
   const btns = document.querySelectorAll('.tabs button');
@@ -83,19 +83,23 @@ function initTerm(){
   const cmd = (seg)=>({ type:true, seg:seg });
   const out = (seg)=>({ type:false, seg:seg });
   const L = [
-    cmd([['t-prompt','$ '],['t-cmd','cd my-project']]),
-    cmd([['t-prompt','$ '],['t-cmd','sandcode']]),
-    out([['t-ok','⏺ '],['t-dim','Reading '],['t-file','AGENTS.md'],['t-dim',' · conventions loaded']]),
-    out([['t-ok','⏺ '],['t-dim','Indexed '],['t-num','1,284'],['t-dim',' files · '],['t-num','12'],['t-dim',' packages · '],['t-file','TypeScript']]),
-    out([['t-ok','⏺ '],['t-dim','Language servers ready · '],['t-file','tsserver'],['t-dim',', '],['t-file','eslint']]),
-    out([['t-key','▸ '],['t-strong','How can I help?']]),
+    cmd([['t-prompt','$ '],['t-cmd','npm i -g sandbase-ai']]),
+    cmd([['t-prompt','$ '],['t-cmd','sandbase setup']]),
     out([]),
-    cmd([['t-prompt','$ '],['t-cmd','sandcode '],['t-key','"Add rate limiting to the auth API"']]),
-    out([['t-ok','⏺ '],['t-dim','Planning — '],['t-num','2'],['t-dim',' steps']]),
-    out([['t-ok','⏺ '],['t-dim','Edit '],['t-file','src/middleware/rate-limit.ts'],['t-add','  +38'],['t-del','  −0']]),
-    out([['t-ok','⏺ '],['t-dim','Edit '],['t-file','src/routes/auth.ts'],['t-add','  +6'],['t-del','  −2']]),
-    out([['t-ok','✓ '],['t-dim','Tests '],['t-num','42'],['t-dim',' passed · '],['t-num','0'],['t-dim',' failed · 1.8s']]),
-    out([['t-ok','✓ '],['t-strong','Ready'],['t-dim',' — '],['t-num','2'],['t-dim',' files changed, '],['t-num','1'],['t-dim',' commit']])
+    out([['t-ok','⏺ '],['t-dim','[1/4] Detecting agent clients']]),
+    out([['t-ok','   ✔ '],['t-file','Cursor'],['t-dim','        ~/.cursor']]),
+    out([['t-ok','   ✔ '],['t-file','Claude Code'],['t-dim','   ~/.claude.json']]),
+    out([['t-ok','   ✔ '],['t-file','OpenCode'],['t-dim','      ~/.config/opencode']]),
+    out([['t-ok','⏺ '],['t-dim','[2/4] '],['t-file','alex@techstartup.io'],['t-dim',' · Standard · Active']]),
+    out([['t-ok','   ✔ '],['t-dim','This month '],['t-num','$41.60'],['t-dim',' of '],['t-num','$70.00'],['t-dim',' · 6h window free '],['t-num','$10.20']]),
+    out([['t-ok','⏺ '],['t-dim','[3/4] Endpoints and MCP tools']]),
+    out([['t-ok','   ✔ '],['t-file','Cursor'],['t-dim','        OpenAI endpoint · search + scrape']]),
+    out([['t-ok','   ✔ '],['t-file','Claude Code'],['t-dim','   Anthropic endpoint · transpiler on']]),
+    out([['t-ok','   ✔ '],['t-file','Local harness'],['t-dim','   syntax check · pytest/jest · git rollback']]),
+    out([['t-ok','⏺ '],['t-dim','[4/4] Rules & Skills Sync']]),
+    out([['t-ok','   ✔ '],['t-file','.sandbase/rules.md'],['t-dim',' → '],['t-file','.cursorrules'],['t-dim',', '],['t-file','CLAUDE.md']]),
+    out([]),
+    out([['t-key','🎉 '],['t-strong','Ready'],['t-dim',' — code in Cursor or Claude Code now.']])
   ];
 
   const segLen = (line)=> line.seg.reduce((n, s)=> n + s[1].length, 0);

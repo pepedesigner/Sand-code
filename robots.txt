@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+# The mock workspace app is demo-only — keep it out of the index.
+Disallow: /workspace-
+
+Sitemap: https://sandcode.ai/sitemap.xml
