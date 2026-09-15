@@ -1,8 +1,10 @@
 /* Sandcode i18n engine — EN ⇄ 中文, dictionary-driven, zero HTML edits.
    - Toggle is auto-injected into marketing navs + workspace topbars.
+   - Language follows the browser (zh* → 中文, anything else → English) until the
+     visitor flips the toggle, after which that choice is persisted.
    - Dictionaries (i18n-dict-*.js) lazily load on the first switch to 中文, so
-     page loads don't pay for ~540 entries nobody reads in EN mode. Pages with
-     中文 stored preload them from an inline bootstrap, which also gates the
+     page loads don't pay for ~850 entries nobody reads in EN mode. Pages with
+     中文 selected preload them from an inline bootstrap, which also gates the
      document so it never paints English first.
    - Static text nodes, placeholder/title/aria-label attrs and <title> swap.
    - The MutationObserver translates only the subtrees a mutation actually
@@ -27,8 +29,17 @@
 
   function dict() { return window.__I18N || {}; }
   function norm(s) { return s.replace(/\s+/g, ' ').trim(); }
+  // An explicit choice always wins. Otherwise follow the browser, which the
+  // inline bootstrap already resolved pre-paint into window.__sandLang — asking
+  // it again here keeps the first render and this engine in agreement.
   function lang() {
-    try { return localStorage.getItem(KEY) || 'en'; } catch (e) { return 'en'; }
+    try {
+      var saved = localStorage.getItem(KEY);
+      if (saved) return saved;
+    } catch (e) { /* private mode: fall through to the browser preference */ }
+    if (window.__sandLang) return window.__sandLang;
+    var n = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
+    return /^zh/i.test(n) ? 'zh' : 'en';
   }
 
   // dictionaries are only needed for 中文 — load once, on demand
