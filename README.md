@@ -96,7 +96,10 @@ The demo was originally built around opencode.ai and is rebranded for SandCode. 
 | OpenCode Zen | Sand Zen |
 | API base `opencode.ai/zen/v1` | `https://api.sandbase.ai/v1` |
 | API key prefix | `sb_live_` |
+| the console | **SandCode Console** |
 
-Note the split the spec draws and the rebrand keeps: **SandBase** is the platform (the API host, the key prefix, the console), **SandCode** is the coding plan sold on top of it. So the marketing domain is `sandcode.ai` while the API is `api.sandbase.ai` — that is not a typo.
+Note the split the spec draws and the rebrand keeps: **SandBase** is the platform underneath — the API host and the key prefix — while **SandCode** is everything the customer actually buys and touches: the plan, the CLI, and the console they manage it in. So the marketing domain is `sandcode.ai` while the API is `api.sandbase.ai`; that is not a typo.
+
+That last row is the one to be careful with. The API hostname says `sandbase`, and it is tempting to follow it into the product name — but the console is **SandCode Console**, and it is what a customer sees in their own tab and in the crumb. `SandBase Console` is wrong everywhere.
 
 Two figures on the site are fixed by the spec's canonical snapshot and are quoted from it verbatim, not derived: the month is **$41.60 of $70.00 ($28.40 left)**, and the cache multiplier is **2.8×** — the spec names 2.8× the only figure allowed externally, so the worked example on the Models page is built to reproduce it rather than to show the raw best case.
