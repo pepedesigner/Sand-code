@@ -21,6 +21,49 @@
     );
   }
 
+  function money(n) { return '$' + n.toFixed(2); }
+  function wallet() {
+    var el = $('balance-val');
+    return el ? (parseFloat(el.textContent.replace(/[^0-9.]/g, '')) || 0) : 0;
+  }
+  // a plausible-looking opaque token; nothing here is ever sent anywhere
+  function secret() {
+    var s = '';
+    while (s.length < 28) s += Math.random().toString(36).slice(2);
+    return 'sb_live_' + s.slice(0, 28);
+  }
+  function node(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text) n.textContent = text; // always textContent: names are user input
+    return n;
+  }
+
+  /* ---------- modal dialogs ----------
+     Native <dialog>, so focus trapping, Escape, focus restore and the inert
+     background are the platform's rather than ours. One at a time. */
+  var openDlg = null;
+  function openDialog(html) {
+    if (openDlg) openDlg.close();
+    var d = document.createElement('dialog');
+    d.className = 'ws-dialog';
+    d.innerHTML = html;
+    d.addEventListener('close', function () {
+      d.remove();
+      if (openDlg === d) openDlg = null;
+    });
+    // the platform reports a backdrop click as a click on the dialog itself
+    d.addEventListener('click', function (e) { if (e.target === d) d.close(); });
+    document.body.appendChild(d);
+    // <dialog> takes no accessible name from its contents, so point it at the
+    // heading — screen readers announce the dialog by its title
+    var h = d.querySelector('h2');
+    if (h) { h.id = 'dlg-title'; d.setAttribute('aria-labelledby', 'dlg-title'); }
+    openDlg = d;
+    d.showModal();
+    return d;
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     Sand.initTheme();
 
@@ -67,13 +110,39 @@
       });
     }
 
-    // billing: top-up bumps the wallet balance
+    // billing: top-up asks how much first, so the amount is a decision rather
+    // than a side effect of pressing the button
     var topup = $('topup-btn'), bal = $('balance-val');
     if (topup && bal) {
       topup.addEventListener('click', function () {
-        var cur = parseFloat(bal.textContent.replace(/[^0-9.]/g, '')) || 0;
-        bal.textContent = '$' + (cur + 20).toFixed(2);
-        toast('$20 added to your wallet — overflow is covered.');
+        var cur = wallet();
+        var d = openDialog(
+          '<h2>Top up your wallet</h2>' +
+          '<p class="dlg-sub">PAYG covers overflow once your plan quota is spent. It stays separate from the monthly pool, and it does not raise it.</p>' +
+          '<div class="dlg-field"><span class="dlg-label" id="dlg-amt-label">Amount</span>' +
+          '<div class="amt" role="radiogroup" aria-labelledby="dlg-amt-label">' +
+          [20, 50, 100].map(function (n, i) {
+            return '<label><input type="radio" name="dlg-amt" value="' + n + '"' + (i ? '' : ' checked') +
+              '><span>$' + n + '</span></label>';
+          }).join('') +
+          '</div></div>' +
+          '<div class="urow" style="margin-top:20px"><span>Wallet balance</span><span>' + money(cur) + '</span></div>' +
+          '<div class="urow"><span>After top-up</span><span id="dlg-after"></span></div>' +
+          '<div class="dlg-actions">' +
+          '<button class="wbtn ghost" type="button" data-close>Cancel</button>' +
+          '<button class="wbtn" type="button" data-confirm>Add funds</button></div>'
+        );
+        function pick() { return parseFloat(d.querySelector('input[name="dlg-amt"]:checked').value); }
+        var after = d.querySelector('#dlg-after');
+        d.querySelectorAll('input[name="dlg-amt"]').forEach(function (r) {
+          r.addEventListener('change', function () { after.textContent = money(cur + pick()); });
+        });
+        after.textContent = money(cur + pick());
+        d.querySelector('[data-confirm]').addEventListener('click', function () {
+          bal.textContent = money(cur + pick());
+          d.close();
+          toast('Funds added to your wallet — overflow is covered.');
+        });
       });
     }
 
@@ -95,38 +164,147 @@
         var dead = b.closest('tr');
         if (dead) dead.remove();
         toast('Key revoked.');
+      } else if (b.hasAttribute('data-close')) {
+        var dlg = b.closest('dialog');
+        if (dlg) dlg.close();
+      } else if (b.hasAttribute('data-role-set')) {
+        var v = window.__sandRole.set(b.getAttribute('data-role-set'));
+        closeAcct(false);
+        toast(v === 'staff' ? 'Viewing the console as the SandBase team.' : 'Viewing the console as a customer.');
+      } else if (b.hasAttribute('data-signout')) {
+        closeAcct(false);
+        signOutDialog();
       }
     });
+
+    /* ---------- account menu ---------- */
+    var acctBtn = $('acct-btn'), acctMenu = $('acct-menu');
+    function closeAcct(restore) {
+      if (!acctMenu || acctMenu.hidden) return;
+      acctMenu.hidden = true;
+      acctBtn.setAttribute('aria-expanded', 'false');
+      if (restore) acctBtn.focus();
+    }
+    function openAcct() {
+      acctMenu.hidden = false;
+      acctBtn.setAttribute('aria-expanded', 'true');
+      var first = acctMenu.querySelector('button');
+      if (first) first.focus();
+    }
+    if (acctBtn && acctMenu) {
+      acctBtn.addEventListener('click', function () {
+        if (acctMenu.hidden) openAcct(); else closeAcct(false);
+      });
+      acctBtn.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); openAcct(); }
+      });
+      // items are real buttons, so Tab order works; arrows just make the menu
+      // behave like one for people who reach for them (same as the language list)
+      acctMenu.addEventListener('keydown', function (e) {
+        var items = Array.prototype.slice.call(acctMenu.querySelectorAll('button'));
+        var i = items.indexOf(document.activeElement);
+        if (e.key === 'ArrowDown') { e.preventDefault(); (items[i + 1] || items[0]).focus(); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); (items[i - 1] || items[items.length - 1]).focus(); }
+      });
+      document.addEventListener('click', function (e) {
+        if (acctMenu.hidden) return;
+        if (!acctMenu.contains(e.target) && !acctBtn.contains(e.target)) closeAcct(false);
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !acctMenu.hidden) { e.stopPropagation(); closeAcct(true); }
+      });
+    }
+
+    function signOutDialog() {
+      var d = openDialog(
+        '<h2>Sign out?</h2>' +
+        '<p class="dlg-sub">You will need to sign in again to reach the console.</p>' +
+        '<div class="dlg-actions">' +
+        '<button class="wbtn ghost" type="button" data-close>Cancel</button>' +
+        '<button class="wbtn danger" type="button" data-go>Sign out</button></div>'
+      );
+      d.querySelector('[data-go]').addEventListener('click', function () {
+        d.close();
+        toast('Signed out.');
+        var go = d.querySelector('[data-close]');
+        if (go) go.blur();
+        setTimeout(function () { location.href = './index.html'; }, 1100);
+      });
+    }
+    // keys: creation is a two-step dialog — name it, then read the value once.
+    // That mirrors how a real revocable token works and is the only moment the
+    // secret exists client-side.
+    function addKeyRow(name, value) {
+      var tb = document.querySelector('#keys-table tbody');
+      if (!tb) return;
+      function cell(cls, text) {
+        var c = document.createElement('td');
+        if (cls) c.className = cls;
+        if (text) c.textContent = text;
+        return c;
+      }
+      function act(label, attr, val, cls) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'wbtn ' + cls;
+        b.textContent = label;
+        b.setAttribute(attr, val === null ? '' : val);
+        return b;
+      }
+      var actions = cell('num');
+      actions.append(
+        act('Copy', 'data-copy', value, 'ghost'),
+        act('Rotate', 'data-regen', null, 'ghost'),
+        act('Revoke', 'data-revoke', null, 'danger')
+      );
+      var tr = document.createElement('tr');
+      tr.append(cell(null, name), cell('mono', 'sb_live_••••' + value.slice(-4)), cell(null, 'never'), actions);
+      tb.prepend(tr);
+    }
+
+    function revealKey(d, value) {
+      while (d.firstChild) d.removeChild(d.firstChild);
+      var row = node('div', 'd-share');
+      var copy = node('button', 'wbtn ghost', 'Copy');
+      copy.type = 'button';
+      copy.setAttribute('data-copy', value); // the delegated handler owns the copy
+      row.append(node('code', null, value), copy);
+      var actions = node('div', 'dlg-actions');
+      var done = node('button', 'wbtn', 'Done');
+      done.type = 'button';
+      done.setAttribute('data-close', '');
+      actions.append(done);
+      var heading = node('h2', null, 'API key created');
+      heading.id = 'dlg-title'; // step 1's heading is gone; relabel the dialog
+      d.append(heading, node('p', 'dlg-sub', 'Copy it now — this is the only time it is shown.'), row, actions);
+      done.focus();
+    }
+
     var create = $('key-create');
     if (create) {
       create.addEventListener('click', function () {
-        var tb = document.querySelector('#keys-table tbody');
-        if (!tb) return;
-        var tag = Math.random().toString(16).slice(2, 6);
-        function cell(cls, text) {
-          var c = document.createElement('td');
-          if (cls) c.className = cls;
-          if (text) c.textContent = text;
-          return c;
-        }
-        function act(label, attr, value, cls) {
-          var b = document.createElement('button');
-          b.type = 'button';
-          b.className = 'wbtn ' + cls;
-          b.textContent = label;
-          b.setAttribute(attr, value === null ? '' : value);
-          return b;
-        }
-        var actions = cell('num');
-        actions.append(
-          act('Copy', 'data-copy', 'sb_live_mock_' + tag + '_key', 'ghost'),
-          act('Rotate', 'data-regen', null, 'ghost'),
-          act('Revoke', 'data-revoke', null, 'danger')
+        var d = openDialog(
+          '<h2>Create an API key</h2>' +
+          '<p class="dlg-sub">You will see the key once. Store it somewhere safe — it cannot be shown again.</p>' +
+          '<div class="dlg-field"><label class="dlg-label" for="dlg-key-name">Name</label>' +
+          '<input class="winput" id="dlg-key-name" autocomplete="off" placeholder="e.g. CI runner"></div>' +
+          '<div class="dlg-actions">' +
+          '<button class="wbtn ghost" type="button" data-close>Cancel</button>' +
+          '<button class="wbtn" type="button" data-create>Create key</button></div>'
         );
-        var tr = document.createElement('tr');
-        tr.append(cell(null, 'New key'), cell('mono', 'sb_live_••••' + tag), cell(null, 'never'), actions);
-        tb.prepend(tr);
-        toast('Key created — copy it now.');
+        var input = d.querySelector('#dlg-key-name');
+        function submit() {
+          var name = input.value.trim();
+          if (!name) { toast('Give the key a name first.'); input.focus(); return; }
+          var value = secret();
+          addKeyRow(name, value);
+          revealKey(d, value);
+        }
+        input.focus();
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') { e.preventDefault(); submit(); }
+        });
+        d.querySelector('[data-create]').addEventListener('click', submit);
       });
     }
 

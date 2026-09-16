@@ -41,13 +41,38 @@
     '</div>' +
     '<div class="wrap fbase"><span>©2026 SandCode</span><span>Demo site inspired by opencode.ai. All trademarks belong to their respective owners.</span><span style="margin-left:auto">English</span></div>';
 
+  // ---- roles ----
+  // Two audiences share this console. A customer sees only what belongs to
+  // their own workspace; our own team additionally gets the internal
+  // acquisition dashboard. The split is expressed as a single attribute on
+  // <html> (set pre-paint by the inline bootstrap) so CSS does the gating and
+  // switching roles needs no reload.
+  var ROLE_KEY = 'sandcode-role';
+  function role() {
+    try { return localStorage.getItem(ROLE_KEY) === 'staff' ? 'staff' : 'customer'; }
+    catch (e) { return 'customer'; }
+  }
+  // Flipping the attribute is the whole switch: the sidebar, the Growth gate and
+  // the menu's own checked state all key off it.
+  function setRole(next) {
+    var v = next === 'staff' ? 'staff' : 'customer';
+    try { localStorage.setItem(ROLE_KEY, v); } catch (e) { /* private mode */ }
+    document.documentElement.dataset.role = v;
+    document.querySelectorAll('[data-role-set]').forEach(function (b) {
+      b.setAttribute('aria-checked', b.dataset.roleSet === v ? 'true' : 'false');
+    });
+    return v;
+  }
+  window.__sandRole = { get: role, set: setRole };
+
   // ---- workspace sidebar + topbar ----
-  // grouped like the console it mirrors: [group label, [[href, text], …]]
+  // grouped like the console it mirrors: [group label, [[href, text, role], …]]
+  // a third element marks an entry only our team sees
   var WS_NAV = [
     ['Workspace', [
       ['workspace-overview.html', 'Overview'],
       ['workspace-plan.html', 'Coding Plan'],
-      ['workspace-growth.html', 'Growth']
+      ['workspace-growth.html', 'Growth', 'staff']
     ]],
     ['Spend', [
       ['workspace-usage.html', 'Usage'],
@@ -76,7 +101,12 @@
   function wsSideHtml() {
     var groups = WS_NAV.map(function (g) {
       return '<span>' + g[0] + '</span>' + g[1].map(function (l) {
-        return '<a href="./' + l[0] + '"' + (l[0] === page ? ' class="active" aria-current="page"' : '') + '>' + l[1] + '</a>';
+        var attrs = '';
+        if (l[0] === page) attrs += ' class="active" aria-current="page"';
+        // the entry stays in the DOM for every role and CSS hides it for
+        // customers — that keeps role switching a one-attribute change
+        if (l[2]) attrs += ' data-staff';
+        return '<a href="./' + l[0] + '"' + attrs + '>' + l[1] + '</a>';
       }).join('');
     }).join('');
     return '<div class="side-top">' +
@@ -86,12 +116,34 @@
       '<div class="side-foot"><a class="back-site" href="./index.html">← Back to site</a></div>';
   }
 
+  // The account menu carries the things that are about who you are rather than
+  // where you are: the identity, which audience you are viewing the console as,
+  // and signing out. aria-checked is seeded here so the menu is correct before
+  // workspace-pages.js takes over the interaction.
+  function acctMenuHtml() {
+    var r = role();
+    function opt(value, label) {
+      return '<button type="button" role="menuitemradio" data-role-set="' + value + '" aria-checked="' +
+        (r === value ? 'true' : 'false') + '">' + label + '</button>';
+    }
+    return '<div class="acct">' +
+      '<button class="avatar" id="acct-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Account">A</button>' +
+      '<div class="acct-menu" id="acct-menu" role="menu" aria-labelledby="acct-btn" hidden>' +
+      '<div class="acct-head"><b>alex@techstartup.io</b><span>Standard · $9.9/mo</span></div>' +
+      '<div class="acct-sep" role="separator"></div>' +
+      '<span class="acct-label">View as</span>' +
+      opt('customer', 'Customer') + opt('staff', 'SandBase team') +
+      '<div class="acct-sep" role="separator"></div>' +
+      '<button type="button" role="menuitem" data-signout>Sign out</button>' +
+      '</div></div>';
+  }
+
   function wsTopbarHtml() {
     return '<button id="menu-side" type="button" aria-label="Menu" aria-expanded="false" aria-controls="side">☰</button>' +
       '<div class="crumbs"><span>SandCode Console</span><span class="sep" aria-hidden="true">›</span><span id="crumb-sess">' + WS_CRUMB[page] + '</span></div>' +
       '<div class="top-actions">' + (WS_EXTRA[page] || '') +
       '<button id="theme-btn" class="theme-btn" type="button" title="Toggle theme" aria-label="Toggle theme">☾</button>' +
-      '<span class="avatar">A</span></div>';
+      acctMenuHtml() + '</div>';
   }
 
   function mount() {

@@ -244,3 +244,66 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,su
    the light canvas need a dark counterpart — and those live on `body` above. */
 body[data-theme="dark"] .switch em::after{background:var(--bg2)}
 body[data-theme="dark"] #side-scrim{background:rgba(0,0,0,.6)}
+
+/* ---------- roles ----------
+   Two audiences share this console: a customer sees their own workspace, our
+   team additionally sees the internal acquisition dashboard. The role lives on
+   <html> (set before first paint), so gating is pure CSS and switching needs no
+   reload. `:not([data-role="staff"])` rather than `[data-role="customer"]` on
+   purpose — with storage blocked the attribute is absent, and absent must mean
+   "customer", not "show everything". */
+html:not([data-role="staff"]) [data-internal],
+html:not([data-role="staff"]) [data-staff]{display:none}
+[data-gate]{display:none}
+html:not([data-role="staff"]) [data-gate]{display:flex}
+
+/* ---------- account menu ---------- */
+/* The top bar gets its own layer so the dropdown is not painted under the page
+   cards that follow it. 20 sits above content but below the mobile drawer
+   (--z-side), so an open drawer still covers the bar it was opened from. */
+#topbar{position:relative;z-index:20}
+.acct{position:relative;flex:none}
+/* .avatar doubles as a button here — buttons.css does not own this selector, so
+   the resets have to be explicit */
+button.avatar{padding:0;border:0;cursor:pointer;font-family:var(--font-mono)}
+button.avatar:hover{background:var(--mark-bg);color:var(--mark-fg)}
+.acct-menu{position:absolute;top:calc(100% + 10px);right:0;min-width:236px;background:var(--apanel);
+  border:1px solid var(--aline);border-radius:0;padding:6px;box-shadow:var(--shadow-pop);z-index:var(--z-menu)}
+.acct-menu[hidden]{display:none}
+.acct-head{padding:10px 12px 12px;display:flex;flex-direction:column;gap:3px}
+.acct-head b{font-size:var(--text-body-sm);color:var(--afg);font-weight:500}
+.acct-head span{font-family:var(--font-mono);font-size:var(--text-label-xs);color:var(--amut)}
+.acct-sep{height:1px;background:var(--aline);margin:6px 0}
+.acct-label{display:block;padding:6px 12px;font-family:var(--font-mono);font-size:var(--text-label-xs);
+  letter-spacing:var(--tracking-label);text-transform:uppercase;color:var(--adim)}
+.acct-menu button{display:block;width:100%;text-align:left;background:transparent;border:0;border-radius:0;
+  padding:10px 12px 10px 30px;font-family:var(--font-sans);font-size:var(--text-body-sm);color:var(--afg);
+  cursor:pointer;position:relative}
+.acct-menu button:hover{background:var(--tint-hover)}
+/* the check is not colour-only: the mark itself carries the state */
+.acct-menu [role="menuitemradio"][aria-checked="true"]::before{content:"✓";position:absolute;left:11px;
+  color:var(--accent);font-weight:600}
+.acct-menu [data-signout]{color:var(--red)}
+
+/* ---------- modal dialogs ----------
+   Native <dialog>, so focus trapping, Escape and the inert background are the
+   platform's job rather than ours. */
+.ws-dialog{width:min(470px,calc(100vw - 32px));background:var(--apanel);color:var(--afg);
+  border:1px solid var(--aline);border-radius:0;padding:26px;box-shadow:var(--shadow-pop)}
+.ws-dialog::backdrop{background:rgba(14,11,26,.5)}
+.ws-dialog h2{margin:0;font-family:var(--font-sans);font-size:var(--text-h);color:var(--afg)}
+.dlg-sub{margin:10px 0 0;color:var(--amut);font-size:var(--text-body-sm)}
+.dlg-field{margin-top:20px}
+.dlg-label{display:block;margin-bottom:9px;font-family:var(--font-mono);font-size:var(--text-label-xs);
+  letter-spacing:var(--tracking-label);text-transform:uppercase;color:var(--adim)}
+.dlg-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:24px}
+.amt{display:flex;gap:8px}
+.amt label{position:relative;flex:1}
+.amt input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.amt span{display:flex;align-items:center;justify-content:center;min-height:46px;background:var(--apanel2);
+  border:1px solid var(--aline);font-family:var(--font-mono);font-size:var(--text-body-sm);color:var(--afg)}
+.amt input:checked + span{background:var(--accent);border-color:var(--accent);color:var(--accent-strong)}
+.amt input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px}
+.ws-dialog .urow{margin-top:8px}
+.ws-dialog .d-share{margin-top:14px}
+body[data-theme="dark"] .ws-dialog::backdrop{background:rgba(0,0,0,.66)}

@@ -14,14 +14,14 @@ Everything the site needs runs offline: the fonts and the favicon are vendored l
 | `docs.html` | Docs — quickstart, endpoints, MCP tools, local harness, rules sync, migrate, rewards, errors, retention |
 | `download.html` | Install — CLI commands, the eight client integrations, GitHub connector, FAQ |
 | `enterprise.html` | Enterprise — no-training commitment, tiered retention, data residency, team seats, contact |
-| `workspace-*.html` | Mock console app (no backend): overview, coding plan, usage, billing, keys, members, growth, settings |
+| `workspace-*.html` | Mock console app (no backend): overview, coding plan, usage, billing, keys, members, growth, settings. **Growth is internal** — see Roles below |
 
 ## Structure
 
 - `chrome.js` — single source for shared shell: marketing nav + footer, console sidebar + topbar. It injects the chrome into empty placeholders (`<header class="site-header">`, `<footer>`, `<aside id="side">`, `<header id="topbar">`) and derives the active nav link from the current filename. The console sidebar is grouped (Workspace / Spend / Account) and the marketing nav collapses to a disclosure menu below 1024px, where it stops fitting on one line. Mounts synchronously so navigation between pages doesn't flash or jump.
 - `common.js` — shared helpers on `window.Sand`: theme (follows the OS `prefers-color-scheme` until the visitor picks one, then that choice is persisted across marketing + console, and drives the mobile `theme-color`) and clipboard with execCommand fallback.
 - `style.css` / `script.js` — shared marketing styles + interactions (tabs, copy fallback, mobile menu, waitlist, terminal typing, scroll reveals). **No animation library.** The hero entrance and the client marquee are CSS keyframes the compositor runs off the main thread; the scroll reveals, the stat count-up, the retracting header, the progress bar and back-to-top are IntersectionObserver plus one passive scroll listener. GSAP + ScrollTrigger used to do this and cost 46 KB gzipped — a third of the page — for easing the platform already provides.
-- `workspace.css` / `workspace-pages.js` — console app styles + mock interactions (theme, wallet top-up, key create/rotate/revoke, member invite, settings toasts). Every meter is drawn as discrete cells rather than a smooth fill — `.ubar` and the daily columns are tiled gradients on `--pitch` / `--pitch-v`, so the grid itself is the unit and the empty cells show the remaining quota. The daily columns are quantised to whole cells in JS so a column never ends mid-block. Dynamic rows are built with DOM APIs, never `innerHTML`.
+- `workspace.css` / `workspace-pages.js` — console app styles + mock interactions (theme, role switching, wallet top-up, key create/rotate/revoke, member invite, settings toasts). Money and key actions go through a native `<dialog>` rather than acting on click and hoping: topping up asks which amount, and creating a key is two steps because the secret exists once. Because it is a real modal, focus trapping, Escape, focus restore and the inert background come from the platform. Every meter is drawn as discrete cells rather than a smooth fill — `.ubar` and the daily columns are tiled gradients on `--pitch` / `--pitch-v`, so the grid itself is the unit and the empty cells show the remaining quota. The daily columns are quantised to whole cells in JS so a column never ends mid-block. Dynamic rows are built with DOM APIs, never `innerHTML`.
 - `tokens.css` — design tokens, single source of truth (type scale, surfaces, hairlines, radii, motion, layout, the `--z-*` stacking ladder, and the translucent `--chrome-bg` / `--tint-*` washes; **light default + re-derived dark**). Loaded before `style.css` / `workspace.css`; both build on it, and the app's `--a*` aliases are declared on `body` so the dark values actually reach them. Also carries the `.sr-only` utility.
 - `buttons.css` — the one button system used across both marketing and console surfaces. Square, ink-filled, flipping to the highlight colour on hover, plus an outlined secondary. It loads last and owns shape/size/type/state for every button; `style.css` and `workspace.css` only add fill, layout and the `.quad` quadrant component.
 - `chrome.css` — styles for the shell that `chrome.js` and `i18n.js` inject: the language picker and the skip link. A separate file because both surfaces need it — the marketing pages and the console each otherwise own only their own layout.
@@ -30,7 +30,24 @@ Everything the site needs runs offline: the fonts and the favicon are vendored l
 - `check-i18n.js` — dictionary lint: `node check-i18n.js` reports orphan keys (a key no page or script ever produces), duplicate keys within a language, and **coverage gaps** (a key another language translates and this one does not, which would silently fall back to English). Matching is exact, the way the engine looks strings up — substring matching would hide real orphans. Exits 1 on findings.
 - `remotion/` — a standalone Remotion intro video kept for marketing use. It is **not embedded in any page**; renders (`remotion/out/`, `poster.png`, `preview.gif`) are gitignored and distributed via GitHub Releases.
 - `robots.txt` / `sitemap.xml` — the six marketing pages are indexable; every `workspace-*.html` carries `noindex` (demo-only).
-- `favicon.svg` + og/twitter meta + `canonical` — shared social-card and SEO basics on every page. The card image is `assets/og.png` (1200×630), rendered from the same `fonts.css` / `tokens.css` the site ships: a throwaway page laid out at 1200×630 with `zoom:2`, screenshotted, downscaled with LANCZOS and quantised to a 64-colour palette (40 KB). Re-render it the same way after a token change rather than redrawing it by hand.
+- `favicon.svg` — the logo mark: the **S** and the **\*** taken as real outlines from the same Clash Grotesk instance the site ships (weight 550, converted to paths at build time), white on the accent with the asterisk in the highlight colour, square-cornered like everything else. Outlines rather than `<text>`, so the tab icon cannot silently fall back to a system face — which is what the old placeholder did for a year while the rest of the site changed identity.
+- og/twitter meta + `canonical` — shared social-card and SEO basics on every page. The card image is `assets/og.png` (1200×630), rendered from the same `fonts.css` / `tokens.css` the site ships: a throwaway page laid out at 1200×630 with `zoom:2`, screenshotted, downscaled with LANCZOS and quantised to a 64-colour palette (40 KB). Re-render it the same way after a token change rather than redrawing it by hand.
+
+## Roles
+
+The console has two audiences, chosen from the account menu (the avatar, top right):
+
+| Role | Sees |
+|------|------|
+| **Customer** (default) | Overview, Coding Plan, Usage, Billing, Keys, Members, Settings — their own workspace and nothing else |
+| **SandBase team** | The above, plus **Growth** — internal acquisition metrics, which are ours rather than a customer's |
+
+Growth is a real gate, not a hidden nav item: opened directly as a customer the page shows an "internal page" notice instead of the numbers, and the notice carries the switch itself, so the reviewer never has to hunt for the toggle.
+
+The role is one attribute on `<html>` (`data-role`), written by the inline bootstrap before first paint and by `chrome.js` on switch. Gating is therefore pure CSS and switching needs no reload. Two deliberate choices:
+
+- The CSS asks `html:not([data-role="staff"])` rather than matching `customer`. With storage blocked the attribute is absent, and **absent has to mean customer** — matching on the positive value would show the internal page to a visitor whose browser refuses `localStorage`.
+- The Growth entry is always in the sidebar DOM and hidden for customers, so the switch is a repaint rather than a re-render.
 
 ## Run locally
 
