@@ -58,7 +58,7 @@ button{font:inherit;color:inherit}
   display:flex;flex-direction:column;z-index:var(--z-side)}
 .side-top{display:flex;align-items:center;gap:10px;padding:20px 18px 14px}
 /* the reference wordmark: a plain grotesk logotype, no chip */
-.mini-logo{font-weight:550;letter-spacing:-.018em;font-size:17px;text-decoration:none;
+.mini-logo{font-weight:550;letter-spacing:-.018em;font-size:var(--text-lede);text-decoration:none;
   border:0;padding:0;border-radius:0;background:transparent;color:var(--afg)}
 .mini-logo span{color:var(--afg)}
 .mini-logo i{font-style:normal;color:var(--accent)}
@@ -126,6 +126,12 @@ button{font:inherit;color:inherit}
 .ws-card + .ws-card,.ws-card + .ws-grid,.ws-grid + .ws-card{margin-top:1px}
 .ws-card h2{margin:0 0 6px;color:var(--amut)}
 .ws-card p{margin:0;color:var(--amut);font-size:var(--text-body-sm)}
+/* bold inside a card paragraph is the number that matters — without this it stays
+   the muted body colour and the emphasis is weight-only, which reads as nothing */
+.ws-card p b{color:var(--afg)}
+/* the small explainer under a card's content. `.ws-card p` out-specifies a bare
+   `.ws-note`, so the card variant is named explicitly rather than relying on order. */
+.ws-note,.ws-card p.ws-note{margin-top:10px;font-size:var(--text-caption);color:var(--adim)}
 /* mono, like the reference's plan-value — sized to the longest value this
    console actually shows ('Standard · $9.9/mo'), not the biggest number */
 .ws-card .big{font-family:var(--font-mono);font-weight:500;font-size:clamp(1.75rem,1.4rem + 1.1vw,2.25rem);
@@ -153,7 +159,6 @@ button{font:inherit;color:inherit}
   font-size:var(--text-label-xs);letter-spacing:var(--tracking-label);text-transform:uppercase;color:var(--adim)}
 .utable{width:100%;border-collapse:collapse;font-size:var(--text-body-sm);margin-top:8px}
 .utable th,.utable td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--aline-soft);white-space:nowrap;vertical-align:middle}
-.member-role{height:40px}
 .utable th{color:var(--amut)}
 .utable tbody tr{transition:background .13s var(--ease)}
 .utable tbody tr:hover{background:var(--tint-hover)}
@@ -163,8 +168,21 @@ button{font:inherit;color:inherit}
 /* .wbtn shape/size/type/state live in buttons.css; the ghost hover wash is
    workspace-specific */
 .wbtn.ghost:hover{background:var(--accent);color:var(--accent-strong)}
-.winput,.wselect{background:var(--bg);border:1px solid var(--aline);border-radius:0;color:var(--afg);
+.winput,.wselect{background-color:var(--bg);border:1px solid var(--aline);border-radius:0;color:var(--afg);
   padding:11px 13px;font-size:var(--text-body-sm);font-family:inherit;width:100%}
+/* The platform arrow is the one glyph in the console we do not draw, and it sits
+   wherever the platform puts it — a different chevron from the one the language
+   picker draws, and not aligned to the value it belongs to. Suppressed and
+   redrawn as the same filled triangle .lang-caret uses, in currentColor so it
+   follows both themes without a second asset. background-color stays separate
+   from the image so the control keeps its fill. */
+.wselect{
+  -webkit-appearance:none;appearance:none;padding-right:38px;
+  background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),
+                   linear-gradient(135deg,currentColor 50%,transparent 50%);
+  background-position:calc(100% - 21px) 50%,calc(100% - 16px) 50%;
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat;
+}
 .winput:focus,.wselect:focus{outline:none;border-color:var(--accent)}
 .winput:focus-visible,.wselect:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 /* console pages do not load style.css, so the shared focus ring lives here too */
@@ -183,7 +201,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,su
 .switch input:checked + em{background:var(--accent)}
 .switch input:checked + em::after{transform:translateX(18px)}
 .switch input:focus-visible + em{outline:2px solid var(--accent);outline-offset:2px}
-.mono{font-family:var(--font-mono);font-size:12px}
+.mono{font-family:var(--font-mono);font-size:var(--text-caption)}
 /* Daily columns: a full-height track of empty cells with the lit ones stacked
    from the bottom. script.js quantises each value to a whole number of cells,
    so a column never ends mid-cell — the chart steps rather than slides. */
@@ -226,7 +244,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,su
 
 /* ---------- referral share row (members) ---------- */
 .d-share{display:flex;gap:8px;align-items:center}
-.d-share code{flex:1;min-width:0;font-family:var(--font-mono);font-size:11px;color:var(--panel-fg);
+.d-share code{flex:1;min-width:0;font-family:var(--font-mono);font-size:var(--text-label-sm);color:var(--panel-fg);
   background:var(--panel);padding:9px 10px;border-radius:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .d-share button{flex:none}
 

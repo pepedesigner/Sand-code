@@ -22,6 +22,8 @@
   --text-body:1rem;
   --text-body-sm:.9375rem;
   --text-body-xs:.90625rem;
+  --text-body-2xs:.8125rem;  /* 13px — small controls (.copy, .d-share button) */
+  --text-caption:.75rem;     /* 12px — table captions, footnotes, .mono */
   --text-label:.71875rem;
   --text-label-sm:.6875rem;
   --text-label-xs:.625rem;
