@@ -22,7 +22,7 @@
    - Unmapped nodes stay English. Persisted in localStorage. */
 (function () {
   var KEY = 'sandcode-lang';
-  var V = '?v=4'; // same cache-busting convention as the other assets
+  var V = '?v=5'; // same cache-busting convention as the other assets
   var ATTRS = ['placeholder', 'title', 'aria-label'];
   var DICT_FILES = ['i18n-dict-a.js', 'i18n-dict-b.js', 'i18n-dict-c.js'];
   var GATE = 'i18n-pending'; // set by the inline bootstrap, cleared here
@@ -176,8 +176,9 @@
     b.type = 'button';
     b.title = 'Language / 语言';
     b.setAttribute('aria-label', 'Switch language');
-    b.style.cssText = 'border:1px solid var(--line-strong,#1f1c19);background:transparent;color:inherit;' +
-      'border-radius:6px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer;flex:none;margin-left:8px;font-family:inherit;';
+    b.style.cssText = 'border:1px solid var(--line,#DBD8DF);background:transparent;color:var(--muted,#5D5969);' +
+      'border-radius:0;padding:8px 10px;font-family:var(--font-mono,monospace);font-size:11px;font-weight:500;' +
+      'letter-spacing:.08em;text-transform:uppercase;cursor:pointer;flex:none;margin-left:8px;';
     b.addEventListener('click', function () {
       setLang(lang() === 'zh' ? 'en' : 'zh');
     });

@@ -1,36 +1,44 @@
-/* Sandcode design tokens — Terminal Dark theme.
-   Dark-first: layered near-black surfaces, hairline borders, syntax-palette
-   accents. style.css (marketing) and workspace.css (dark app) both build on
-   these. Light mode is a separate re-derivation via body[data-theme="light"].
-   The translucent tints below are the other half of that: chrome that needs a
-   black wash on light uses one token instead of repeating a literal pair. */
+/* Sandcode design tokens — aligned with the SandBase design system.
+   Light-first: an off-white canvas, white surfaces, hairline borders, one
+   violet accent and a lime highlight. style.css (marketing) and
+   workspace.css (console) both build on these. Dark mode is a re-derivation
+   via body[data-theme="dark"].
+   Elevation comes from surface lightness + hairlines, NOT from shadows — the
+   system is flat and corners are square (--radius-button is the only shape
+   token). */
 :root{
   /* type */
-  --font-sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
-  --font-display:"Newsreader",Georgia,"Times New Roman",serif;  /* elegant serif for headings */
+  --font-sans:"Clash Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --font-mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
+  --font-display:var(--font-sans);  /* no serif face — headings use the grotesk */
 
-  /* brand accents = the syntax palette; syntax-func leads the UI */
-  --accent:#82AAFF;                          /* syntax-func — primary UI accent */
-  --accent-strong:#0A0B0D;                   /* accent-inverted foreground  */
-  --accent-soft:rgba(130,170,255,.12);       /* quiet accent wash           */
-  --success:#C3E88D;                         /* syntax-string — success state */
-  --red:#F07178;                             /* syntax-error — destructive    */
-  --green:#C3E88D;
+  /* type scale — mirrors the reference system (fluid where it needs to be) */
+  --text-hero:clamp(2.5rem,1.5rem + 3.4vw,3.75rem);
+  --text-h1:clamp(2rem,1.2rem + 2.5vw,2.8125rem);
+  --text-h2:clamp(1.75rem,1.35rem + 1.3vw,2.25rem);
+  --text-plan-value:clamp(2.25rem,1.8rem + 1.5vw,2.875rem);
+  --text-card-title:1.375rem;
+  --text-lede:1.0625rem;
+  --text-body:1rem;
+  --text-body-sm:.9375rem;
+  --text-body-xs:.90625rem;
+  --text-label:.71875rem;
+  --text-label-sm:.6875rem;
+  --text-label-xs:.625rem;
+  --tracking-label:.08em;
 
-  /* shape */
-  --radius:8px;
-  --radius-s:6px;
+  /* shape — square; only the toggle track is a pill */
+  --radius-button:0px;
   --pill:999px;
 
-  /* motion — precise, functional */
-  --ease:cubic-bezier(.16,1,.3,1);
+  /* motion */
+  --ease:cubic-bezier(.4,0,.2,1);
   --t-fast:.15s;
-  --t-med:.22s;
+  --t-med:.24s;
 
   /* layout */
-  --max:1080px;
-  --header-h:64px;
+  --max:1200px;            /* content measure */
+  --header-h:72px;
 
   /* stacking order — see the ladder, not a magic number, at each use site */
   --z-hero:-1;             /* hero dot canvas, inside the hero's own context */
@@ -41,39 +49,49 @@
   --z-fab:90;              /* back-to-top                        */
   --z-toast:99;            /* toast + scroll progress            */
 
-  /* ---- dark (primary design) :root == default ---- */
-  --bg:#0A0B0D;            /* bg-base     canvas          */
-  --bg2:#101216;           /* bg-surface  raised surfaces  */
-  --bg3:#16181D;           /* bg-elevated nav/popovers     */
-  --ink:#E6E8EB;           /* text-primary                 */
-  --muted:#9BA1AC;         /* text-secondary               */
-  --line:#1E2127;          /* border-subtle hairlines      */
-  --line-strong:#2A2E37;   /* border-strong                */
-  --card:#101216;          /* surface tiles                */
+  /* ---- light (primary design) :root == default ---- */
+  --bg:#F2F0F3;            /* bg-canvas   page canvas      */
+  --bg2:#FFFFFF;           /* bg-surface  raised surfaces  */
+  --bg3:#E7E4EA;           /* bg-surface-alt tints/trays   */
+  --ink:#0E0B1A;           /* text-primary                 */
+  --muted:#5D5969;         /* text-secondary               */
+  --line:#DBD8DF;          /* border-subtle hairlines      */
+  --line-strong:#0E0B1A;   /* border-strong / control edge */
+  --card:#FFFFFF;          /* surface tiles                */
+
+  /* brand accents.
+     --accent is the reference's violet, darkened just enough that it clears
+     WCAG AA as *text* on every surface it lands on (4.53 on the canvas was the
+     reference's value; 4.08 on --bg3/the mint band failed). #5A3AEB gives 5.72
+     on the canvas, 5.15 on the band and 6.48 on white. */
+  --accent:#5A3AEB;
+  --accent-strong:#FFFFFF; /* accent-inverted foreground   */
+  --mark-bg:#D9FF43;       /* lime highlight (the reference's tint-cyan) */
+  --mark-fg:#0E0B1A;
+  --positive:#3F7A1A;      /* success state                */
+  --red:#C0362C;           /* destructive                  */
+
+  --plate:#0E0B1A;         /* full-bleed dark band          */
+  --tint-mint:#E7E4EA;     /* quiet band                    */
 
   /* translucent chrome — one token per wash, re-derived below */
-  --chrome-bg:rgba(10,11,13,.82);      /* sticky header / app topbar */
-  --tint-soft:rgba(255,255,255,.015);  /* page-footer wash           */
-  --tint-panel:rgba(255,255,255,.02);  /* segmented-control tray     */
-  --tint-hover:rgba(255,255,255,.028); /* table row hover            */
-  --tint-track:rgba(255,255,255,.08);  /* progress / switch track    */
+  --chrome-bg:rgba(242,240,243,.86);   /* sticky header / app topbar */
+  --tint-hover:rgba(14,11,26,.045);    /* table row + nav hover      */
+  --tint-track:rgba(14,11,26,.12);     /* progress / switch track    */
 
-  /* code surfaces */
-  --code-bg:#0D0F12;       /* code block canvas            */
-  --code-fg:#E6E8EB;
-  /* accents that always sit on the dark code canvas (dark in both themes) */
-  --code-bright:#C792EA;   /* syntax-keyword in code boxes  */
-  --code-success:#C3E88D;  /* syntax-string / prompt in box */
-  --code-muted:#9BA1AC;    /* secondary text in code boxes  */
-  --code-accent:#82AAFF;   /* syntax-func — paths in code   */
-  --code-warn:#E3B341;     /* syntax-number — counts in code */
+  /* code surfaces — dark in both themes, like the reference's bg-panel */
+  --panel:#0E0B1A;
+  --panel-fg:#F2F0F3;
+  --code-fg:#F2F0F3;
+  --code-bright:#C9B8FF;   /* syntax-keyword in code boxes  */
+  --code-muted:#A29EA9;    /* secondary text in code boxes  */
+  --code-accent:#D9FF43;   /* syntax-func — paths in code   */
+  --code-warn:#FFCF6B;     /* syntax-number — counts in code */
 
-  /* elevation — depth from lightness + hairlines, NOT shadows */
-  --shadow:none;
-  --shadow-app:0 10px 30px rgba(0,0,0,.35);
-  --shadow-pop:0 16px 40px rgba(0,0,0,.5);
+  /* the one shadow in the system: the toast, which floats over content */
+  --shadow-pop:0 16px 40px -14px rgba(14,11,26,.32);
 
-  color-scheme:dark;
+  color-scheme:light;
 }
 
 /* visually hidden, still exposed to assistive tech — used for table/action
@@ -81,35 +99,40 @@
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-/* ---- light: re-derived, not an inversion ---- */
-body[data-theme="light"]{
-  --bg:#F7F8FA;            /* light canvas (#F7F8FA, not #FFF) */
-  --bg2:#FFFFFF;
-  --bg3:#EEF0F4;
-  --ink:#1A1C20;           /* text-primary (not #000)          */
-  --muted:#4B5158;
-  --line:#DDE0E6;          /* hairline                          */
-  --line-strong:#C3C8D0;
-  --card:#FFFFFF;
+/* ---- dark: re-derived, not an inversion ---- */
+body[data-theme="dark"]{
+  --bg:#0E0B1A;            /* deep indigo canvas */
+  --bg2:#241D44;
+  --bg3:#2E2656;
+  --ink:#F2F0F3;           /* text-primary (not #FFF) */
+  --muted:#A29EA9;
+  --line:#332D4F;
+  --line-strong:#F2F0F3;
+  --card:#241D44;
 
-  /* the same washes, flipped to black on a light canvas */
-  --chrome-bg:rgba(247,248,250,.85);
-  --tint-soft:rgba(26,28,32,.015);
-  --tint-panel:rgba(26,28,32,.02);
-  --tint-hover:rgba(26,28,32,.03);
-  --tint-track:rgba(26,28,32,.12);
+  /* the accent flips to the lime, and the highlight to the violet */
+  --accent:#D9FF43;
+  --accent-strong:#0E0B1A;
+  --mark-bg:#8B6FFF;
+  --mark-fg:#0E0B1A;
+  --positive:#D9FF43;
+  --red:#FF8A80;
 
-  --code-bg:#101418;
-  --code-fg:#E6E8EB;       /* code blocks stay dark on light mode */
+  --plate:#1E1936;
+  --tint-mint:#1A1531;
 
-  /* re-picked syntax accents that pass on light surfaces */
-  --accent:#3B6AF0;        /* syntax-func (deeper for contrast) */
-  --accent-soft:rgba(59,106,240,.12);
-  --success:#2E8B57;
-  --red:#D64550;
-  --green:var(--success);  /* --green is the app-facing alias of --success */
+  /* the same washes, flipped to white on a dark canvas */
+  --chrome-bg:rgba(14,11,26,.85);
+  --tint-hover:rgba(242,240,243,.05);
+  --tint-track:rgba(242,240,243,.16);
 
-  --shadow:0 1px 2px rgba(20,22,26,.05),0 10px 28px -12px rgba(20,22,26,.18);
+  /* the code panel is the raised purple, as in the reference */
+  --panel:#3A3070;
+  /* the panel is lighter here, so its secondary text has to be too — #A29EA9
+     only reaches 4.36:1 on #3A3070. This is the reference's panel-fg-muted. */
+  --code-muted:#B3AFC1;
 
-  color-scheme:light;
+  --shadow-pop:0 20px 48px -14px rgba(0,0,0,.6);
+
+  color-scheme:dark;
 }

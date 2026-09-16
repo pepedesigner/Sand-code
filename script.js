@@ -267,7 +267,7 @@ function initHeroDots(){
 
   let w = 0, h = 0, cols = 0, rows = 0, ox = 0, oy = 0, dpr = 1;
   let heat = new Float32Array(1);
-  let dotColor = '#9BA1AC', hotColor = '#82AAFF';
+  let dotColor = '#5D5969', hotColor = '#6A4CFF';
   let px = -1e5, py = -1e5, hovering = false, raf = 0, pending = 0;
 
   function readColors(){

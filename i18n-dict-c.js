@@ -5,6 +5,9 @@ Object.assign(window.__I18N, {
   /* ---- console chrome (chrome.js) ---- */
   'SandCode Console': 'SandCode 控制台',
   'Menu': '菜单',
+  'Workspace': '工作台',
+  'Spend': '消费',
+  'Account': '账户',
   'Overview': '概览',
   'Usage': '用量',
   'Billing': '账单',

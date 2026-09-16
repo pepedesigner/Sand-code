@@ -42,16 +42,25 @@
     '<div class="wrap fbase"><span>©2026 SandCode</span><span>Demo site inspired by opencode.ai. All trademarks belong to their respective owners.</span><span style="margin-left:auto">English</span></div>';
 
   // ---- workspace sidebar + topbar ----
+  // grouped like the console it mirrors: [group label, [[href, text], …]]
   var WS_NAV = [
-    ['workspace-overview.html', 'Overview'],
-    ['workspace-plan.html', 'Coding Plan'],
-    ['workspace-usage.html', 'Usage'],
-    ['workspace-billing.html', 'Billing'],
-    ['workspace-keys.html', 'Keys'],
-    ['workspace-members.html', 'Members'],
-    ['workspace-growth.html', 'Growth'],
-    ['workspace-settings.html', 'Settings']
+    ['Workspace', [
+      ['workspace-overview.html', 'Overview'],
+      ['workspace-plan.html', 'Coding Plan'],
+      ['workspace-growth.html', 'Growth']
+    ]],
+    ['Spend', [
+      ['workspace-usage.html', 'Usage'],
+      ['workspace-billing.html', 'Billing']
+    ]],
+    ['Account', [
+      ['workspace-keys.html', 'Keys'],
+      ['workspace-members.html', 'Members'],
+      ['workspace-settings.html', 'Settings']
+    ]]
   ];
+  // crumbs keep their own labels ('API keys' reads better than the nav's
+  // 'Keys'), and double as the "is this a workspace page" test in mount()
   var WS_CRUMB = {
     'workspace-overview.html': 'Overview',
     'workspace-plan.html': 'Coding Plan',
@@ -65,19 +74,21 @@
   var WS_EXTRA = { 'workspace-plan.html': '<span class="model-badge">Standard · $9.9/mo</span>' };
 
   function wsSideHtml() {
-    var links = WS_NAV.map(function (l) {
-      return '<a href="./' + l[0] + '"' + (l[0] === page ? ' class="active" aria-current="page"' : '') + '>' + l[1] + '</a>';
+    var groups = WS_NAV.map(function (g) {
+      return '<span>' + g[0] + '</span>' + g[1].map(function (l) {
+        return '<a href="./' + l[0] + '"' + (l[0] === page ? ' class="active" aria-current="page"' : '') + '>' + l[1] + '</a>';
+      }).join('');
     }).join('');
     return '<div class="side-top">' +
       '<a class="mini-logo" href="./index.html"><span>Sand</span>Code<i>*</i></a>' +
       '<span class="env-pill"><span class="pulse"></span>api.sandcode.ai</span></div>' +
-      '<nav class="ws-nav" aria-label="Console"><span>Console</span>' + links + '</nav>' +
+      '<nav class="ws-nav" aria-label="Console">' + groups + '</nav>' +
       '<div class="side-foot"><a class="back-site" href="./index.html">← Back to site</a></div>';
   }
 
   function wsTopbarHtml() {
     return '<button id="menu-side" type="button" aria-label="Menu" aria-expanded="false" aria-controls="side">☰</button>' +
-      '<div class="crumbs"><span>SandCode Console</span><span class="sep">›</span><span id="crumb-sess">' + WS_CRUMB[page] + '</span></div>' +
+      '<div class="crumbs"><span>SandCode Console</span><span class="sep" aria-hidden="true">›</span><span id="crumb-sess">' + WS_CRUMB[page] + '</span></div>' +
       '<div class="top-actions">' + (WS_EXTRA[page] || '') +
       '<button id="theme-btn" class="theme-btn" type="button" title="Toggle theme" aria-label="Toggle theme">☾</button>' +
       '<span class="avatar">A</span></div>';
