@@ -41,27 +41,29 @@
 
   /* ---------- modal dialogs ----------
      Native <dialog>, so focus trapping, Escape, focus restore and the inert
-     background are the platform's rather than ours. One at a time. */
-  var openDlg = null;
+     background are the platform's rather than ours. One dialog at a time.
+     The element is built once and reused: tearing it down on close would mean
+     hanging cleanup off the `close` event, and that event is not dependable
+     enough to be the only thing standing between the page and a leaked modal
+     per interaction. Reusing it also makes the two-step key flow a content
+     swap rather than a second element. */
+  var dlg = null;
   function openDialog(html) {
-    if (openDlg) openDlg.close();
-    var d = document.createElement('dialog');
-    d.className = 'ws-dialog';
-    d.innerHTML = html;
-    d.addEventListener('close', function () {
-      d.remove();
-      if (openDlg === d) openDlg = null;
-    });
-    // the platform reports a backdrop click as a click on the dialog itself
-    d.addEventListener('click', function (e) { if (e.target === d) d.close(); });
-    document.body.appendChild(d);
+    if (!dlg) {
+      dlg = document.createElement('dialog');
+      dlg.className = 'ws-dialog';
+      // the platform reports a backdrop click as a click on the dialog itself
+      dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+      document.body.appendChild(dlg);
+    }
+    if (dlg.open) dlg.close();
+    dlg.innerHTML = html;
     // <dialog> takes no accessible name from its contents, so point it at the
     // heading — screen readers announce the dialog by its title
-    var h = d.querySelector('h2');
-    if (h) { h.id = 'dlg-title'; d.setAttribute('aria-labelledby', 'dlg-title'); }
-    openDlg = d;
-    d.showModal();
-    return d;
+    var h = dlg.querySelector('h2');
+    if (h) { h.id = 'dlg-title'; dlg.setAttribute('aria-labelledby', 'dlg-title'); }
+    dlg.showModal();
+    return dlg;
   }
 
   document.addEventListener('DOMContentLoaded', function () {
