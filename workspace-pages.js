@@ -48,7 +48,7 @@
     // usage: daily bars
     var bars = $('daily-bars');
     if (bars) {
-      var vals = [1.2, 2.1, 1.6, 3.4, 2.8, 4.6, 3.1, 2.4, 5.2, 3.8, 4.1, 2.9, 3.6, 4.4];
+      var vals = [1.2, 2.1, 1.6, 3.4, 2.8, 5.6, 3.1, 2.4, 5.2, 3.8, 4.1, 2.9, 3.6, 5.4]; // sums to the $47.20 headline
       var max = Math.max.apply(null, vals);
       bars.innerHTML = vals.map(function (v) {
         return '<div style="height:' + Math.round((v / max) * 100) + '%" title="$' + v.toFixed(2) + '"></div>';

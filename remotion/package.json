@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "render": "remotion render src/index.ts SandcodeIntro out/sandcode-intro.mp4",
-    "still": "remotion still src/index.ts SandcodeIntro",
+    "poster": "remotion still src/index.ts SandcodeIntro out/poster.png --frame=120",
+    "preview": "remotion render src/index.ts SandcodeIntro out/preview.gif --codec=gif --every-nth-frame=3",
     "studio": "remotion studio src/index.ts"
   },
   "dependencies": {
-    "@remotion/cli": "^4.0.0",
-    "@remotion/google-fonts": "^4.0.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "remotion": "^4.0.0"
+    "@remotion/cli": "4.0.520",
+    "@remotion/google-fonts": "4.0.520",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.520"
   }
 }

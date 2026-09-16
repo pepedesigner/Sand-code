@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SandCode Pricing | Flat-rate coding compute</title>
-<meta name="description" content="SandCode plans — $9.9/mo for a $70 model pool, a rolling 6h window, daily burst and PAYG overflow. Bundled search and scrape. Never hard-capped.">
+<meta name="description" content="SandCode plans — $9.9/mo for a $70 model pool, a rolling 6h window, daily burst and PAYG overflow. Bundled search and scrape. No wall at the window; the monthly pool is the only ceiling.">
 <link rel="stylesheet" href="./fonts.css?v=4">
 <link rel="stylesheet" href="./tokens.css?v=4">
 <link rel="stylesheet" href="./style.css?v=4">
@@ -10,7 +10,7 @@
 <link rel="preload" as="font" type="font/woff2" href="./fonts/inter-normal-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="./fonts/newsreader-normal-latin.woff2" crossorigin>
 <meta property="og:title" content="SandCode Pricing | Flat-rate coding compute">
-<meta property="og:description" content="SandCode plans — $9.9/mo for a $70 model pool, a rolling 6h window, daily burst and PAYG overflow. Bundled search and scrape. Never hard-capped.">
+<meta property="og:description" content="SandCode plans — $9.9/mo for a $70 model pool, a rolling 6h window, daily burst and PAYG overflow. Bundled search and scrape. No wall at the window; the monthly pool is the only ceiling.">
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://sandcode.ai/pricing.html">
 <meta property="og:url" content="https://sandcode.ai/pricing.html">
@@ -29,7 +29,7 @@
 <main class="wrap">
 <div class="hero" style="text-align:center">
 <div class="badge">Plans — one price, every client</div>
-<h1>Flat-rate coding compute.<br>Never hard-capped.</h1>
+<h1>Flat-rate coding compute.<br>No wall at the window.</h1>
 <p class="sub" style="margin-left:auto;margin-right:auto">A $70 model pool, bundled search and scrape, and a local verification harness — shared across Cursor, Claude Code and OpenCode.</p>
 <div class="hero-ctas"><a class="btn" href="./download.html">Start with Standard</a><a class="btn light" href="./docs.html">Read the docs</a></div>
 </div>
@@ -216,7 +216,7 @@
 <h2>Questions, answered.</h2>
 <div class="faq">
 <details open><summary>Why isn't there a $1 plan?</summary><p>After fixed payment fees, a $1 plan earns almost nothing and mostly attracts bulk-created accounts. We use a $4.9 first month plus a $5 trial instead, which filters abuse and still costs less than a coffee.</p></details>
-<details><summary>Does the daily burst add to my monthly quota?</summary><p>No. A burst raises the ceiling of the current 6h window only — $15 to $20 on Standard. Everything you spend still counts against the monthly pool, which never changes.</p></details>
+<details><summary>Does the daily burst add to my monthly quota?</summary><p>No. A burst raises the ceiling of the current 6h window only — $15 to $20 on Standard. Everything you spend still counts against the monthly pool, which the burst does not raise.</p></details>
 <details><summary>Can unused quota roll over?</summary><p>No. Quota is monthly and resets at the end of the cycle. Rollover would make our compute cost unpredictable, which is exactly what the flat price depends on.</p></details>
 <details><summary>Why 402 and not 429 when I run out?</summary><p>Clients like Claude Code retry automatically on 429. Using 429 for "out of quota" would trigger a retry storm and burn compute. 402 tells the client to stop and ask you to top up or wait.</p></details>
 <details><summary>Can I use one subscription across several clients?</summary><p>Yes. The quota pool and the five-request concurrency limit are shared across every client on the account — Cursor, Claude Code and OpenCode at the same time.</p></details>

@@ -67,10 +67,10 @@ Object.assign(window.__I18N, {
   'PAYG wallet balance': 'PAYG 钱包余额',
 
   /* ---- usage ---- */
-  'Last 14 days · per-model and per-client · mock data.': '近 14 天 · 分模型与分客户端 · 演示数据。',
-  'Spend · 14d': '花费 · 14 天',
+  'This month so far · per-model and per-client · mock data.': '本月至今 · 分模型与分客户端 · 演示数据。',
+  'Spend · month': '花费 · 本月',
   'vs $51.90 previous period': '上期 $51.90',
-  'Requests · 14d': '请求 · 14 天',
+  'Requests · month': '请求 · 本月',
   '8.1M tokens · 96% tool-call success': '8.1M token · 工具调用成功率 96%',
   'Daily spend': '每日花费',
   'By model': '分模型',
@@ -213,8 +213,8 @@ Object.assign(window.__I18N, {
   'Sep 1, 2026': '2026 年 9 月 1 日',
   'Aug 1, 2026': '2026 年 8 月 1 日',
   'Jul 1, 2026': '2026 年 7 月 1 日',
-  'Aug 22': '8 月 22 日',
-  'Sep 4': '9 月 4 日',
+  'Sep 1': '9 月 1 日',
+  'Sep 14': '9 月 14 日',
 
   /* ---- growth ---- */
   'Owner view · referral and activation metrics · mock data.': '所有者视角 · 邀请与激活指标 · 演示数据。',
@@ -238,7 +238,7 @@ Object.assign(window.__I18N, {
   'Referral': '裂变',
   'Community, content and ads': '社区、内容与投放',
   'Blended': '混合',
-  'A successful invite costs $1.80, not $10 — the reward is nominal quota, so the real spend is its wholesale cost at a 60% redemption rate.': '一次成功邀请的成本是 $1.80，而非 $10——奖励是名义额度，真实支出只是它的批发成本，并按 60% 兑付率折算。',
+  'A successful invite costs $1.80, not $10 — the reward is nominal quota, so the real spend is its wholesale cost at a 61% redemption rate.': '一次成功邀请的成本是 $1.80，而非 $10——奖励是名义额度，真实支出只是它的批发成本，并按 61% 兑付率折算。',
   'Reward guardrails': '奖励护栏',
   'Budget cap: 8% of monthly MRR, measured at actual cost ($1.80 per successful invite)': '预算上限：当月 MRR 的 8%，按实际成本计（每次成功邀请 $1.80）',
   'Lifetime cap: $50 in rewards per account': '终身上限：单账号奖励累计 $50',

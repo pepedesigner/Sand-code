@@ -1,0 +1,20 @@
+# GitHub Pages serves this repository from the branch root, so every tracked
+# file becomes a public URL. The site's own assets are meant to be there; the
+# engineering files are not:
+#
+#   README.md      documents where the copy came from and what it was rebranded
+#                  from, which is not something a marketing URL should carry
+#   check-i18n.js  local dictionary lint, a development tool
+#   remotion/      the video project: sources, npm manifests, and full-page
+#                  screenshots of an earlier version of the site
+#
+# Note this is the Jekyll build being told what to skip. It stops working if the
+# site is ever switched to an Actions build or a .nojekyll file is added, in
+# which case the site needs to be published from a subdirectory instead.
+exclude:
+  - README.md
+  - check-i18n.js
+  - remotion
+  - node_modules
+  - Gemfile
+  - Gemfile.lock

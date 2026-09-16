@@ -202,7 +202,7 @@ const Cta: React.FC = () => {
             borderRadius: 999,
           }}
         >
-          Get Sandcode
+          Get SandCode
         </div>
         <div style={{fontFamily: MONO, fontSize: 25, color: MUTED, marginTop: 28}}>
           curl -fsSL https://sandcode.ai/install | bash

@@ -132,7 +132,7 @@ Object.assign(window.__I18N, {
   'Why isn\'t there a $1 plan?': '为什么没有 $1 套餐？',
   'After fixed payment fees, a $1 plan earns almost nothing and mostly attracts bulk-created accounts. We use a $4.9 first month plus a $5 trial instead, which filters abuse and still costs less than a coffee.': '扣除固定支付手续费后，$1 套餐几乎不赚钱，反而最容易招来批量注册的薅羊毛账号。我们改用「首月 $4.9 + $5 试用额度」，既能过滤滥用，也比一杯咖啡便宜。',
   'Does the daily burst add to my monthly quota?': '每日 Burst 会增加我的月度额度吗？',
-  'No. A burst raises the ceiling of the current 6h window only — $15 to $20 on Standard. Everything you spend still counts against the monthly pool, which never changes.': '不会。Burst 只把当前 6h 窗口的上限从 $15 提到 $20（标准版）。所有消耗照常计入月度额度池，月度上限始终不变。',
+  'No. A burst raises the ceiling of the current 6h window only — $15 to $20 on Standard. Everything you spend still counts against the monthly pool, which the burst does not raise.': '不会。Burst 只把当前 6h 窗口的上限从 $15 提到 $20（标准版）。所有消耗照常计入月度额度池，Burst 不会抬高它。',
   'Can unused quota roll over?': '没用完的额度能结转吗？',
   'No. Quota is monthly and resets at the end of the cycle. Rollover would make our compute cost unpredictable, which is exactly what the flat price depends on.': '不能。额度按月计算，周期结束即清零。若允许结转，我们的算力成本将无法预测，而固定价格恰恰依赖这种可预测性。',
   'Why 402 and not 429 when I run out?': '额度耗尽时为什么是 402 而不是 429？',

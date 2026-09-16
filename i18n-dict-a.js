@@ -31,7 +31,7 @@ Object.assign(window.__I18N, {
   'English': '中文',
 
   /* ---- homepage hero ---- */
-  'New · A rolling 6h window, daily burst and PAYG overflow — never hard-capped': '新 · 6 小时滚动窗口、每日 Burst 与 PAYG 接力——永不硬拦截',
+  'New · A rolling 6h window, daily burst and PAYG overflow — no wall at the window': '新 · 6 小时滚动窗口、每日 Burst 与 PAYG 接力——窗口永不硬停',
   'See how →': '了解机制 →',
   'Flat-rate compute for': '为',
   'every': '每一个',
@@ -47,7 +47,7 @@ Object.assign(window.__I18N, {
   'Six things developers keep hitting with per-token billing — and what we do instead.': '按量计费下开发者反复踩的六个坑——以及我们的解法。',
   'A flat $9.9, not a meter.': '固定 $9.9，不是计价器。',
   'A $70 model pool you spend down at list price. No per-token invoice, no bracing before you press enter.': '$70 模型额度池，按官方牌价扣减。没有按 token 账单，回车前不必先心疼。',
-  'Never hard-capped.': '永不硬拦截。',
+  'No wall at the window.': '窗口永不硬停。',
   'A rolling 6h window, a daily burst that lifts its ceiling, then your PAYG wallet takes over. The agent keeps working.': '6 小时滚动窗口、每日一次抬升上限的 Burst，之后由 PAYG 钱包自动接力。智能体不会停。',
   'Eyes on the world.': '给智能体一双眼睛。',
   '500 search and 500 scrape calls a month, injected over MCP. The agent checks the docs instead of inventing an API.': '每月 500 次搜索 + 500 次抓取，通过 MCP 自动注入。智能体会去查文档，而不是编接口。',
@@ -166,7 +166,7 @@ Object.assign(window.__I18N, {
   ', then run': '，然后运行',
   '. It detects your clients, links your account and injects the endpoints and MCP tools in one pass.': '。它会自动识别你的客户端、关联账号，并一次性注入端点与 MCP 工具。',
   'Does the daily burst raise my monthly quota?': '每日 Burst 会增加我的月度额度吗？',
-  'No. It only raises the ceiling of the current 6h window — $15 to $20 on Standard. Spend still counts against the monthly pool, which never changes.': '不会。它只把当前 6h 窗口的上限从 $15 抬到 $20（标准版）。消耗照常计入月度额度池，月度上限始终不变。',
+  'No. It only raises the ceiling of the current 6h window — $15 to $20 on Standard. Spend still counts against the monthly pool, which the burst does not raise.': '不会。它只把当前 6h 窗口的上限从 $15 抬到 $20（标准版）。消耗照常计入月度额度池，Burst 不会抬高它。',
   'Can unused quota roll over to next month?': '没用完的额度能结转到下月吗？',
   'No. Quota is monthly and resets at the end of the cycle. Rollover would make compute cost unpredictable, and the flat price depends on it staying predictable.': '不能。额度按月计算，周期结束即清零。若允许结转，算力成本将无法预测，而固定价格正建立在这种可预测性上。',
   'Why does running out return 402 and not 429?': '为什么额度耗尽是 402 而不是 429？',
