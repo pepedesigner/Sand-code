@@ -23,7 +23,7 @@
    - Unmapped nodes stay English. Persisted in localStorage. */
 (function () {
   var KEY = 'sandcode-lang';
-  var V = '?v=10'; // same cache-busting convention as the other assets
+  var V = '?v=14'; // same cache-busting convention as the other assets
   var ATTRS = ['placeholder', 'title', 'aria-label'];
   var GATE = 'i18n-pending'; // set by the inline bootstrap, cleared here
   var DEBOUNCE = 120;

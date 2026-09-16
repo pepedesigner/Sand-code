@@ -246,12 +246,24 @@ body[data-theme="dark"] .switch em::after{background:var(--bg2)}
 body[data-theme="dark"] #side-scrim{background:rgba(0,0,0,.6)}
 
 /* ---------- auth gate ----------
-   The console is behind a sign-in. The redirect is done by the inline bootstrap
-   in each workspace-*.html, before first paint; it also sets `auth-pending` so
-   that a slow redirect cannot flash the console to a visitor who is not signed
-   in. Hiding `body` covers the whole page — the shell, the cards and the toast
-   all live inside it. */
-html.auth-pending body{visibility:hidden}
+   The console is behind a sign-in, and the gate fails closed: `auth-locked` is
+   in the markup itself, so the page starts hidden and the inline bootstrap has
+   to *earn* the reveal by finding a session. The other way round — hide from
+   script — means every way of not running that script (scripting off, an
+   extension, a CSP that refuses inline script, a parse error earlier in the
+   head) hands the whole console to a signed-out visitor, which is the one
+   outcome the gate exists to prevent.
+
+   Hiding `body` covers everything: the shell, the cards and the toast all live
+   inside it. */
+html.auth-locked body{visibility:hidden}
+/* visibility is inherited but overridable, so the no-JS notice can sit inside
+   the hidden body and still be the one thing on screen */
+html.auth-locked .auth-nojs{visibility:visible}
+.auth-nojs{position:relative;z-index:var(--z-toast);max-width:520px;margin:18vh auto 0;padding:0 22px;
+  font-family:var(--font-sans);color:var(--afg)}
+.auth-nojs h1{margin:0 0 10px;font-size:var(--text-h2)}
+.auth-nojs p{margin:0;color:var(--amut);font-size:var(--text-body-sm)}
 
 /* ---------- account menu ---------- */
 /* The top bar gets its own layer so the dropdown is not painted under the page

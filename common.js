@@ -86,17 +86,19 @@
 
   // demo auth state. There is no backend: this only decides which surface the
   // visitor is allowed to see, so what is stored is the signed-in email rather
-  // than a token. The workspace pages gate on it before first paint (see the
-  // inline bootstrap in each page), and the account menu reads it to label the
-  // avatar — both read localStorage directly, because neither can wait for the
+  // than a token. The workspace pages gate on it before first paint — their
+  // markup ships locked and the inline bootstrap unlocks it only once this key
+  // is there (see each page) — and the account menu reads it to label the
+  // avatar. Both read localStorage directly, because neither can wait for the
   // other to load.
   var AUTH_KEY = 'sandcode-auth';
   function user() {
     try { return localStorage.getItem(AUTH_KEY) || null; } catch (e) { return null; }
   }
   function signIn(email) {
+    // storing the session is the whole job: the page we navigate to reads the
+    // key itself and unlocks. There is nothing to reveal on the sign-in page.
     try { localStorage.setItem(AUTH_KEY, email || 'alex@techstartup.io'); } catch (e) {}
-    document.documentElement.classList.remove('auth-pending');
   }
   function signOut() {
     try { localStorage.removeItem(AUTH_KEY); } catch (e) {}

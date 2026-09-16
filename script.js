@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const safe = (fn)=>{ try { fn(); } catch (e) { console.warn('[sandcode] init failed:', fn.name || fn, e); } };
   if(window.Sand && Sand.initTheme) safe(Sand.initTheme);
   [initTabs, initMenu, initWaitlist, initAuth, initTerm, initCopyBtn, initUsecase, initHeroDots,
-   initReveal, initScrollAffordances, initCountUp, initMarquee].forEach(safe);
+   initAuthDots, initReveal, initScrollAffordances, initCountUp, initMarquee].forEach(safe);
 });
 // The progress bar and back-to-top button are not decorations — reducing motion
 // must not remove them, only the tweened behaviour. No animation library is
@@ -490,4 +490,239 @@ function initHeroDots(){
     new MutationObserver(()=>{ readColors(); measure(); })
       .observe(document.body, {attributes:true, attributeFilter:['data-theme']});
   }
+}
+// Sign-in / sign-up background — the React Bits <DotGrid /> idea, ported to
+// plain canvas: a field of dots that tints toward the accent under the pointer,
+// scatters when the pointer is moving fast, and ripples out from a click, then
+// springs back to rest. The reference hands the return to GSAP's InertiaPlugin;
+// a damped spring does the same job here, so this stays dependency-free like the
+// rest of the site — GSAP was dropped on purpose and is not coming back for one
+// background.
+//
+// Unlike the hero grid this one moves, so it cannot cache a static base layer and
+// paint lit dots over it: a displaced dot would leave its original behind. The
+// whole field is redrawn instead, and the loop only exists while something is
+// actually happening — a pointer move or a click starts it, and it parks itself
+// the moment every dot is home.
+function initAuthDots(){
+  const host = document.querySelector('[data-auth-dots]');
+  if(!host || !document.createElement('canvas').getContext) return;
+
+  const R = 2.1;             // dot radius, px
+  const GAP = 26;            // grid pitch, px
+  const PROXIMITY = 140;     // how far the pointer reaches, px
+  const SPEED_TRIGGER = 700; // pointer speed (px/s) that counts as a flick
+  const MAX_SPEED = 5000;    // clamp, so one fast pass cannot fling the field apart
+  const SHOCK_RADIUS = 230;  // click ripple reach, px
+  const SHOCK_IMPULSE = 2.2; // click ripple strength
+  const STIFF = 0.022;       // spring constant pulling a dot home
+  const DAMPING = 0.93;      // velocity kept per frame — underdamped, so it springs
+  const AT_REST = 0.25;      // px: a remaining swing below this is not worth a frame
+  const BANDS = 24;          // cached colour steps between the two tokens
+  const TAU = Math.PI * 2;
+
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const canvas = document.createElement('canvas');
+  canvas.className = 'auth-dots';
+  canvas.setAttribute('aria-hidden', 'true');
+  host.insertBefore(canvas, host.firstChild);
+  const ctx = canvas.getContext('2d');
+
+  let w = 0, h = 0, dpr = 1;
+  let dots = [];
+  let tints = [];
+  let px = -1e5, py = -1e5;   // pointer, in canvas space
+  let lastT = 0, lastX = 0, lastY = 0, vx = 0, vy = 0;
+  let raf = 0, pending = 0;
+
+  // tokens → colour: the same pair the hero grid reads, so the two fields look
+  // like one system and both follow a theme switch
+  const rgbOf = (v)=>{
+    const m = String(v || '').trim().match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+    return m ? [parseInt(m[1],16), parseInt(m[2],16), parseInt(m[3],16)] : null;
+  };
+  function readColors(){
+    const cs = getComputedStyle(document.body);
+    const base = rgbOf(cs.getPropertyValue('--muted')) || [93,89,105];
+    const hot = rgbOf(cs.getPropertyValue('--accent')) || [90,58,235];
+    tints = [];
+    for(let i = 0; i <= BANDS; i++){
+      const t = i / BANDS;
+      tints.push('rgb(' +
+        Math.round(base[0] + (hot[0]-base[0])*t) + ',' +
+        Math.round(base[1] + (hot[1]-base[1])*t) + ',' +
+        Math.round(base[2] + (hot[2]-base[2])*t) + ')');
+    }
+  }
+
+  function build(){
+    const rect = host.getBoundingClientRect();
+    w = rect.width;
+    h = rect.height;
+    if(!w || !h) return;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const cell = R * 2 + GAP;
+    const cols = Math.max(1, Math.floor((w + GAP) / cell));
+    const rows = Math.max(1, Math.floor((h + GAP) / cell));
+    // centre the field: a leftover pixel goes to both margins, not just the right
+    const startX = (w - (cols * cell - GAP)) / 2 + R;
+    const startY = (h - (rows * cell - GAP)) / 2 + R;
+
+    dots = [];
+    for(let y = 0; y < rows; y++){
+      for(let x = 0; x < cols; x++){
+        dots.push({ cx: startX + x*cell, cy: startY + y*cell, dx: 0, dy: 0, vx: 0, vy: 0, busy: false });
+      }
+    }
+    draw();
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, w, h);
+    const proxSq = PROXIMITY * PROXIMITY;
+    for(let i = 0; i < dots.length; i++){
+      const d = dots[i];
+      const ox = d.cx - px, oy = d.cy - py;
+      const dsq = ox*ox + oy*oy;
+      let band = 0;
+      if(dsq <= proxSq){
+        const t = 1 - Math.sqrt(dsq) / PROXIMITY;
+        band = Math.round(t * BANDS);
+        ctx.globalAlpha = 0.45 + 0.55 * t;   // resting dots stay quiet, as in the hero
+      } else {
+        ctx.globalAlpha = 0.45;
+      }
+      ctx.fillStyle = tints[band];
+      ctx.beginPath();
+      ctx.arc(d.cx + d.dx, d.cy + d.dy, R, 0, TAU);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function kick(){ if(!raf && !reduce) raf = requestAnimationFrame(frame); }
+
+  function frame(){
+    raf = 0;
+    let moving = false;
+    for(let i = 0; i < dots.length; i++){
+      const d = dots[i];
+      if(!d.dx && !d.dy && !d.vx && !d.vy) continue;
+      d.vx -= STIFF * d.dx;
+      d.vy -= STIFF * d.dy;
+      d.vx *= DAMPING;
+      d.vy *= DAMPING;
+      d.dx += d.vx;
+      d.dy += d.vy;
+      // "At rest" has to mean the whole remaining swing, not where the dot
+      // happens to sit right now: a dot crossing home at full speed still has
+      // amplitude to burn, and snapping it there would cut the overshoot that
+      // makes the return feel elastic. amplitude² = offset² + velocity²/k, so
+      // this is exact and costs no square root.
+      if(d.dx*d.dx + d.dy*d.dy + (d.vx*d.vx + d.vy*d.vy) / STIFF < AT_REST * AT_REST){
+        d.dx = d.dy = d.vx = d.vy = 0;
+        d.busy = false;   // home, so the next pass may shove it again
+      } else {
+        moving = true;
+      }
+    }
+    draw();
+    if(moving) kick();
+  }
+
+  // a fast pass shoves the dots it sweeps — in the direction of travel as much as
+  // away from the pointer, which is what makes it read as a wake
+  function shove(){
+    const proxSq = PROXIMITY * PROXIMITY;
+    for(let i = 0; i < dots.length; i++){
+      const d = dots[i];
+      if(d.busy) continue;
+      const ox = d.cx - px, oy = d.cy - py;
+      const dsq = ox*ox + oy*oy;
+      if(dsq > proxSq) continue;
+      const dist = Math.sqrt(dsq) || 1;
+      const t = 1 - dist / PROXIMITY;
+      const inv = 1 / dist;
+      const f = 1.8 * t;
+      d.vx += (ox*inv + vx/MAX_SPEED*0.8) * f;
+      d.vy += (oy*inv + vy/MAX_SPEED*0.8) * f;
+      d.busy = true;
+    }
+  }
+
+  function shock(cx, cy){
+    for(let i = 0; i < dots.length; i++){
+      const d = dots[i];
+      const ox = d.cx - cx, oy = d.cy - cy;
+      const dist = Math.hypot(ox, oy);
+      if(dist > SHOCK_RADIUS) continue;
+      const falloff = 1 - dist / SHOCK_RADIUS;
+      const inv = 1 / (dist || 1);
+      d.vx += ox * inv * SHOCK_IMPULSE * falloff;
+      d.vy += oy * inv * SHOCK_IMPULSE * falloff;
+      d.busy = true;
+    }
+    kick();
+  }
+
+  function onMove(e){
+    const rect = canvas.getBoundingClientRect();
+    px = e.clientX - rect.left;
+    py = e.clientY - rect.top;
+    const now = performance.now();
+    // the first move of a pass has no previous sample to measure against
+    if(lastT){
+      const dt = Math.max(1, now - lastT);
+      let nvx = (e.clientX - lastX) / dt * 1000;
+      let nvy = (e.clientY - lastY) / dt * 1000;
+      let speed = Math.hypot(nvx, nvy);
+      if(speed > MAX_SPEED){
+        const k = MAX_SPEED / speed;
+        nvx *= k; nvy *= k; speed = MAX_SPEED;
+      }
+      vx = nvx; vy = nvy;
+      if(speed > SPEED_TRIGGER) shove();
+    }
+    lastT = now; lastX = e.clientX; lastY = e.clientY;
+    kick();
+  }
+
+  function onLeave(){
+    px = py = -1e5;   // drops the tint everywhere; the spring finishes on its own
+    lastT = 0;
+    kick();
+  }
+
+  function onClick(e){
+    const rect = canvas.getBoundingClientRect();
+    shock(e.clientX - rect.left, e.clientY - rect.top);
+  }
+
+  function schedule(){
+    if(pending) return;
+    pending = requestAnimationFrame(()=>{ pending = 0; readColors(); build(); });
+  }
+
+  readColors();
+  build();
+  if(window.ResizeObserver) new ResizeObserver(schedule).observe(host);
+  else window.addEventListener('resize', schedule);
+
+  // a theme switch re-derives --muted/--accent under us — repaint with the new pair
+  if(window.MutationObserver){
+    new MutationObserver(()=>{ readColors(); draw(); })
+      .observe(document.body, {attributes:true, attributeFilter:['data-theme']});
+  }
+
+  if(reduce) return;   // the field is still drawn, it just does not react
+  host.addEventListener('pointermove', onMove, {passive:true});
+  host.addEventListener('pointerleave', onLeave, {passive:true});
+  host.addEventListener('click', onClick);
 }
