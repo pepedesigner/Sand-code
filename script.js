@@ -38,7 +38,14 @@ function copyCmd(){
       },1200);
     }
   };
-  Sand.copyText(text).then(done).catch(()=>{ /* ignore */ });
+  const label = btn && btn.querySelector('.copy-label');
+  const fail = ()=>{
+    if(!label) return;
+    label.textContent = 'Copy failed';
+    setTimeout(()=>{ label.textContent = 'Copy'; }, 1600);
+  };
+  if(!window.Sand || !Sand.copyText){ fail(); return; }
+  Sand.copyText(text).then(done).catch(fail);
 }
 // expose for inline onclick + addEventListener both work
 window.copyCmd = copyCmd;
@@ -164,17 +171,46 @@ function initTerm(){
   step();
 }
 document.addEventListener('DOMContentLoaded', ()=>{
-  Sand.initTheme(); initTabs(); initMenu(); initWaitlist(); initTerm(); initCopyBtn(); initUsecase(); initHeroDots();
+  // each init is isolated: one failure must not take the rest of the page with
+  // it (common.js missing, an unsupported API, one bad selector …)
+  const safe = (fn)=>{ try { fn(); } catch (e) { console.warn('[sandcode] init failed:', fn.name || fn, e); } };
+  if(window.Sand && Sand.initTheme) safe(Sand.initTheme);
+  [initTabs, initMenu, initWaitlist, initTerm, initCopyBtn, initUsecase, initHeroDots].forEach(safe);
   // GSAP when available, legacy IO reveal as fallback (also covers no-JS-safe default)
-  if (!initMotion()) initReveal();
+  safe(()=>{ if (!initMotion()) { initReveal(); initScrollAffordances(); } });
 });
+// The progress bar and back-to-top button are not decorations — reducing motion
+// must not remove them, only the tweened behaviour. initScrollFX owns the GSAP
+// version; this is the plain-scroll equivalent used when motion is off.
+function initScrollAffordances(){
+  var bar = document.querySelector('.progress');
+  if(!bar){ bar = document.createElement('div'); bar.className = 'progress'; document.body.prepend(bar); }
+  var top = document.querySelector('#toTop');
+  if(!top){
+    top = document.createElement('button');
+    top.id = 'toTop'; top.type = 'button';
+    top.setAttribute('aria-label', 'Back to top');
+    top.textContent = '↑';
+    document.body.appendChild(top);
+    top.addEventListener('click', ()=>{ window.scrollTo({ top: 0, behavior: 'auto' }); });
+  }
+  const onScroll = ()=>{
+    const doc = document.documentElement;
+    const max = doc.scrollHeight - window.innerHeight;
+    bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, window.scrollY / max) : 0) + ')';
+    top.classList.toggle('show', window.scrollY > 600);
+  };
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll, {passive:true});
+  onScroll();
+}
 function initCopyBtn(){
   const btn = document.getElementById('copy-btn');
   if(btn) btn.addEventListener('click', copyCmd);
 }
 // scroll reveal (progressive enhancement: no-JS keeps content visible)
 function initReveal(){
-  const els = document.querySelectorAll('section.block, .terminal, .install, .logos, .card, .feat, .stat, .t, .plan, .zen-banner, .waitlist, .compare, .uc-panel');
+  const els = document.querySelectorAll('section.block, .terminal, .install, .logos, .card, .feat, .stat, .plan, .zen-banner, .waitlist, .compare, .uc-panel, .quad');
   if(!els.length || !('IntersectionObserver' in window)){
     return;
   }
@@ -440,7 +476,7 @@ function initMotion(){
     }
 
     // scroll reveals (batch; visible panels only — hidden tab panels are excluded)
-    const targets = gsap.utils.toArray('section.block, .card, .feat, .stat, .t, .plan, .zen-banner, .waitlist, .compare, .doc');
+    const targets = gsap.utils.toArray('section.block, .card, .feat, .stat, .plan, .zen-banner, .waitlist, .compare, .doc, .quad');
     targets.forEach((el)=>{
       gsap.from(el, { y: 26, opacity: 0, duration: 0.8, ease: 'power3.out',
         scrollTrigger: { trigger: el, start: 'top 88%', once: true } });

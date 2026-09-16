@@ -28,16 +28,16 @@ h1,h2{font-family:var(--font-display);font-weight:600;letter-spacing:-.01em;text
 h1 em,h2 em{font-style:italic;color:var(--accent)}
 
 /* ---------- header ---------- */
-.site-header{position:sticky;top:0;z-index:50;background:rgba(10,11,13,.82);
+.site-header{position:sticky;top:0;z-index:var(--z-header);background:var(--chrome-bg);
   -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
   border-bottom:1px solid var(--line);transition:transform .32s var(--ease)}
 .site-header.nav-hidden{transform:translateY(-100%)}
 /* scroll progress + back-to-top + scroll hint */
 .progress{position:fixed;top:0;left:0;right:0;height:2px;background:var(--accent);
-  transform:scaleX(0);transform-origin:left;z-index:99}
+  transform:scaleX(0);transform-origin:left;z-index:var(--z-toast)}
 /* shape/size/fill live in buttons.css — placement + show/hide only here */
 #toTop{position:fixed;right:22px;bottom:22px;
-  opacity:0;pointer-events:none;transform:translateY(12px);z-index:90}
+  opacity:0;pointer-events:none;transform:translateY(12px);z-index:var(--z-fab)}
 #toTop.show{opacity:1;pointer-events:auto;transform:none}
 #toTop:hover{background:var(--line-strong)}
 .scroll-hint{display:flex;justify-content:center;margin-top:26px}
@@ -76,14 +76,14 @@ h1{font-size:clamp(34px,5.4vw,60px);line-height:1.06;margin:0 0 20px;letter-spac
    context). It stops at the terminal frame and fades out well before it, so
    the grid never cuts a hard edge against an opaque panel. */
 .hero[data-hero-dots]{position:relative;isolation:isolate}
-.hero-dots{position:absolute;top:0;left:0;z-index:-1;pointer-events:none;
+.hero-dots{position:absolute;top:0;left:0;z-index:var(--z-hero);pointer-events:none;
   -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 52%,transparent 92%);
           mask-image:linear-gradient(to bottom,#000 0%,#000 52%,transparent 92%)}
 
 /* ---------- install ---------- */
 .install{border:1px solid var(--line-strong);background:var(--bg2);border-radius:10px;
   margin:0 auto;max-width:680px;overflow:hidden;text-align:left}
-.tabs{display:flex;border-bottom:1px solid var(--line);overflow-x:auto;background:rgba(255,255,255,.02)}
+.tabs{display:flex;border-bottom:1px solid var(--line);overflow-x:auto;background:var(--tint-panel)}
 .tabs button{flex:1;background:transparent;border:0;border-right:1px solid var(--line);padding:12px 10px;
   font-family:var(--font-mono);font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;min-width:88px;
   transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
@@ -161,10 +161,9 @@ section.block .eyebrow::before{counter-increment:sec;content:"0" counter(sec);ma
 .feat p b{color:var(--ink);font-weight:650}
 
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:28px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg2)}
-.stat{padding:32px 10px;color:var(--ink);border-right:1px solid var(--line);background:transparent}
+.stat{padding:32px 10px;font-size:13px;color:var(--muted);border-right:1px solid var(--line);background:transparent}
 .stat:last-child{border-right:0}
-.stat strong{font-family:var(--font-sans);font-weight:600;font-size:42px;display:block;letter-spacing:-.02em}
-.stat{font-size:13px;color:var(--muted)}
+.stat strong{font-family:var(--font-sans);font-weight:600;font-size:42px;color:var(--ink);display:block;letter-spacing:-.02em}
 
 /* ---------- faq ---------- */
 .faq{border-top:1px solid var(--line);margin:26px auto 0;max-width:760px;text-align:left}
@@ -190,7 +189,7 @@ section.block .eyebrow::before{counter-increment:sec;content:"0" counter(sec);ma
 .waitlist input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
 
 /* ---------- footer ---------- */
-footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,255,255,.015)}
+footer{border-top:1px solid var(--line);margin-top:56px;background:var(--tint-soft)}
 .fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px;padding:48px 0 32px;text-align:left}
 .fbrand p{color:var(--muted);font-size:13.5px;max-width:260px}
 .fcols b{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
@@ -228,7 +227,6 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,255,
 .step b{display:block;font-size:15px;margin-bottom:6px}
 .step p{margin:0;color:var(--muted);font-size:13.5px}
 .step code{font-family:var(--font-mono);font-size:12px;background:var(--bg3);padding:1px 6px;border-radius:5px}
-@media(max-width:760px){.steps{grid-template-columns:1fr}}
 
 /* ---------- enterprise extras ---------- */
 .pillrow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:26px}
@@ -244,6 +242,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,255,
   padding:30px 28px;display:flex;flex-direction:column;
   transition:transform var(--t-med) var(--ease),border-color var(--t-med) var(--ease)}
 .plan:hover{transform:translateY(-3px);border-color:var(--line-strong)}
+.plan.wide{grid-column:1/-1}
 .plan h3{margin:0;font-family:var(--font-sans);font-size:16px;font-weight:700}
 .plan .price{margin:12px 0 0;font-family:var(--font-sans);font-size:44px;font-weight:600;letter-spacing:-.02em}
 .plan .price small{font-family:var(--font-sans);font-size:12.5px;font-weight:500;color:var(--muted)}
@@ -266,7 +265,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,255,
 .compare th,.compare td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
 .compare thead th{background:var(--bg3);color:var(--ink);font-size:12.5px}
 .compare tbody tr:last-child td{border-bottom:0}
-.compare tbody tr:hover{background:rgba(255,255,255,.025)}
+.compare tbody tr:hover{background:var(--tint-hover)}
 .compare td:first-child{color:var(--ink);font-weight:600}
 
 /* ---------- positioning quadrant (pricing) ----------
@@ -294,6 +293,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,255,
 @media(max-width:900px){.plans{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){
   .grid,.stats,.dl-grid,.docs-layout{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
   .uc-panel.active{grid-template-columns:1fr}
   .plans{grid-template-columns:1fr}
   .quad{grid-template-columns:1fr}
@@ -318,21 +318,17 @@ footer{border-top:1px solid var(--line);margin-top:56px;background:rgba(255,255,
 @media(max-width:560px){.fcols{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  *{transition:none !important}
+  *{animation:none !important;transition:none !important}
   .reveal{opacity:1 !important;transform:none !important}
 }
 
-/* ---------- light theme (re-derived, from tokens.css) ---------- */
-body[data-theme="light"] .site-header{background:rgba(247,248,250,.85)}
+/* ---------- light theme (re-derived, from tokens.css) ----------
+   Only the surfaces that need a *shadow* or a different code treatment are
+   overridden here; every tint now re-derives from its token. */
 body[data-theme="light"] .badge{box-shadow:var(--shadow)}
-body[data-theme="light"] .tabs{background:var(--bg2)}
 body[data-theme="light"] .cmd{background:var(--code-bg);color:var(--code-fg);border:1px solid var(--line-strong)}
 body[data-theme="light"] .card,body[data-theme="light"] .doc,body[data-theme="light"] .compare,
 body[data-theme="light"] .zen-banner,body[data-theme="light"] .plan.featured{box-shadow:var(--shadow)}
-/* the dark theme tints these surfaces with white; on a light canvas that reads
-   as "invisible", so they flip to a black tint of the same strength */
-body[data-theme="light"] footer{background:rgba(26,28,32,.015)}
-body[data-theme="light"] .compare tbody tr:hover{background:rgba(26,28,32,.025)}
 
 /* ---------- scroll reveal ---------- */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}

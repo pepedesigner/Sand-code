@@ -26,8 +26,8 @@
     }).join('');
     return '<div class="wrap nav">' +
       '<a class="logo" href="./index.html"><span>Sand</span>Code<i>*</i></a>' +
-      '<button class="menu-btn" id="menu-btn" type="button" aria-expanded="false">Open menu</button>' +
-      '<nav class="nav-links" id="nav-links">' + links +
+      '<button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="nav-links">Open menu</button>' +
+      '<nav class="nav-links" id="nav-links" aria-label="Main">' + links +
       '<button id="theme-btn" class="theme-btn" type="button" title="Toggle theme" aria-label="Toggle theme">☾</button>' +
       '<a class="btn" href="./download.html">Install SandCode</a></nav></div>';
   }
@@ -70,14 +70,14 @@
     }).join('');
     return '<div class="side-top">' +
       '<a class="mini-logo" href="./index.html"><span>Sand</span>Code<i>*</i></a>' +
-      '<span class="env-pill"><span class="pulse"></span>api.sandbase.ai</span></div>' +
-      '<nav class="ws-nav"><span>Console</span>' + links + '</nav>' +
+      '<span class="env-pill"><span class="pulse"></span>api.sandcode.ai</span></div>' +
+      '<nav class="ws-nav" aria-label="Console"><span>Console</span>' + links + '</nav>' +
       '<div class="side-foot"><a class="back-site" href="./index.html">← Back to site</a></div>';
   }
 
   function wsTopbarHtml() {
-    return '<button id="menu-side" type="button" aria-label="Menu" aria-expanded="false">☰</button>' +
-      '<div class="crumbs"><span>SandBase Console</span><span class="sep">›</span><span id="crumb-sess">' + WS_CRUMB[page] + '</span></div>' +
+    return '<button id="menu-side" type="button" aria-label="Menu" aria-expanded="false" aria-controls="side">☰</button>' +
+      '<div class="crumbs"><span>SandCode Console</span><span class="sep">›</span><span id="crumb-sess">' + WS_CRUMB[page] + '</span></div>' +
       '<div class="top-actions">' + (WS_EXTRA[page] || '') +
       '<button id="theme-btn" class="theme-btn" type="button" title="Toggle theme" aria-label="Toggle theme">☾</button>' +
       '<span class="avatar">A</span></div>';

@@ -40,17 +40,22 @@
 
   // clipboard with execCommand fallback; resolves on success, rejects on failure
   function fallbackCopy(text, resolve, reject) {
+    var ta = null;
     try {
-      var ta = document.createElement('textarea');
+      ta = document.createElement('textarea');
       ta.value = text;
       ta.style.position = 'fixed';
       ta.style.opacity = '0';
       document.body.appendChild(ta);
       ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      resolve();
-    } catch (e) { reject(e); }
+      // execCommand reports failure via its return value, not by throwing
+      if (document.execCommand('copy')) resolve();
+      else reject(new Error('execCommand("copy") returned false'));
+    } catch (e) {
+      reject(e);
+    } finally {
+      if (ta && ta.parentNode) ta.parentNode.removeChild(ta); // also on the throw path
+    }
   }
   function copyText(text) {
     return new Promise(function (resolve, reject) {

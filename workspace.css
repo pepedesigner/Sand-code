@@ -7,7 +7,7 @@
      --shadow-app, --shadow-pop, --ease, --t-fast, --t-med */
   --ahover:rgba(255,255,255,.05);
   --aline-soft:rgba(255,255,255,.06);
-  --adim:rgba(230,232,235,.45);
+  --adim:rgba(230,232,235,.62);
   --accent:#82AAFF; --accent-ink:#0A0B0D;
 }
 *{box-sizing:border-box}
@@ -27,13 +27,13 @@ body{margin:0;background:var(--abg);color:var(--afg);
      and the light theme would never reach them. */
   --abg:var(--bg); --apanel:var(--bg2); --apanel2:var(--bg3);
   --aline:var(--line); --afg:var(--ink); --amut:var(--muted)}
-#app{position:relative;z-index:1}
+#app{position:relative;z-index:var(--z-app)}
 button{font:inherit;color:inherit}
 #app{display:flex;height:100vh;height:100dvh}
 
 /* ---------- sidebar ---------- */
 #side{width:288px;flex:none;background:var(--apanel);border-right:1px solid var(--aline);
-  display:flex;flex-direction:column;z-index:30}
+  display:flex;flex-direction:column;z-index:var(--z-side)}
 .side-top{display:flex;align-items:center;gap:10px;padding:14px 14px 10px}
 .mini-logo{font-weight:900;letter-spacing:2.5px;font-size:13px;text-decoration:none;
   border:1.5px solid var(--aline);padding:5px 9px;border-radius:var(--radius-s);background:#0f0d0d;color:var(--afg);
@@ -51,7 +51,7 @@ button{font:inherit;color:inherit}
 /* ---------- main ---------- */
 .main{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--abg)}
 #topbar{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--aline);
-  min-height:53px;background:rgba(27,24,24,.8);backdrop-filter:blur(8px);flex:none}
+  min-height:53px;background:var(--chrome-bg);backdrop-filter:blur(8px);flex:none}
 /* fill only — buttons.css owns size/shape/display of #menu-side */
 #menu-side{background:transparent;border-color:var(--aline);color:var(--afg)}
 .crumbs{font-size:13px;color:var(--adim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -66,8 +66,10 @@ button{font:inherit;color:inherit}
 @media(max-width:760px){
   #side{position:fixed;top:0;left:0;bottom:0;transform:translateX(-100%);transition:transform .22s ease;box-shadow:20px 0 50px rgba(0,0,0,.5)}
   #side.open{transform:none}
-  #side-scrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:25}
+  #side-scrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:var(--z-scrim)}
   #side-scrim[hidden]{display:none}
+  .ws-grid{grid-template-columns:1fr}
+  .ws-page{padding:20px 14px 50px}
 }
 #side-scrim{display:none}
 @media(prefers-reduced-motion:reduce){
@@ -94,7 +96,7 @@ button{font:inherit;color:inherit}
 .ws-card h2{margin:0 0 4px;font-size:14.5px}
 .ws-card p{margin:0;color:var(--amut);font-size:13px}
 .ws-card .big{font-family:var(--font-display);font-weight:500;font-size:38px;letter-spacing:0;margin:8px 0 2px}
-.ubar{height:9px;border-radius:99px;background:rgba(255,255,255,.08);margin:10px 0 6px;overflow:hidden}
+.ubar{height:9px;border-radius:99px;background:var(--tint-track);margin:10px 0 6px;overflow:hidden}
 .ubar i{display:block;height:100%;border-radius:99px;background:var(--accent)}
 .urow{display:flex;justify-content:space-between;font-size:12px;color:var(--adim)}
 .utable{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
@@ -102,7 +104,7 @@ button{font:inherit;color:inherit}
 .member-role{height:38px}
 .utable th{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--adim);font-weight:800}
 .utable tbody tr{transition:background .13s ease}
-.utable tbody tr:hover{background:rgba(255,255,255,.028)}
+.utable tbody tr:hover{background:var(--tint-hover)}
 .utable tr:last-child td{border-bottom:0}
 .utable td.num,.utable th.num{text-align:right;font-variant-numeric:tabular-nums}
 .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;padding-top:16px}
@@ -112,23 +114,29 @@ button{font:inherit;color:inherit}
 .winput,.wselect{background:#0f0d0d;border:1px solid var(--aline);border-radius:9px;color:var(--afg);
   padding:10px 13px;font-size:13px;font-family:inherit;width:100%}
 .winput:focus,.wselect:focus{outline:none;border-color:var(--accent)}
+.winput:focus-visible,.wselect:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+/* console pages do not load style.css, so the shared focus ring lives here too */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{
+  outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
 .wlabel{display:block;font-size:12px;font-weight:700;color:var(--amut);margin:14px 0 6px}
 .switchrow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--aline-soft);font-size:13px}
 .switchrow:last-child{border-bottom:0}
 .switchrow small{display:block;color:var(--adim);font-size:11.5px}
 .switch{margin-left:auto;position:relative;width:40px;height:22px;flex:none;cursor:pointer}
-.switch input{opacity:0;width:0;height:0}
+/* the input stays full-size and transparent so it remains focusable and the
+   focus ring has real area — a 0x0 input has no visible focus indicator */
+.switch input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
 .switch em{position:absolute;inset:0;background:rgba(255,255,255,.14);border-radius:99px;transition:.18s}
 .switch em::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.18s}
 .switch input:checked + em{background:var(--accent)}
 .switch input:checked + em::after{transform:translateX(18px)}
+.switch input:focus-visible + em{outline:2px solid var(--accent);outline-offset:2px}
 .mono{font-family:var(--font-mono);font-size:12px}
 .dbars{display:flex;gap:6px;align-items:flex-end;height:120px;margin-top:14px}
 .dbars div{flex:1;background:var(--accent);border-radius:4px 4px 0 0;min-height:4px;opacity:.85}
 .check li{list-style:none}
 .check{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:9px;font-size:13px;color:var(--amut)}
 .check li::before{content:"✓ ";color:var(--green);font-weight:900}
-@media(max-width:760px){.ws-grid{grid-template-columns:1fr}.ws-page{padding:20px 14px 50px}}
 
 /* ---------- referral share row (members) ---------- */
 .d-share{display:flex;gap:8px;align-items:center}
@@ -142,7 +150,7 @@ button{font:inherit;color:inherit}
 #theme-btn:hover{background:var(--ahover)}
 #toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:var(--apanel2);
   border:1px solid var(--aline);color:var(--afg);font-size:13px;padding:10px 18px;border-radius:var(--radius-s);
-  box-shadow:var(--shadow-pop);z-index:99}
+  box-shadow:var(--shadow-pop);z-index:var(--z-toast)}
 #toast[hidden]{display:none}
 
 /* ---------- light theme ---------- */
@@ -152,12 +160,10 @@ body[data-theme="light"]{
   --ahover:rgba(26,28,32,.05); --aline-soft:rgba(26,28,32,.06); --adim:#7A828C;
 }
 body[data-theme="light"] .mini-logo{background:var(--ink);color:var(--bg)}
-body[data-theme="light"] #topbar{background:rgba(247,248,250,.88)}
 /* light theme: flat, borders only, no shadows */
 body[data-theme="light"] .ws-card,body[data-theme="light"] #toast{box-shadow:none !important}
 body[data-theme="light"] .winput,body[data-theme="light"] .wselect{background:var(--bg);color:var(--afg)}
+/* white-on-white tints read as "invisible" on a light canvas — they now come
+   from --tint-* in tokens.css, so only the remaining one-offs live here */
 body[data-theme="light"] .switch em{background:rgba(26,28,32,.18)}
-/* white-on-white tints read as "invisible" on a light canvas — flip them */
-body[data-theme="light"] .ubar{background:rgba(26,28,32,.12)}
-body[data-theme="light"] .utable tbody tr:hover{background:rgba(26,28,32,.03)}
 body[data-theme="light"] .d-share code{background:rgba(26,28,32,.06)}

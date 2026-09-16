@@ -12,14 +12,20 @@
 <meta property="og:title" content="SandCode Console — Coding Plan">
 <meta property="og:description" content="SandCode Console Coding Plan — 6h window, reasoning sub-quota, cache savings, tool water meters and live traces (mock demo).">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"><meta name="robots" content="noindex">
+<meta name="robots" content="noindex">
 <link rel="canonical" href="https://sandcode.ai/workspace-plan.html">
 <meta property="og:url" content="https://sandcode.ai/workspace-plan.html">
+<meta property="og:image" content="https://sandcode.ai/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SandCode — flat-rate coding compute for every agent client">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://sandcode.ai/assets/og.png">
 <meta property="og:site_name" content="SandCode">
 </head>
 <body>
 <script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
-<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
+<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f+'?v=4';document.head.appendChild(l)})}}catch(e){}</script>
 <div id="app">
   <aside id="side"></aside>
   <div id="side-scrim" hidden></div>
@@ -38,7 +44,7 @@
       </div>
       <div class="ws-grid">
         <div class="ws-card"><h2>Prompt caching savings</h2><div class="big">$42.10</div>
-          <p>Last 7 days · 80% hit rate · ≈2.8× effective purchasing power.</p>
+          <p>Last 7 days · 80% hit rate · ≈3.45× effective purchasing power.</p>
           <div class="btnrow"><button class="wbtn ghost" id="share-savings" type="button">Share weekly report</button></div></div>
         <div class="ws-card"><h2>Tool quota (MCP)</h2>
           <div class="ubar"><i style="width:14%"></i></div>
@@ -53,7 +59,7 @@
         <div class="urow"><span>Monthly · $47.20 of $70.00</span><span>67%</span></div>
       </div>
       <div class="ws-card" style="margin-bottom:14px"><h2>Live traces</h2>
-        <table class="utable"><thead><tr><th>Time</th><th>Client</th><th>Model</th><th class="num">Tokens (cached / out)</th><th class="num">Latency</th><th class="num">Cost</th><th>Status</th></tr></thead>
+        <table aria-label="Live traces" class="utable"><thead><tr><th scope="col">Time</th><th scope="col">Client</th><th scope="col">Model</th><th scope="col" class="num">Tokens (cached / out)</th><th scope="col" class="num">Latency</th><th scope="col" class="num">Cost</th><th scope="col">Status</th></tr></thead>
         <tbody>
         <tr><td class="mono">17:24:02</td><td>Cursor</td><td><code>deepseek-v4.1-flash</code></td><td class="num">84,200 (80,000) / 420</td><td class="num">0.8s</td><td class="num">$0.0035</td><td>200</td></tr>
         <tr><td class="mono">17:21:15</td><td>Claude Code</td><td><code>deepseek-v4.1-pro</code></td><td class="num">120,400 (96,000) / 3,100</td><td class="num">4.2s</td><td class="num">$0.0487</td><td>200</td></tr>

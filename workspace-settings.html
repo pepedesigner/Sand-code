@@ -12,14 +12,20 @@
 <meta property="og:title" content="SandCode Console — Settings">
 <meta property="og:description" content="SandCode Console settings — region and data residency, opt-in retention, and alerts (mock demo).">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"><meta name="robots" content="noindex">
+<meta name="robots" content="noindex">
 <link rel="canonical" href="https://sandcode.ai/workspace-settings.html">
 <meta property="og:url" content="https://sandcode.ai/workspace-settings.html">
+<meta property="og:image" content="https://sandcode.ai/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SandCode — flat-rate coding compute for every agent client">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://sandcode.ai/assets/og.png">
 <meta property="og:site_name" content="SandCode">
 </head>
 <body>
 <script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
-<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
+<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f+'?v=4';document.head.appendChild(l)})}}catch(e){}</script>
 <div id="app">
   <aside id="side"></aside>
   <div id="side-scrim" hidden></div>
@@ -32,7 +38,7 @@
         <label class="wlabel" for="ws-name">Workspace name</label>
         <input class="winput" id="ws-name" value="acme" maxlength="32">
         <label class="wlabel" for="ws-region">Data region</label>
-        <select class="wselect" id="ws-region"><option>US (default)</option><option>EU</option><option>Singapore</option></select>
+        <select class="wselect" id="ws-region"><option value="US (default)">US (default)</option><option value="EU">EU</option><option value="Singapore">Singapore</option></select>
         <p style="margin-top:10px;font-size:12px;color:var(--adim)">Region decides where data is stored. Residency terms and excluded regions are part of the DPA on Enterprise.</p>
         <div class="btnrow"><button class="wbtn" id="ws-save" type="button">Save changes</button></div></div>
       <div class="ws-card" style="margin-bottom:14px"><h2>Retention</h2>

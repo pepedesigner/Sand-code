@@ -12,14 +12,20 @@
 <meta property="og:title" content="SandCode Console — Members">
 <meta property="og:description" content="SandCode Console members — team seats, roles, per-member daily caps and two-way referral credit (mock demo).">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"><meta name="robots" content="noindex">
+<meta name="robots" content="noindex">
 <link rel="canonical" href="https://sandcode.ai/workspace-members.html">
 <meta property="og:url" content="https://sandcode.ai/workspace-members.html">
+<meta property="og:image" content="https://sandcode.ai/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SandCode — flat-rate coding compute for every agent client">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://sandcode.ai/assets/og.png">
 <meta property="og:site_name" content="SandCode">
 </head>
 <body>
 <script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
-<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
+<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f+'?v=4';document.head.appendChild(l)})}}catch(e){}</script>
 <div id="app">
   <aside id="side"></aside>
   <div id="side-scrim" hidden></div>
@@ -29,11 +35,11 @@
       <h1>Members</h1>
       <p class="ws-sub">Every seat draws on one shared pool · mock data.</p>
       <div class="ws-card" style="margin-bottom:14px">
-        <table class="utable" id="members-table"><thead><tr><th>Member</th><th>Role</th><th>Daily cap</th><th>Joined</th></tr></thead>
+        <table aria-label="Members" class="utable" id="members-table"><thead><tr><th scope="col">Member</th><th scope="col">Role</th><th scope="col">Daily cap</th><th scope="col">Joined</th></tr></thead>
         <tbody>
           <tr><td><b>alex</b> · owner</td><td>Owner</td><td class="num">no cap</td><td>May 2026</td></tr>
-          <tr><td><b>jay</b> · jay@acme.dev</td><td><select class="wselect member-role" style="width:auto" aria-label="Role"><option>Member</option><option>Admin</option></select></td><td class="num">$3/day</td><td>Jun 2026</td></tr>
-          <tr><td><b>dax</b> · dax@acme.dev</td><td><select class="wselect member-role" style="width:auto" aria-label="Role"><option>Member</option><option>Admin</option></select></td><td class="num">$8/day</td><td>Aug 2026</td></tr>
+          <tr><td><b>jay</b> · jay@acme.dev</td><td><select class="wselect member-role" style="width:auto" aria-label="Role for jay"><option value="Member">Member</option><option value="Admin">Admin</option></select></td><td class="num">$3/day</td><td>Jun 2026</td></tr>
+          <tr><td><b>dax</b> · dax@acme.dev</td><td><select class="wselect member-role" style="width:auto" aria-label="Role for dax"><option value="Member">Member</option><option value="Admin">Admin</option></select></td><td class="num">$8/day</td><td>Aug 2026</td></tr>
         </tbody></table>
         <p style="margin-top:10px;font-size:12px;color:var(--adim)">Seats can also be provisioned from a GitHub Organization, and roles are covered by the workspace audit history.</p>
       </div>

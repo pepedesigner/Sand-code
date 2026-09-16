@@ -12,13 +12,19 @@
 <meta property="og:title" content="SandCode | Install">
 <meta property="og:description" content="Install the SandCode CLI and configure Cursor, Claude Code, OpenCode, Antigravity, VS Code, Zed, Aider or Cline in a single pass.">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"><link rel="canonical" href="https://sandcode.ai/download.html">
+<link rel="canonical" href="https://sandcode.ai/download.html">
 <meta property="og:url" content="https://sandcode.ai/download.html">
+<meta property="og:image" content="https://sandcode.ai/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SandCode — flat-rate coding compute for every agent client">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://sandcode.ai/assets/og.png">
 <meta property="og:site_name" content="SandCode">
 </head>
 <body>
 <script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
-<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
+<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f+'?v=4';document.head.appendChild(l)})}}catch(e){}</script>
 <header class="site-header"></header>
 <main class="wrap">
 <div class="hero"><h1>Install once. <em>Every client.</em></h1>
@@ -62,7 +68,7 @@ paru -S sandbase</pre>
 <div class="faq">
 <details open><summary>Is installing SandCode free?</summary><p>Yes. The CLI and the setup wizard cost nothing. Usage needs a plan — Standard is $9.9/mo, and the PAYG wallet has no monthly fee at all.</p></details>
 <details><summary>Do I need a particular editor?</summary><p>No. Any client that accepts a custom base URL can use your pool, and setup configures each one it finds on your machine.</p></details>
-<details><summary>Which endpoints does it use?</summary><p>An OpenAI-compatible chat-completions endpoint and an Anthropic-compatible messages endpoint, both under https://api.sandbase.ai/v1.</p></details>
+<details><summary>Which endpoints does it use?</summary><p>An OpenAI-compatible chat-completions endpoint and an Anthropic-compatible messages endpoint, both under https://api.sandcode.ai/v1.</p></details>
 <details><summary>What exactly does setup write to my machine?</summary><p>Client config files (endpoint and MCP entries), a rules file compiled into each client's format, and short-lived revocable tokens. It prompts before the first write, and <code>sandbase harness off</code> disables the local harness.</p></details>
 </div></section>
 </main>

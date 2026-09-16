@@ -1,7 +1,9 @@
 /* Sandcode design tokens — Terminal Dark theme.
    Dark-first: layered near-black surfaces, hairline borders, syntax-palette
    accents. style.css (marketing) and workspace.css (dark app) both build on
-   these. Light mode is a separate re-derivation via body[data-theme="light"]. */
+   these. Light mode is a separate re-derivation via body[data-theme="light"].
+   The translucent tints below are the other half of that: chrome that needs a
+   black wash on light uses one token instead of repeating a literal pair. */
 :root{
   /* type */
   --font-sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
@@ -12,10 +14,7 @@
   --accent:#82AAFF;                          /* syntax-func — primary UI accent */
   --accent-strong:#0A0B0D;                   /* accent-inverted foreground  */
   --accent-soft:rgba(130,170,255,.12);       /* quiet accent wash           */
-  --accent-bright:#C792EA;                   /* syntax-keyword — secondary   */
-  --accent-bright-soft:rgba(199,146,234,.14);
   --success:#C3E88D;                         /* syntax-string — success state */
-  --success-bright:#C3E88D;
   --red:#F07178;                             /* syntax-error — destructive    */
   --green:#C3E88D;
 
@@ -33,6 +32,15 @@
   --max:1080px;
   --header-h:64px;
 
+  /* stacking order — see the ladder, not a magic number, at each use site */
+  --z-hero:-1;             /* hero dot canvas, inside the hero's own context */
+  --z-app:1;
+  --z-scrim:25;            /* drawer scrims (below the drawer)   */
+  --z-side:30;             /* app sidebar                        */
+  --z-header:50;           /* sticky marketing header            */
+  --z-fab:90;              /* back-to-top                        */
+  --z-toast:99;            /* toast + scroll progress            */
+
   /* ---- dark (primary design) :root == default ---- */
   --bg:#0A0B0D;            /* bg-base     canvas          */
   --bg2:#101216;           /* bg-surface  raised surfaces  */
@@ -42,11 +50,13 @@
   --line:#1E2127;          /* border-subtle hairlines      */
   --line-strong:#2A2E37;   /* border-strong                */
   --card:#101216;          /* surface tiles                */
-  --night:#16181D;         /* elevated panels              */
-  --night-deep:#0A0B0D;    /* deepest layer                */
-  --paper:#0A0B0D;         /* marketing canvas (alias)     */
-  --paper-deep:#101216;
-  --paper-ink:#E6E8EB;
+
+  /* translucent chrome — one token per wash, re-derived below */
+  --chrome-bg:rgba(10,11,13,.82);      /* sticky header / app topbar */
+  --tint-soft:rgba(255,255,255,.015);  /* page-footer wash           */
+  --tint-panel:rgba(255,255,255,.02);  /* segmented-control tray     */
+  --tint-hover:rgba(255,255,255,.028); /* table row hover            */
+  --tint-track:rgba(255,255,255,.08);  /* progress / switch track    */
 
   /* code surfaces */
   --code-bg:#0D0F12;       /* code block canvas            */
@@ -57,16 +67,19 @@
   --code-muted:#9BA1AC;    /* secondary text in code boxes  */
   --code-accent:#82AAFF;   /* syntax-func — paths in code   */
   --code-warn:#E3B341;     /* syntax-number — counts in code */
-  --code-error:#F07178;    /* syntax-error — diff deletions  */
 
   /* elevation — depth from lightness + hairlines, NOT shadows */
   --shadow:none;
-  --shadow-hover:none;
   --shadow-app:0 10px 30px rgba(0,0,0,.35);
   --shadow-pop:0 16px 40px rgba(0,0,0,.5);
 
   color-scheme:dark;
 }
+
+/* visually hidden, still exposed to assistive tech — used for table/action
+   labels that would otherwise be blank cells */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 /* ---- light: re-derived, not an inversion ---- */
 body[data-theme="light"]{
@@ -78,28 +91,25 @@ body[data-theme="light"]{
   --line:#DDE0E6;          /* hairline                          */
   --line-strong:#C3C8D0;
   --card:#FFFFFF;
-  --night:#EEF0F4;
-  --night-deep:#E4E7EC;
-  --paper:#F7F8FA;
-  --paper-deep:#FFFFFF;
-  --paper-ink:#1A1C20;
+
+  /* the same washes, flipped to black on a light canvas */
+  --chrome-bg:rgba(247,248,250,.85);
+  --tint-soft:rgba(26,28,32,.015);
+  --tint-panel:rgba(26,28,32,.02);
+  --tint-hover:rgba(26,28,32,.03);
+  --tint-track:rgba(26,28,32,.12);
 
   --code-bg:#101418;
   --code-fg:#E6E8EB;       /* code blocks stay dark on light mode */
 
   /* re-picked syntax accents that pass on light surfaces */
   --accent:#3B6AF0;        /* syntax-func (deeper for contrast) */
-  --accent-strong:#0A0B0D;
   --accent-soft:rgba(59,106,240,.12);
-  --accent-bright:#9B50C9;
-  --accent-bright-soft:rgba(155,80,201,.12);
   --success:#2E8B57;
-  --success-bright:#2E8B57;
   --red:#D64550;
   --green:var(--success);  /* --green is the app-facing alias of --success */
 
   --shadow:0 1px 2px rgba(20,22,26,.05),0 10px 28px -12px rgba(20,22,26,.18);
-  --shadow-hover:0 2px 4px rgba(20,22,26,.06),0 16px 36px -12px rgba(20,22,26,.22);
 
   color-scheme:light;
 }

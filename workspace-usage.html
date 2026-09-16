@@ -12,14 +12,20 @@
 <meta property="og:title" content="SandCode Console — Usage">
 <meta property="og:description" content="SandCode Console usage — daily spend, per-model and per-client breakdown (mock demo).">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"><meta name="robots" content="noindex">
+<meta name="robots" content="noindex">
 <link rel="canonical" href="https://sandcode.ai/workspace-usage.html">
 <meta property="og:url" content="https://sandcode.ai/workspace-usage.html">
+<meta property="og:image" content="https://sandcode.ai/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SandCode — flat-rate coding compute for every agent client">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://sandcode.ai/assets/og.png">
 <meta property="og:site_name" content="SandCode">
 </head>
 <body>
 <script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
-<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
+<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f+'?v=4';document.head.appendChild(l)})}}catch(e){}</script>
 <div id="app">
   <aside id="side"></aside>
   <div id="side-scrim" hidden></div>
@@ -36,14 +42,14 @@
         <div class="urow" style="margin-top:8px"><span>Aug 22</span><span>Sep 4</span></div></div>
       <div class="ws-grid">
         <div class="ws-card"><h2>By model</h2>
-          <table class="utable"><thead><tr><th>Model</th><th class="num">Requests</th><th class="num">Tokens</th><th class="num">Cost</th></tr></thead>
+          <table aria-label="By model" class="utable"><thead><tr><th scope="col">Model</th><th scope="col" class="num">Requests</th><th scope="col" class="num">Tokens</th><th scope="col" class="num">Cost</th></tr></thead>
           <tbody><tr><td><code>deepseek-v4.1-flash</code></td><td class="num">6,104</td><td class="num">4.2M</td><td class="num">$24.10</td></tr>
           <tr><td><code>tencent/hy3</code></td><td class="num">3,208</td><td class="num">2.1M</td><td class="num">$13.60</td></tr>
           <tr><td><code>minimax-m3</code></td><td class="num">1,930</td><td class="num">1.4M</td><td class="num">$7.90</td></tr>
           <tr><td><code>deepseek-v4.1-pro</code></td><td class="num">640</td><td class="num">0.3M</td><td class="num">$1.20</td></tr>
           <tr><td><code>z-ai/glm-5.2</code></td><td class="num">380</td><td class="num">0.1M</td><td class="num">$0.40</td></tr></tbody></table></div>
         <div class="ws-card"><h2>By client</h2>
-          <table class="utable"><thead><tr><th>Client</th><th class="num">Requests</th><th class="num">Share</th></tr></thead>
+          <table aria-label="By client" class="utable"><thead><tr><th scope="col">Client</th><th scope="col" class="num">Requests</th><th scope="col" class="num">Share</th></tr></thead>
           <tbody><tr><td>Cursor</td><td class="num">7,100</td><td class="num">57%</td></tr>
           <tr><td>Claude Code</td><td class="num">3,240</td><td class="num">26%</td></tr>
           <tr><td>Antigravity</td><td class="num">1,320</td><td class="num">11%</td></tr>

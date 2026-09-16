@@ -12,13 +12,19 @@
 <meta property="og:title" content="SandCode Pricing | Flat-rate coding compute">
 <meta property="og:description" content="SandCode plans — $9.9/mo for a $70 model pool, a rolling 6h window, daily burst and PAYG overflow. Bundled search and scrape. Never hard-capped.">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"><link rel="canonical" href="https://sandcode.ai/pricing.html">
+<link rel="canonical" href="https://sandcode.ai/pricing.html">
 <meta property="og:url" content="https://sandcode.ai/pricing.html">
+<meta property="og:image" content="https://sandcode.ai/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SandCode — flat-rate coding compute for every agent client">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://sandcode.ai/assets/og.png">
 <meta property="og:site_name" content="SandCode">
 </head>
 <body>
 <script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
-<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
+<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f+'?v=4';document.head.appendChild(l)})}}catch(e){}</script>
 <header class="site-header"></header>
 <main class="wrap">
 <div class="hero" style="text-align:center">
@@ -95,7 +101,7 @@
 <a class="btn" href="./docs.html">Read the API docs</a>
 <ul>
 <li>OpenAI and Anthropic compatible endpoints</li>
-<li>All eight models, plus claude-sonnet-5 passthrough</li>
+<li>All eight models, including claude-sonnet-5 passthrough</li>
 <li>Catches subscription overflow automatically</li>
 <li>Per-request analytics and traces</li>
 <li>Tool calls beyond quota billed at $0.02 each</li>
@@ -126,8 +132,8 @@
 <div class="step"><i>03</i><b>PAYG overflow</b><p>When the window is spent, your wallet takes over automatically. Add funds and keep working.</p></div>
 </div>
 <div class="compare">
-<table>
-<thead><tr><th></th><th>Standard</th><th>Pro</th><th>Team</th><th>Provider</th></tr></thead>
+<table aria-label="Three buffers. No wall.">
+<thead><tr><th scope="col">Feature</th><th scope="col">Standard</th><th scope="col">Pro</th><th scope="col">Team</th><th scope="col">Provider</th></tr></thead>
 <tbody>
 <tr><td>Monthly price</td><td>$9.9</td><td>$24.9</td><td>$24.9/seat</td><td>$0 + usage</td></tr>
 <tr><td>Model pool</td><td>$70</td><td>$175</td><td>$175/seat pooled</td><td>Wallet</td></tr>
@@ -149,14 +155,14 @@
 <h2>Portable compute, <em>full runtime.</em></h2>
 <p class="sub">Two axes decide this market: whether your quota can move between clients, and how much engineering runtime sits behind the tokens.</p>
 <div class="quad">
-  <div class="quad-y" aria-hidden="true">Engineering runtime depth</div>
+  <div class="quad-y">Engineering runtime depth</div>
   <div class="quad-grid">
     <div class="quad-cell on"><span class="q-tag">SandCode</span><b>Open full-stack runtime</b><p>Quota moves between clients, and the runtime verifies, heals and rolls back your changes.</p></div>
     <div class="quad-cell"><b>Closed deep platform</b><p>Strong native runtimes, but the quota only works inside the vendor's own client.</p></div>
     <div class="quad-cell"><b>Closed compute pack</b><p>Flat-rate pools that resell tokens with little runtime value on top.</p></div>
     <div class="quad-cell"><b>Open protocol pipe</b><p>Any client via compatible endpoints, but no engineering runtime behind it.</p></div>
   </div>
-  <div class="quad-x" aria-hidden="true">Compute portability</div>
+  <div class="quad-x">Compute portability</div>
 </div>
 <p class="sub" style="font-size:12.5px;margin-top:14px">Quadrant names only. Positioning is an internal estimate, shown for orientation — not a scoring of any named product.</p>
 </section>
@@ -166,8 +172,8 @@
 <h2>Capability, <em>side by side.</em></h2>
 <p class="sub">How SandCode differs from the other ways developers buy coding compute today.</p>
 <div class="compare">
-<table>
-<thead><tr><th>Capability</th><th>SandCode</th><th>Anthropic subscription</th><th>OpenCode Go</th><th>Command Code</th></tr></thead>
+<table aria-label="Capability, side by side.">
+<thead><tr><th scope="col">Capability</th><th scope="col">SandCode</th><th scope="col">Anthropic subscription</th><th scope="col">OpenCode Go</th><th scope="col">Command Code</th></tr></thead>
 <tbody>
 <tr><td>Quota usable in other clients</td><td>✓</td><td>✗</td><td>Partial</td><td>✗</td></tr>
 <tr><td>Bundled search &amp; scrape</td><td>✓ 1,000/mo</td><td>✗</td><td>✗</td><td>✗</td></tr>
@@ -187,8 +193,8 @@
 <h2>What happens at the edge.</h2>
 <p class="sub">Quota exhaustion is a first-class state, not a crash. Clients get a clear signal instead of a retry storm.</p>
 <div class="compare">
-<table>
-<thead><tr><th>Situation</th><th>Status</th><th>What the client gets</th></tr></thead>
+<table aria-label="What happens at the edge.">
+<thead><tr><th scope="col">Situation</th><th scope="col">Status</th><th scope="col">What the client gets</th></tr></thead>
 <tbody>
 <tr><td>Monthly pool exhausted</td><td>402 Payment Required</td><td>A retry-after hint plus a top-up link</td></tr>
 <tr><td>6h or weekly window exhausted</td><td>402 Payment Required</td><td>The time the window releases</td></tr>

@@ -17,7 +17,7 @@
   function copyText(t, msg) {
     Sand.copyText(t).then(
       function () { toast(msg || 'Copied to clipboard.'); },
-      function () { toast('Copy failed.'); }
+      function () { toast('Copy failed'); }
     );
   }
 
@@ -76,8 +76,8 @@
         var row = b.closest('tr');
         var cell = row && row.querySelector('td.mono');
         var tag = Math.random().toString(16).slice(2, 6);
-        if (cell) cell.textContent = 'sb_live_••••' + tag;
-        b.setAttribute('data-copy', 'sb_live_mock_' + tag + '_key');
+        if (cell) cell.textContent = 'sc_live_••••' + tag;
+        b.setAttribute('data-copy', 'sc_live_mock_' + tag + '_key');
         toast('Key rotated. The old value stopped working.');
       } else if (b.hasAttribute('data-revoke')) {
         var dead = b.closest('tr');
@@ -107,12 +107,12 @@
         }
         var actions = cell('num');
         actions.append(
-          act('Copy', 'data-copy', 'sb_live_mock_' + tag + '_key', 'ghost'),
+          act('Copy', 'data-copy', 'sc_live_mock_' + tag + '_key', 'ghost'),
           act('Rotate', 'data-regen', null, 'ghost'),
           act('Revoke', 'data-revoke', null, 'danger')
         );
         var tr = document.createElement('tr');
-        tr.append(cell(null, 'New key'), cell('mono', 'sb_live_••••' + tag), cell(null, 'never'), actions);
+        tr.append(cell(null, 'New key'), cell('mono', 'sc_live_••••' + tag), cell(null, 'never'), actions);
         tb.prepend(tr);
         toast('Key created — copy it now.');
       });

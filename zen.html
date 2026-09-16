@@ -12,13 +12,19 @@
 <meta property="og:title" content="SandCode Models | Eight models for coding agents">
 <meta property="og:description" content="Sand Zen — eight handpicked models load-tested on real agent traces, with transparent list pricing and 1:1 prompt-caching passthrough.">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"><link rel="canonical" href="https://sandcode.ai/zen.html">
+<link rel="canonical" href="https://sandcode.ai/zen.html">
 <meta property="og:url" content="https://sandcode.ai/zen.html">
+<meta property="og:image" content="https://sandcode.ai/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SandCode — flat-rate coding compute for every agent client">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://sandcode.ai/assets/og.png">
 <meta property="og:site_name" content="SandCode">
 </head>
 <body>
 <script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
-<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
+<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f+'?v=4';document.head.appendChild(l)})}}catch(e){}</script>
 <header class="site-header"></header>
 <main class="wrap">
 <div class="hero">
@@ -33,8 +39,8 @@
 <h2>Eight models, <em>one pool.</em></h2>
 <p class="sub">Prices are per million tokens at upstream list rate. Your subscription pool is drawn down at exactly these numbers.</p>
 <div class="compare">
-<table>
-<thead><tr><th>Model</th><th>Context</th><th>In / Out</th><th>Cache reads</th><th>Quota</th></tr></thead>
+<table aria-label="Eight models, one pool.">
+<thead><tr><th scope="col">Model</th><th scope="col">Context</th><th scope="col">In / Out</th><th scope="col">Cache reads</th><th scope="col">Quota</th></tr></thead>
 <tbody>
 <tr><td><code>deepseek/deepseek-v4.1-flash</code></td><td>1M</td><td>$0.44 / $1.32</td><td>0.0318×</td><td>Full pool · default</td></tr>
 <tr><td><code>tencent/hy3</code></td><td>256k</td><td>$0.132 / $0.528</td><td>0.2500×</td><td>Full pool · cheapest</td></tr>
@@ -55,18 +61,18 @@
 <h2>Cache reads, <em>passed through 1:1.</em></h2>
 <p class="sub">On the flagship model, a cache read costs 0.0318× the input price — about $0.0140 per million tokens. We pass that discount through untouched.</p>
 <div class="compare">
-<table>
-<thead><tr><th>Scenario</th><th>Working</th><th>Cost</th></tr></thead>
+<table aria-label="Cache reads, passed through 1:1.">
+<thead><tr><th scope="col">Scenario</th><th scope="col">Working</th><th scope="col">Cost</th></tr></thead>
 <tbody>
 <tr><td>No cache</td><td>100,000 × $0.44/M + 3,000 × $1.32/M</td><td>$0.0480</td></tr>
 <tr><td>Cache hit at 80%</td><td>20,000 × $0.44/M + 80,000 × $0.0140/M + 3,000 × $1.32/M</td><td>$0.0139</td></tr>
-<tr><td>Effective purchasing power</td><td>$0.0480 ÷ $0.0139</td><td>≈ 2.8×</td></tr>
+<tr><td>Effective purchasing power</td><td>$0.0480 ÷ $0.0139</td><td>≈ 3.45×</td></tr>
 </tbody>
 </table>
 </div>
 <div class="grid">
 <div class="card"><b>What it does not do</b><p>Caching does not raise our margin — the platform takes the same cut either way. It changes how much work one dollar of quota buys, which is why a $70 pool can feel like far more.</p></div>
-<div class="card"><b>Measured, not assumed</b><p>The 2.8× figure is quoted at an 80% cache hit rate with output around 20% of input cost. Different workloads land differently — heavier input means a bigger multiple.</p></div>
+<div class="card"><b>Measured, not assumed</b><p>The 3.45× figure is quoted at an 80% cache hit rate with output around 20% of input cost. Different workloads land differently — heavier input means a bigger multiple.</p></div>
 </div>
 </section>
 

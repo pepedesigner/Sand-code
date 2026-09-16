@@ -12,16 +12,22 @@
 <meta property="og:title" content="SandCode Docs | Intro">
 <meta property="og:description" content="SandCode docs — install the CLI, point any client at the gateway, wire up MCP tools and the local harness, and understand limits and retention.">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"><link rel="canonical" href="https://sandcode.ai/docs.html">
+<link rel="canonical" href="https://sandcode.ai/docs.html">
 <meta property="og:url" content="https://sandcode.ai/docs.html">
+<meta property="og:image" content="https://sandcode.ai/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SandCode — flat-rate coding compute for every agent client">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://sandcode.ai/assets/og.png">
 <meta property="og:site_name" content="SandCode">
 </head>
 <body>
 <script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
-<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
+<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f+'?v=4';document.head.appendChild(l)})}}catch(e){}</script>
 <header class="site-header"></header>
 <main class="wrap docs-layout">
-<aside class="sidebar">
+<nav class="sidebar" aria-label="Docs">
 <b>Docs</b>
 <a class="active" href="./docs.html" aria-current="page">Intro</a>
 <a href="./docs.html#quickstart">Quickstart</a>
@@ -37,7 +43,7 @@
 <a href="./docs.html#data">Data &amp; retention</a>
 <a href="./pricing.html">Plans</a>
 <a href="./enterprise.html">Enterprise</a>
-</aside>
+</nav>
 <article class="doc">
 <h1>Intro</h1>
 <p><b>SandCode</b> is flat-rate coding compute for agent clients. The gateway speaks both the OpenAI and Anthropic wire formats, so any client that accepts a custom base URL can draw on your pool — with search, scrape and a local verification harness layered on top.</p>
@@ -54,14 +60,14 @@ paru -S sandbase</pre>
 
 <h2 id="configure">Configure</h2>
 <p>Point your client at the unified base URL and authenticate with a key from the <a href="./workspace-keys.html">Console</a>.</p>
-<pre>Base URL   https://api.sandbase.ai/v1
-Auth       Authorization: Bearer sb_live_&lt;key&gt;
+<pre>Base URL   https://api.sandcode.ai/v1
+Auth       Authorization: Bearer sc_live_&lt;key&gt;
 
 POST /v1/chat/completions        # OpenAI-compatible
 POST /v1/messages                # Anthropic-compatible
 POST /v1/messages/count_tokens   # required by Claude Code</pre>
-<pre>curl https://api.sandbase.ai/v1/chat/completions \
-  -H "Authorization: Bearer sb_live_xxx" \
+<pre>curl https://api.sandcode.ai/v1/chat/completions \
+  -H "Authorization: Bearer sc_live_xxx" \
   -H "Content-Type: application/json" \
   -d '{"model":"deepseek/deepseek-v4.1-flash",
        "messages":[{"role":"user","content":"hi"}]}'</pre>
@@ -70,14 +76,14 @@ POST /v1/messages/count_tokens   # required by Claude Code</pre>
 <pre>sandbase auth rotate</pre>
 
 <h2 id="models">Models</h2>
-<p>Eight models, priced at upstream list rate with prompt-caching discounts passed through 1:1. Six draw on the full monthly pool; the two flagship reasoning models sit behind a smaller monthly sub-quota so long-thinking arbitrage cannot eat the shared pool.</p>
+<p>Eight models, priced at upstream list rate with prompt-caching discounts passed through 1:1. Four draw on the full monthly pool; the two flagship reasoning models sit behind a smaller monthly sub-quota so long-thinking arbitrage cannot eat the shared pool.</p>
 <p><a href="./zen.html">See the full model matrix →</a></p>
 
 <h2 id="tools">Tools</h2>
 <p>Search and scrape are injected as MCP tools during setup, so the agent can look things up mid-task instead of inventing an API.</p>
 <div class="compare">
-<table>
-<thead><tr><th>Tool</th><th>Backing APIs</th><th>Standard quota</th></tr></thead>
+<table aria-label="Tools">
+<thead><tr><th scope="col">Tool</th><th scope="col">Backing APIs</th><th scope="col">Standard quota</th></tr></thead>
 <tbody>
 <tr><td>Search</td><td>cloudsway/search, exa/search</td><td>500 calls/month</td></tr>
 <tr><td>Scrape</td><td>firecrawl/scrape, exa/contents</td><td>500 calls/month</td></tr>
@@ -90,8 +96,8 @@ POST /v1/messages/count_tokens   # required by Claude Code</pre>
 <h2 id="harness">Harness</h2>
 <p>The harness is a local MCP server installed on your machine. It never runs on our side, because the gateway has no access to your filesystem, tests or Git repository.</p>
 <div class="compare">
-<table>
-<thead><tr><th>Capability</th><th>What it does</th></tr></thead>
+<table aria-label="Harness">
+<thead><tr><th scope="col">Capability</th><th scope="col">What it does</th></tr></thead>
 <tbody>
 <tr><td>Syntax check</td><td>Validates the change as it lands. Clients with a pre-write hook can block it; others verify immediately after and roll back on failure.</td></tr>
 <tr><td>Test hooks</td><td>Runs the relevant tests after each edit — pytest, jest or cargo test.</td></tr>
@@ -119,8 +125,8 @@ sandbase migrate --from commandcode</pre>
 <h2 id="rewards">Rewards</h2>
 <p>Invite rewards are paid in PAYG credit, so they never reduce your monthly quota pool.</p>
 <div class="compare">
-<table>
-<thead><tr><th>Programme</th><th>Reward</th><th>Limits</th></tr></thead>
+<table aria-label="Rewards">
+<thead><tr><th scope="col">Programme</th><th scope="col">Reward</th><th scope="col">Limits</th></tr></thead>
 <tbody>
 <tr><td>Two-way invite</td><td>$5 PAYG credit to each side</td><td>Granted once the invitee subscribes and completes their first paid month</td></tr>
 <tr><td>Invite monthly cap</td><td>10 effective invites</td><td>Per account, per month</td></tr>
@@ -139,8 +145,8 @@ sandbase trace --last</pre>
 
 <h2 id="errors">Errors &amp; limits</h2>
 <div class="compare">
-<table>
-<thead><tr><th>Situation</th><th>Status</th><th>Response</th></tr></thead>
+<table aria-label="Errors &amp; limits">
+<thead><tr><th scope="col">Situation</th><th scope="col">Status</th><th scope="col">Response</th></tr></thead>
 <tbody>
 <tr><td>Monthly pool exhausted</td><td>402</td><td>Retry hint plus a top-up link</td></tr>
 <tr><td>6h or weekly window exhausted</td><td>402</td><td>The time the window releases</td></tr>
@@ -155,8 +161,8 @@ sandbase trace --last</pre>
 <h2 id="data">Data &amp; retention</h2>
 <p>Requests are never used for training. Retention is tiered rather than absolute — a full session trace and "nothing is ever stored" cannot both be true, so we are specific about each class of data.</p>
 <div class="compare">
-<table>
-<thead><tr><th>Data</th><th>Default</th><th>Kept for</th></tr></thead>
+<table aria-label="Data &amp; retention">
+<thead><tr><th scope="col">Data</th><th scope="col">Default</th><th scope="col">Kept for</th></tr></thead>
 <tbody>
 <tr><td>Token ledger and call metadata</td><td>Stored (required for billing)</td><td>24 months</td></tr>
 <tr><td>Tool-call records (query, URL)</td><td>Stored, you can turn it off</td><td>90 days</td></tr>

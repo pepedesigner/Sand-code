@@ -15,14 +15,19 @@
 <meta property="og:title" content="SandCode | Flat-rate coding compute for every agent">
 <meta property="og:description" content="SandCode is flat-rate coding compute for every agent client. $9.9/mo for a $70 model pool, bundled search and scrape, and a local verification harness — never hard-capped.">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
 <link rel="canonical" href="https://sandcode.ai/">
 <meta property="og:url" content="https://sandcode.ai/">
+<meta property="og:image" content="https://sandcode.ai/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SandCode — flat-rate coding compute for every agent client">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://sandcode.ai/assets/og.png">
 <meta property="og:site_name" content="SandCode">
 </head>
 <body>
 <script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
-<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f;document.head.appendChild(l)})}}catch(e){}</script>
+<script>try{var s=localStorage.getItem('sandcode-lang')||((navigator.languages&&navigator.languages[0])||navigator.language||'en');var z=/^zh/i.test(s);window.__sandLang=z?'zh':'en';if(z){var d=document.documentElement;d.lang='zh-CN';d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},2000);['i18n-dict-a.js','i18n-dict-b.js','i18n-dict-c.js'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='script';l.href='./'+f+'?v=4';document.head.appendChild(l)})}}catch(e){}</script>
 <header class="site-header"></header>
 
 <main class="wrap">
@@ -196,7 +201,7 @@
 <h2 style="margin:0">Be the first to know when we release new models</h2>
 <p class="sub" style="margin:8px 0 0">Join the waitlist for early access.</p>
 <form id="waitlist-form"><input required type="email" name="email" aria-label="Email address" placeholder="you@example.com"><button type="submit">Subscribe</button></form>
-<p id="waitlist-msg" style="font-weight:700"></p>
+<p id="waitlist-msg" role="status" aria-live="polite" style="font-weight:700"></p>
 </div>
 
 </main>

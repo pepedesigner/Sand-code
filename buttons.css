@@ -75,7 +75,7 @@ body { --btn-bg:var(--ink); --btn-fg:var(--bg); }
 body[data-theme="dark"] { --btn-bg:var(--ink); --btn-fg:var(--bg); }
 body[data-theme="light"] { --btn-bg:var(--ink); --btn-fg:var(--bg); }
 /* workspace app keeps a filled accent as the primary action */
-#app { --btn-bg:var(--accent); --btn-fg:#0A0B0D; }
+#app { --btn-bg:var(--accent); --btn-fg:var(--accent-strong); }
 
 /* ---------- documented exceptions (must stay distinct) ---------- */
 .menu-btn, #menu-side { display:none; }

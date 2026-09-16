@@ -1,26 +1,33 @@
 /* Sandcode i18n engine — EN ⇄ 中文, dictionary-driven, zero HTML edits.
    - Toggle is auto-injected into marketing navs + workspace topbars.
    - Language follows the browser (zh* → 中文, anything else → English) until the
-     visitor flips the toggle, after which that choice is persisted.
-   - Dictionaries (i18n-dict-*.js) lazily load on the first switch to 中文, so
-     page loads don't pay for ~850 entries nobody reads in EN mode. Pages with
-     中文 selected preload them from an inline bootstrap, which also gates the
-     document so it never paints English first.
+     visitor flips the toggle, after which that choice is persisted. The inline
+     bootstrap resolves it the same way pre-paint into window.__sandLang, and
+     this file normalises through the same /^zh/i test so the two can never
+     disagree (a stored 'zh-CN' must mean the same thing to both).
+   - Dictionaries (i18n-dict-*.js) lazily load on the first 中文 render, so page
+     loads don't pay for ~850 entries nobody reads in EN mode. Pages with 中文
+     selected preload them from the inline bootstrap, which also gates the
+     document so it never paints English first. A failed load is not remembered,
+     so the next toggle retries instead of silently staying English.
    - Static text nodes, placeholder/title/aria-label attrs and <title> swap.
    - The MutationObserver translates only the subtrees a mutation actually
      touched, coalesced on a short trailing debounce. A whole-document re-walk
      would otherwise run continuously: the hero terminal rewrites its DOM every
      ~16ms and the stat counters every frame.
-   - Original EN strings are stored on the text node itself (GC-friendly —
-   no strong registry that keeps detached nodes alive).
+   - The original string is kept on the node itself (GC-friendly — no strong
+     registry that keeps detached nodes alive) together with the last value this
+     engine wrote, so a write by anyone else is adopted as the new original
+     instead of being reverted to a stale one.
    - Unmapped nodes stay English. Persisted in localStorage. */
 (function () {
   var KEY = 'sandcode-lang';
+  var V = '?v=4'; // same cache-busting convention as the other assets
   var ATTRS = ['placeholder', 'title', 'aria-label'];
   var DICT_FILES = ['i18n-dict-a.js', 'i18n-dict-b.js', 'i18n-dict-c.js'];
   var GATE = 'i18n-pending'; // set by the inline bootstrap, cleared here
   var DEBOUNCE = 120;
-  var origAttr = new WeakMap(); // Element -> {attr: original EN}
+  var attrState = new WeakMap(); // Element -> {src:{attr:EN}, last:{attr:written}}
   var _origTitle = document.title; // captured at parse time (static EN)
   var applying = false; // suppress observer while this engine writes
   var dictPromise = null;
@@ -29,31 +36,36 @@
 
   function dict() { return window.__I18N || {}; }
   function norm(s) { return s.replace(/\s+/g, ' ').trim(); }
-  // An explicit choice always wins. Otherwise follow the browser, which the
-  // inline bootstrap already resolved pre-paint into window.__sandLang — asking
-  // it again here keeps the first render and this engine in agreement.
+
+  // One normalisation for every source: an explicit choice wins, then whatever
+  // the bootstrap resolved pre-paint, then the browser itself.
   function lang() {
-    try {
-      var saved = localStorage.getItem(KEY);
-      if (saved) return saved;
-    } catch (e) { /* private mode: fall through to the browser preference */ }
-    if (window.__sandLang) return window.__sandLang;
-    var n = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
-    return /^zh/i.test(n) ? 'zh' : 'en';
+    var src = null;
+    try { src = localStorage.getItem(KEY); } catch (e) { /* private mode */ }
+    if (!src) src = window.__sandLang;
+    if (!src) src = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
+    return /^zh/i.test(src) ? 'zh' : 'en';
   }
 
-  // dictionaries are only needed for 中文 — load once, on demand
+  // dictionaries are only needed for 中文 — load on demand, retry after failure
   function loadDicts() {
     if (dictPromise) return dictPromise;
     dictPromise = new Promise(function (resolve) {
       var left = DICT_FILES.length;
+      var failed = false;
+      function done() {
+        if (--left > 0) return;
+        if (failed) dictPromise = null; // do not memoise a failure for the session
+        resolve();
+      }
       DICT_FILES.forEach(function (src) {
         var s = document.createElement('script');
-        s.src = './' + src;
-        s.onload = function () { if (--left === 0) resolve(); };
+        s.src = './' + src + V;
+        s.onload = done;
         s.onerror = function () {
+          failed = true;
           console.warn('[sandcode] i18n dictionary failed to load:', src);
-          if (--left === 0) resolve();
+          done();
         };
         document.head.appendChild(s);
       });
@@ -64,33 +76,41 @@
   function setLang(l) {
     try { localStorage.setItem(KEY, l); } catch (e) {}
     document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
-    if (l === 'zh') loadDicts().then(function () { applyLang(l); paintButton(l); });
-    else { applyLang(l); paintButton(l); }
+    if (l === 'zh') {
+      loadDicts().then(function () { applyLang(l); paintButton(l); })
+        .catch(function (e) { console.warn('[sandcode] i18n apply failed:', e); });
+    } else { applyLang(l); paintButton(l); }
   }
 
   function swapTextNode(node, l) {
-    if (node.__i18nEN === undefined) node.__i18nEN = node.nodeValue;
+    var cur = node.nodeValue;
+    // a writer other than this engine changed the node — adopt it as the source
+    if (node.__i18nEN === undefined || (cur !== node.__i18nEN && cur !== node.__i18nLast)) {
+      node.__i18nEN = cur;
+    }
     var src = node.__i18nEN;
     var m = src.match(/^(\s*)([\s\S]*?)(\s*)$/);
     var key = norm(m[2]);
     if (!key) return;
     var next = (l === 'zh' && dict()[key] !== undefined) ? m[1] + dict()[key] + m[3] : src;
-    if (node.nodeValue !== next) node.nodeValue = next; // write only on real change
+    if (cur !== next) { node.nodeValue = next; node.__i18nLast = next; }
   }
+
   function swapAttrs(root, l) {
     var els = root.querySelectorAll ? root.querySelectorAll('[' + ATTRS.join('],[') + ']') : [];
     for (var i = 0; i < els.length; i++) {
       (function (el) {
-        var saved = origAttr.get(el) || {};
+        var st = attrState.get(el) || { src: {}, last: {} };
         ATTRS.forEach(function (a) {
           if (!el.hasAttribute(a)) return;
-          if (!(a in saved)) saved[a] = el.getAttribute(a);
-          var src = saved[a];
-          var key = norm(src);
-          var next = (l === 'zh' && dict()[key] !== undefined) ? dict()[key] : src;
-          if (el.getAttribute(a) !== next) el.setAttribute(a, next); // write only on real change
+          var cur = el.getAttribute(a);
+          // same rule as text nodes: someone else's write becomes the new source
+          if (st.src[a] === undefined || (cur !== st.src[a] && cur !== st.last[a])) st.src[a] = cur;
+          var key = norm(st.src[a]);
+          var next = (l === 'zh' && dict()[key] !== undefined) ? dict()[key] : st.src[a];
+          if (cur !== next) { el.setAttribute(a, next); st.last[a] = next; }
         });
-        origAttr.set(el, saved);
+        attrState.set(el, st);
       })(els[i]);
     }
   }
@@ -117,8 +137,8 @@
   function applyLang(l) {
     applying = true;
     try {
-      translate(document.body, l);
-      swapAttrs(document, l);
+      eachText(document.body, function (t) { swapTextNode(t, l); });
+      swapAttrs(document, l); // covers <head> too; swapAttrs(document.body) would repeat this
       var titleKey = norm(_origTitle);
       if (l === 'zh' && dict()[titleKey] !== undefined) document.title = dict()[titleKey];
       else document.title = _origTitle;
@@ -147,6 +167,10 @@
   }
   function injectButton() {
     if (document.getElementById('lang-btn')) return;
+    // bail out rather than leaving a detached button with a live click handler
+    var nav = document.querySelector('.nav-links');
+    var top = nav ? null : document.querySelector('.top-actions');
+    if (!nav && !top) return;
     var b = document.createElement('button');
     b.id = 'lang-btn';
     b.type = 'button';
@@ -157,14 +181,8 @@
     b.addEventListener('click', function () {
       setLang(lang() === 'zh' ? 'en' : 'zh');
     });
-    var nav = document.querySelector('.nav-links');
-    if (nav) {
-      var theme = document.getElementById('theme-btn');
-      nav.insertBefore(b, theme || null);
-    } else {
-      var top = document.querySelector('.top-actions');
-      if (top) top.insertBefore(b, top.firstChild);
-    }
+    if (nav) nav.insertBefore(b, document.getElementById('theme-btn') || null);
+    else top.insertBefore(b, top.firstChild);
     paintButton(lang());
   }
 
@@ -199,8 +217,12 @@
   document.addEventListener('DOMContentLoaded', function () {
     injectButton();
     observe();
-    if (lang() === 'zh') loadDicts().then(function () { applyLang('zh'); ungated(); });
-    else { applyLang('en'); ungated(); }
+    if (lang() === 'zh') {
+      loadDicts()
+        .then(function () { applyLang('zh'); })
+        .catch(function (e) { console.warn('[sandcode] i18n apply failed:', e); })
+        .then(ungated); // always un-hide, even if applying threw
+    } else { applyLang('en'); ungated(); }
     document.documentElement.lang = lang() === 'zh' ? 'zh-CN' : 'en';
   });
 })();

@@ -3,10 +3,9 @@
 window.__I18N = window.__I18N || {};
 Object.assign(window.__I18N, {
   /* ---- console chrome (chrome.js) ---- */
-  'SandBase Console': 'SandBase 控制台',
+  'SandCode Console': 'SandCode 控制台',
   'Menu': '菜单',
   'Overview': '概览',
-  'Coding Plan': 'Coding Plan',
   'Usage': '用量',
   'Billing': '账单',
   'Keys': '密钥',
@@ -40,16 +39,14 @@ Object.assign(window.__I18N, {
   'Open Coding Plan': '打开 Coding Plan',
 
   /* ---- coding plan ---- */
-  'Coding plan': 'Coding plan',
   'Windows, tools and traces · mock data.': '窗口、工具与 Trace · 演示数据。',
   '6h rolling window': '6h 滚动窗口',
   '$4.80 of $15.00': '$4.80 / $15.00',
   'oldest request ages out in 42m': '最早的请求将在 42 分钟后滑出',
   '$4.20 of $20.00': '$4.20 / $20.00',
-  'V4.1 Pro · GLM 5.2': 'V4.1 Pro · GLM 5.2',
   'Prompt caching savings': 'Prompt Caching 节省',
   'Share weekly report': '分享周报',
-  'Last 7 days · 80% hit rate · ≈2.8× effective purchasing power.': '近 7 天 · 命中率 80% · 等效购买力 ≈2.8×。',
+  'Last 7 days · 80% hit rate · ≈3.45× effective purchasing power.': '近 7 天 · 命中率 80% · 等效购买力 ≈3.45×。',
   'Tool quota (MCP)': '工具额度（MCP）',
   'Search · 68 of 500': '搜索 · 68 / 500',
   'Scrape · 12 of 500': '抓取 · 12 / 500',
@@ -188,7 +185,6 @@ Object.assign(window.__I18N, {
   'Discord webhook off': 'Discord Webhook 已关闭',
   'Email alerts': '邮件告警',
   'Copied to clipboard.': '已复制到剪贴板。',
-  'Copy failed.': '复制失败。',
   'Key copied.': '密钥已复制。',
   'Key rotated. The old value stopped working.': '密钥已轮换，旧值已失效。',
   'Key revoked.': '密钥已吊销。',
@@ -198,8 +194,8 @@ Object.assign(window.__I18N, {
   'Enter a valid email.': '请输入有效邮箱。',
   'Settings saved (mock — nothing stored).': '设置已保存（演示，未存储）。',
   'Nothing to delete — retention is off.': '没有可删除的数据——留存功能处于关闭状态。',
-  'This is a demo — you are staying.': '这是演示站——你还留着。',
-  '$20 added to your wallet — overflow is covered.': '已向钱包充值 $20——溢出已有承接。',
+  'This is a demo — you are staying.': '这是演示站——不会真的把你移出。',
+  '$20 added to your wallet — overflow is covered.': '$20 已充入钱包——超出订阅额度的部分由此承接。',
 
   /* ---- page titles ---- */
   'SandCode Console — Overview': 'SandCode 控制台 — 概览',
@@ -212,7 +208,6 @@ Object.assign(window.__I18N, {
   'SandCode Console — Settings': 'SandCode 控制台 — 设置',
 
   /* ---- table tokens ---- */
-  'Visa ··4242': 'Visa ··4242',
   'CI runner': 'CI 运行器',
   '· owner': '· 所有者',
   'Sep 1, 2026': '2026 年 9 月 1 日',
