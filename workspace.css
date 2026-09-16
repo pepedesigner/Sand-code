@@ -245,17 +245,13 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,su
 body[data-theme="dark"] .switch em::after{background:var(--bg2)}
 body[data-theme="dark"] #side-scrim{background:rgba(0,0,0,.6)}
 
-/* ---------- roles ----------
-   Two audiences share this console: a customer sees their own workspace, our
-   team additionally sees the internal acquisition dashboard. The role lives on
-   <html> (set before first paint), so gating is pure CSS and switching needs no
-   reload. `:not([data-role="staff"])` rather than `[data-role="customer"]` on
-   purpose — with storage blocked the attribute is absent, and absent must mean
-   "customer", not "show everything". */
-html:not([data-role="staff"]) [data-internal],
-html:not([data-role="staff"]) [data-staff]{display:none}
-[data-gate]{display:none}
-html:not([data-role="staff"]) [data-gate]{display:flex}
+/* ---------- auth gate ----------
+   The console is behind a sign-in. The redirect is done by the inline bootstrap
+   in each workspace-*.html, before first paint; it also sets `auth-pending` so
+   that a slow redirect cannot flash the console to a visitor who is not signed
+   in. Hiding `body` covers the whole page — the shell, the cards and the toast
+   all live inside it. */
+html.auth-pending body{visibility:hidden}
 
 /* ---------- account menu ---------- */
 /* The top bar gets its own layer so the dropdown is not painted under the page
@@ -274,15 +270,10 @@ button.avatar:hover{background:var(--mark-bg);color:var(--mark-fg)}
 .acct-head b{font-size:var(--text-body-sm);color:var(--afg);font-weight:500}
 .acct-head span{font-family:var(--font-mono);font-size:var(--text-label-xs);color:var(--amut)}
 .acct-sep{height:1px;background:var(--aline);margin:6px 0}
-.acct-label{display:block;padding:6px 12px;font-family:var(--font-mono);font-size:var(--text-label-xs);
-  letter-spacing:var(--tracking-label);text-transform:uppercase;color:var(--adim)}
 .acct-menu button{display:block;width:100%;text-align:left;background:transparent;border:0;border-radius:0;
-  padding:10px 12px 10px 30px;font-family:var(--font-sans);font-size:var(--text-body-sm);color:var(--afg);
+  padding:10px 12px;font-family:var(--font-sans);font-size:var(--text-body-sm);color:var(--afg);
   cursor:pointer;position:relative}
 .acct-menu button:hover{background:var(--tint-hover)}
-/* the check is not colour-only: the mark itself carries the state */
-.acct-menu [role="menuitemradio"][aria-checked="true"]::before{content:"✓";position:absolute;left:11px;
-  color:var(--accent);font-weight:600}
 .acct-menu [data-signout]{color:var(--red)}
 
 /* ---------- modal dialogs ----------

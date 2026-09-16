@@ -78,6 +78,37 @@ function initWaitlist(){
     f.reset();
   });
 }
+// Sign-in / sign-up (demo). There is no backend, so submitting the form *is*
+// the exchange: the address is remembered and the console opens. The checks
+// exist so the flow has a real failure state to show, not to model a password
+// policy — and the same handler serves both pages, which is why it looks up
+// elements rather than assuming one of them.
+function initAuth(){
+  const f = document.getElementById('auth-form');
+  if(!f) return;
+  const err = document.getElementById('auth-err');
+  const email = document.getElementById('auth-email');
+  const pass = document.getElementById('auth-pass');
+  const fail = (msg)=>{ if(err){ err.textContent = msg; err.hidden = false; } };
+  const enter = (addr)=>{
+    if(window.Sand && Sand.auth) Sand.auth.signIn(addr);
+    location.href = './workspace-overview.html';
+  };
+  f.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const a = email ? email.value.trim() : '';
+    const p = pass ? pass.value : '';
+    if(!a || a.indexOf('@') < 1) return fail('Enter a valid email address.');
+    if(p.length < 8) return fail('Your password needs at least 8 characters.');
+    enter(a);
+  });
+  const gh = document.getElementById('auth-github');
+  if(gh) gh.addEventListener('click', ()=>enter('alex@techstartup.io'));
+  // clear the message as soon as the visitor starts fixing it
+  [email, pass].forEach((el)=>{
+    if(el) el.addEventListener('input', ()=>{ if(err) err.hidden = true; });
+  });
+}
 // fake terminal session — one-time type-on, never loops.
 // Lines are lists of [cssClass, text] segments, so colour survives the
 // animation. Command lines type character by character; output lines stream in
@@ -175,7 +206,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   // it (common.js missing, an unsupported API, one bad selector …)
   const safe = (fn)=>{ try { fn(); } catch (e) { console.warn('[sandcode] init failed:', fn.name || fn, e); } };
   if(window.Sand && Sand.initTheme) safe(Sand.initTheme);
-  [initTabs, initMenu, initWaitlist, initTerm, initCopyBtn, initUsecase, initHeroDots,
+  [initTabs, initMenu, initWaitlist, initAuth, initTerm, initCopyBtn, initUsecase, initHeroDots,
    initReveal, initScrollAffordances, initCountUp, initMarquee].forEach(safe);
 });
 // The progress bar and back-to-top button are not decorations — reducing motion

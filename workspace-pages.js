@@ -169,10 +169,6 @@
       } else if (b.hasAttribute('data-close')) {
         var dlg = b.closest('dialog');
         if (dlg) dlg.close();
-      } else if (b.hasAttribute('data-role-set')) {
-        var v = window.__sandRole.set(b.getAttribute('data-role-set'));
-        closeAcct(false);
-        toast(v === 'staff' ? 'Viewing the console as the SandBase team.' : 'Viewing the console as a customer.');
       } else if (b.hasAttribute('data-signout')) {
         closeAcct(false);
         signOutDialog();
@@ -226,11 +222,14 @@
         '<button class="wbtn danger" type="button" data-go>Sign out</button></div>'
       );
       d.querySelector('[data-go]').addEventListener('click', function () {
+        Sand.auth.signOut();
         d.close();
         toast('Signed out.');
         var go = d.querySelector('[data-close]');
         if (go) go.blur();
-        setTimeout(function () { location.href = './index.html'; }, 1100);
+        // land on sign-in rather than the marketing home: signing out of the
+        // console is the start of signing back in, and the console is gated
+        setTimeout(function () { location.href = './signin.html'; }, 900);
       });
     }
     // keys: creation is a two-step dialog — name it, then read the value once.

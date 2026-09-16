@@ -1,5 +1,6 @@
 /* Sandcode shared chrome — injects nav/footer (marketing) and sidebar/topbar
-   (workspace) so 13 pages don't duplicate the same ~30 lines of markup.
+   (workspace) so the marketing pages and the console don't each duplicate the
+   same ~30 lines of markup.
    Loaded before i18n.js so injected text is picked up for translation.
    Active link is derived from the current filename. */
 (function () {
@@ -15,7 +16,8 @@
     { href: './pricing.html', text: 'Pricing' },
     { href: './zen.html', text: 'Models' },
     { href: './enterprise.html', text: 'Enterprise' },
-    { href: './workspace-overview.html', text: 'Console' }
+    { href: './workspace-overview.html', text: 'Console' },
+    { href: './signin.html', text: 'Sign in' }
   ];
 
   function headerHtml() {
@@ -41,38 +43,33 @@
     '</div>' +
     '<div class="wrap fbase"><span>©2026 SandCode</span><span>Demo site inspired by opencode.ai. All trademarks belong to their respective owners.</span><span style="margin-left:auto">English</span></div>';
 
-  // ---- roles ----
-  // Two audiences share this console. A customer sees only what belongs to
-  // their own workspace; our own team additionally gets the internal
-  // acquisition dashboard. The split is expressed as a single attribute on
-  // <html> (set pre-paint by the inline bootstrap) so CSS does the gating and
-  // switching roles needs no reload.
-  var ROLE_KEY = 'sandcode-role';
-  function role() {
-    try { return localStorage.getItem(ROLE_KEY) === 'staff' ? 'staff' : 'customer'; }
-    catch (e) { return 'customer'; }
+  // ---- identity ----
+  // There is no backend, so "signed in" is simply the address the sign-in page
+  // stored. The workspace pages gate on it before first paint (each page's
+  // inline bootstrap redirects to sign-in when the key is absent), so by the
+  // time this menu renders there is always an address to show. Read straight
+  // from localStorage rather than via common.js: chrome.js is loaded first on
+  // purpose, so the shell is in the DOM before the page scripts run.
+  var AUTH_KEY = 'sandcode-auth';
+  function signedInAs() {
+    try { return localStorage.getItem(AUTH_KEY) || 'alex@techstartup.io'; }
+    catch (e) { return 'alex@techstartup.io'; }
   }
-  // Flipping the attribute is the whole switch: the sidebar, the Growth gate and
-  // the menu's own checked state all key off it.
-  function setRole(next) {
-    var v = next === 'staff' ? 'staff' : 'customer';
-    try { localStorage.setItem(ROLE_KEY, v); } catch (e) { /* private mode */ }
-    document.documentElement.dataset.role = v;
-    document.querySelectorAll('[data-role-set]').forEach(function (b) {
-      b.setAttribute('aria-checked', b.dataset.roleSet === v ? 'true' : 'false');
+  // the address is user input and this menu is assembled as a string, so escape
+  // it rather than assuming the sign-in form was the only thing that ever wrote
+  // the key
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
-    return v;
   }
-  window.__sandRole = { get: role, set: setRole };
 
   // ---- workspace sidebar + topbar ----
-  // grouped like the console it mirrors: [group label, [[href, text, role], …]]
-  // a third element marks an entry only our team sees
+  // grouped like the console it mirrors: [group label, [[href, text], …]]
   var WS_NAV = [
     ['Workspace', [
       ['workspace-overview.html', 'Overview'],
-      ['workspace-plan.html', 'Coding Plan'],
-      ['workspace-growth.html', 'Growth', 'staff']
+      ['workspace-plan.html', 'Coding Plan']
     ]],
     ['Spend', [
       ['workspace-usage.html', 'Usage'],
@@ -93,7 +90,6 @@
     'workspace-billing.html': 'Billing',
     'workspace-keys.html': 'API keys',
     'workspace-members.html': 'Members',
-    'workspace-growth.html': 'Growth',
     'workspace-settings.html': 'Settings'
   };
   var WS_EXTRA = { 'workspace-plan.html': '<span class="model-badge">Standard · $9.9/mo</span>' };
@@ -103,9 +99,6 @@
       return '<span>' + g[0] + '</span>' + g[1].map(function (l) {
         var attrs = '';
         if (l[0] === page) attrs += ' class="active" aria-current="page"';
-        // the entry stays in the DOM for every role and CSS hides it for
-        // customers — that keeps role switching a one-attribute change
-        if (l[2]) attrs += ' data-staff';
         return '<a href="./' + l[0] + '"' + attrs + '>' + l[1] + '</a>';
       }).join('');
     }).join('');
@@ -116,23 +109,17 @@
       '<div class="side-foot"><a class="back-site" href="./index.html">← Back to site</a></div>';
   }
 
-  // The account menu carries the things that are about who you are rather than
-  // where you are: the identity, which audience you are viewing the console as,
-  // and signing out. aria-checked is seeded here so the menu is correct before
-  // workspace-pages.js takes over the interaction.
+  // The account menu carries what is about who you are rather than where you
+  // are: the identity, and signing out. The address is the demo auth value and
+  // the avatar shows its first letter, so signing in as someone else is visibly
+  // a different account.
   function acctMenuHtml() {
-    var r = role();
-    function opt(value, label) {
-      return '<button type="button" role="menuitemradio" data-role-set="' + value + '" aria-checked="' +
-        (r === value ? 'true' : 'false') + '">' + label + '</button>';
-    }
+    var email = signedInAs();
     return '<div class="acct">' +
-      '<button class="avatar" id="acct-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Account">A</button>' +
+      '<button class="avatar" id="acct-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Account">' +
+      esc(email.charAt(0).toUpperCase()) + '</button>' +
       '<div class="acct-menu" id="acct-menu" role="menu" aria-labelledby="acct-btn" hidden>' +
-      '<div class="acct-head"><b>alex@techstartup.io</b><span>Standard · $9.9/mo</span></div>' +
-      '<div class="acct-sep" role="separator"></div>' +
-      '<span class="acct-label">View as</span>' +
-      opt('customer', 'Customer') + opt('staff', 'SandBase team') +
+      '<div class="acct-head"><b>' + esc(email) + '</b><span>Standard · $9.9/mo</span></div>' +
       '<div class="acct-sep" role="separator"></div>' +
       '<button type="button" role="menuitem" data-signout>Sign out</button>' +
       '</div></div>';

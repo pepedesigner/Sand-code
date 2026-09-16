@@ -1,6 +1,7 @@
-/* Sandcode shared helpers — theme + clipboard, used by both the marketing
-   site (script.js) and the workspace app (workspace-pages.js). Exposed as
-   window.Sand; Sand.initTheme() must run after chrome.js has mounted. */
+/* Sandcode shared helpers — theme + clipboard + demo auth, used by both the
+   marketing site (script.js) and the workspace app (workspace-pages.js).
+   Exposed as window.Sand; Sand.initTheme() must run after chrome.js has
+   mounted. */
 (function () {
   var KEY = 'sandcode-theme';
   var LIGHT_MQ = '(prefers-color-scheme: light)';
@@ -83,5 +84,26 @@
     });
   }
 
-  window.Sand = { setTheme: setTheme, initTheme: initTheme, copyText: copyText };
+  // demo auth state. There is no backend: this only decides which surface the
+  // visitor is allowed to see, so what is stored is the signed-in email rather
+  // than a token. The workspace pages gate on it before first paint (see the
+  // inline bootstrap in each page), and the account menu reads it to label the
+  // avatar — both read localStorage directly, because neither can wait for the
+  // other to load.
+  var AUTH_KEY = 'sandcode-auth';
+  function user() {
+    try { return localStorage.getItem(AUTH_KEY) || null; } catch (e) { return null; }
+  }
+  function signIn(email) {
+    try { localStorage.setItem(AUTH_KEY, email || 'alex@techstartup.io'); } catch (e) {}
+    document.documentElement.classList.remove('auth-pending');
+  }
+  function signOut() {
+    try { localStorage.removeItem(AUTH_KEY); } catch (e) {}
+  }
+
+  window.Sand = {
+    setTheme: setTheme, initTheme: initTheme, copyText: copyText,
+    auth: { user: user, signIn: signIn, signOut: signOut }
+  };
 })();

@@ -277,6 +277,33 @@ section.block .eyebrow::before{counter-increment:sec;content:"0" counter(sec);ma
    about 1.15:1, well under the 3:1 a focus indicator needs. */
 .waitlist input:focus{border-color:var(--accent)}
 
+/* ---------- sign-in / sign-up ----------
+   One centered card on the marketing canvas. The console it opens is a separate
+   surface with its own stylesheet — this page only has to look like the front
+   door to it, so it reuses the marketing type scale and the button system
+   rather than the console's tokens. */
+.auth{max-width:440px;margin:clamp(44px,8vw,96px) auto;text-align:left}
+.auth h1{font-size:var(--text-h2);margin:0 0 8px}
+.auth .sub{margin:0 0 28px}
+.authcard{border:1px solid var(--line);background:var(--bg2);padding:28px}
+.authcard form{display:flex;flex-direction:column;margin:0}
+.authcard label{font-family:var(--font-mono);font-size:var(--text-label-sm);letter-spacing:var(--tracking-label);
+  text-transform:uppercase;color:var(--muted);margin-top:16px}
+.authcard label:first-child{margin-top:0}
+.authcard input{padding:12px 14px;margin-top:6px;border:1px solid var(--line-strong);border-radius:0;
+  font-family:inherit;font-size:var(--text-body-sm);background:var(--bg);color:var(--ink)}
+.authcard input:focus{border-color:var(--accent)}
+.authcard .btn{width:100%;margin-top:20px}
+.ghbtn{width:100%}
+.auth-or{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--muted);
+  font-family:var(--font-mono);font-size:var(--text-label-sm);letter-spacing:var(--tracking-label);text-transform:uppercase}
+.auth-or::before,.auth-or::after{content:"";flex:1;height:1px;background:var(--line)}
+.auth-alt{margin:20px 0 0;font-size:var(--text-body-sm);color:var(--muted)}
+.auth-alt a{color:var(--accent)}
+#auth-err{margin:14px 0 0;padding:10px 12px;border:1px solid var(--red);color:var(--red);
+  font-size:var(--text-body-sm)}
+#auth-err[hidden]{display:none}
+
 /* ---------- footer ---------- */
 footer{border-top:1px solid var(--line);margin-top:0;background:var(--bg)}
 .fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;padding:56px 0 36px;text-align:left}

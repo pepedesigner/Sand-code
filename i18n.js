@@ -23,7 +23,7 @@
    - Unmapped nodes stay English. Persisted in localStorage. */
 (function () {
   var KEY = 'sandcode-lang';
-  var V = '?v=9'; // same cache-busting convention as the other assets
+  var V = '?v=10'; // same cache-busting convention as the other assets
   var ATTRS = ['placeholder', 'title', 'aria-label'];
   var GATE = 'i18n-pending'; // set by the inline bootstrap, cleared here
   var DEBOUNCE = 120;
@@ -144,8 +144,16 @@
     }
   }
 
-  // text nodes under `root` (a text node root yields itself)
+  // text nodes under `root`. A text node root is handled directly: a
+  // TreeWalker never returns its own root, so a text node queued by the
+  // observer — a toast, an inline form error — would be walked, found empty and
+  // skipped, leaving the string untranslated.
   function eachText(root, fn) {
+    if (root.nodeType === 3) {
+      var parent = root.parentElement;
+      if (!parent || (parent.tagName !== 'SCRIPT' && parent.tagName !== 'STYLE')) fn(root);
+      return;
+    }
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     var n;
     while ((n = walker.nextNode())) {
