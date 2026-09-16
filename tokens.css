@@ -75,8 +75,11 @@
   --plate:#0E0B1A;         /* full-bleed dark band          */
   --tint-mint:#E7E4EA;     /* quiet band                    */
 
-  /* translucent chrome — one token per wash, re-derived below */
-  --chrome-bg:rgba(242,240,243,.86);   /* sticky header / app topbar */
+  /* translucent chrome — one token per wash, re-derived below.
+     The chrome sits a step *below* the canvas rather than matching it: a bar
+     painted in the page's own colour reads as nothing until content scrolls
+     under it, and the marketing header has no hairline to fall back on. */
+  --chrome-bg:rgba(231,228,234,.86);   /* sticky header / app topbar */
   --tint-hover:rgba(14,11,26,.045);    /* table row + nav hover      */
   --tint-track:rgba(14,11,26,.12);     /* progress / switch track    */
 
@@ -122,8 +125,10 @@ body[data-theme="dark"]{
   --plate:#1E1936;
   --tint-mint:#1A1531;
 
-  /* the same washes, flipped to white on a dark canvas */
-  --chrome-bg:rgba(14,11,26,.85);
+  /* the same washes, flipped to white on a dark canvas — except the chrome,
+     which keeps going down: on a canvas this dark, up is where the surfaces
+     already are, so down is the only direction that reads as a separate bar */
+  --chrome-bg:rgba(7,6,13,.85);
   --tint-hover:rgba(242,240,243,.05);
   --tint-track:rgba(242,240,243,.16);
 

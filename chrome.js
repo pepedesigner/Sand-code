@@ -16,8 +16,7 @@
     { href: './pricing.html', text: 'Pricing' },
     { href: './zen.html', text: 'Models' },
     { href: './enterprise.html', text: 'Enterprise' },
-    { href: './workspace-overview.html', text: 'Console' },
-    { href: './signin.html', text: 'Sign in' }
+    { href: './workspace-overview.html', text: 'Console' }
   ];
 
   function headerHtml() {
