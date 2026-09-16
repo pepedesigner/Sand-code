@@ -46,6 +46,7 @@
   --z-scrim:25;            /* drawer scrims (below the drawer)   */
   --z-side:30;             /* app sidebar                        */
   --z-header:50;           /* sticky marketing header            */
+  --z-menu:60;             /* injected chrome: language menu, skip link */
   --z-fab:90;              /* back-to-top                        */
   --z-toast:99;            /* toast + scroll progress            */
 

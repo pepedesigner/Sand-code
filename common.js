@@ -4,6 +4,10 @@
 (function () {
   var KEY = 'sandcode-theme';
   var LIGHT_MQ = '(prefers-color-scheme: light)';
+  // Mobile browsers tint their own chrome with this. It cannot be a static
+  // <meta> pair driven by prefers-color-scheme, because the visitor can pick a
+  // theme that disagrees with the OS — so the toggle owns it instead.
+  var THEME_COLOR = { light: '#F2F0F3', dark: '#0E0B1A' };
 
   // theme: follows the OS until the visitor picks one, then that choice wins
   // and is shared across pages. Dark is the fallback when matchMedia is absent.
@@ -13,8 +17,18 @@
   function storedTheme() {
     try { return localStorage.getItem(KEY); } catch (e) { return null; }
   }
+  function paintThemeColor(t) {
+    var m = document.querySelector('meta[name="theme-color"]');
+    if (!m) {
+      m = document.createElement('meta');
+      m.setAttribute('name', 'theme-color');
+      document.head.appendChild(m);
+    }
+    m.setAttribute('content', THEME_COLOR[t] || THEME_COLOR.light);
+  }
   function paint(t) {
     document.body.dataset.theme = t;
+    paintThemeColor(t);
     var b = document.getElementById('theme-btn');
     if (b) b.textContent = (t === 'dark') ? '☀' : '☾';
   }

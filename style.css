@@ -28,6 +28,11 @@ body{
   margin:0; background:var(--bg); color:var(--ink);
   font-family:var(--font-sans);
   font-size:var(--text-body); line-height:1.5;
+  /* Safety net for the long compound words German and Russian build. Without
+     it a single unbreakable word in a 40px headline is wider than a 360px
+     phone and scrolls the whole page sideways; the break only happens when the
+     word genuinely does not fit, so normal copy is untouched. */
+  overflow-wrap:break-word;
   -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
 }
 ::selection{background:var(--mark-bg);color:var(--mark-fg)}

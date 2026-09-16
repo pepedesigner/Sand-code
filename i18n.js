@@ -1,15 +1,16 @@
-/* Sandcode i18n engine — EN ⇄ 中文, dictionary-driven, zero HTML edits.
-   - Toggle is auto-injected into marketing navs + workspace topbars.
-   - Language follows the browser (zh* → 中文, anything else → English) until the
-     visitor flips the toggle, after which that choice is persisted. The inline
-     bootstrap resolves it the same way pre-paint into window.__sandLang, and
-     this file normalises through the same /^zh/i test so the two can never
-     disagree (a stored 'zh-CN' must mean the same thing to both).
-   - Dictionaries (i18n-dict-*.js) lazily load on the first 中文 render, so page
-     loads don't pay for ~850 entries nobody reads in EN mode. Pages with 中文
-     selected preload them from the inline bootstrap, which also gates the
-     document so it never paints English first. A failed load is not remembered,
-     so the next toggle retries instead of silently staying English.
+/* Sandcode i18n engine — 9 languages, dictionary-driven, zero HTML edits.
+   - The language picker is auto-injected into marketing navs + console topbars.
+   - Language follows the browser (the first supported tag in
+     navigator.languages wins) until the visitor picks one, after which that
+     choice is persisted. The inline bootstrap resolves it the same way
+     pre-paint into window.__sandLang, and this file normalises through the same
+     base-subtag test so the two can never disagree.
+   - One dictionary per language (i18n-<code>.js), lazily loaded on the first
+     render in that language, so page loads don't pay for entries nobody reads
+     in English. A language with a dictionary is preloaded from the inline
+     bootstrap, which also gates the document so the page never paints English
+     first. A failed load is not remembered, so the next switch retries instead
+     of silently staying English.
    - Static text nodes, placeholder/title/aria-label attrs and <title> swap.
    - The MutationObserver translates only the subtrees a mutation actually
      touched, coalesced on a short trailing debounce. A whole-document re-walk
@@ -24,18 +25,47 @@
   var KEY = 'sandcode-lang';
   var V = '?v=5'; // same cache-busting convention as the other assets
   var ATTRS = ['placeholder', 'title', 'aria-label'];
-  var DICT_FILES = ['i18n-dict-a.js', 'i18n-dict-b.js', 'i18n-dict-c.js'];
   var GATE = 'i18n-pending'; // set by the inline bootstrap, cleared here
   var DEBOUNCE = 120;
+
+  /* The single source of truth for which languages exist. `tag` is what goes on
+     <html lang>; `label` is the endonym, which is what a language picker should
+     show (a reader looking for their own language recognises "日本語", not
+     "Japanese"). Order is the order the picker renders. */
+  var LANGS = [
+    { c: 'en', tag: 'en', label: 'English' },
+    { c: 'zh', tag: 'zh-CN', label: '中文' },
+    { c: 'ja', tag: 'ja', label: '日本語' },
+    { c: 'ko', tag: 'ko', label: '한국어' },
+    { c: 'es', tag: 'es', label: 'Español' },
+    { c: 'de', tag: 'de', label: 'Deutsch' },
+    { c: 'fr', tag: 'fr', label: 'Français' },
+    { c: 'pt', tag: 'pt-BR', label: 'Português' },
+    { c: 'ru', tag: 'ru', label: 'Русский' }
+  ];
+  var BY_CODE = {};
+  LANGS.forEach(function (l) { BY_CODE[l.c] = l; });
+
   var attrState = new WeakMap(); // Element -> {src:{attr:EN}, last:{attr:written}}
   var _origTitle = document.title; // captured at parse time (static EN)
   var applying = false; // suppress observer while this engine writes
   var dictPromise = null;
+  var dictFor = null; // which language dictPromise belongs to
   var queued = null; // Set of nodes whose subtree needs (re)translating
   var timer = null;
+  var open = false; // picker state
 
   function dict() { return window.__I18N || {}; }
   function norm(s) { return s.replace(/\s+/g, ' ').trim(); }
+  function fileFor(code) { return code === 'en' ? null : 'i18n-' + code + '.js'; }
+
+  /* Anything not English resolves to a supported base subtag: 'zh-Hans-CN' →
+     'zh', 'pt-PT' → 'pt', 'de-AT' → 'de'. Unknown languages fall back to
+     English rather than to the closest guess. */
+  function resolve(src) {
+    var base = String(src || '').toLowerCase().split('-')[0];
+    return BY_CODE[base] ? base : 'en';
+  }
 
   // One normalisation for every source: an explicit choice wins, then whatever
   // the bootstrap resolved pre-paint, then the browser itself.
@@ -44,55 +74,53 @@
     try { src = localStorage.getItem(KEY); } catch (e) { /* private mode */ }
     if (!src) src = window.__sandLang;
     if (!src) src = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
-    return /^zh/i.test(src) ? 'zh' : 'en';
+    return resolve(src);
   }
 
-  // dictionaries are only needed for 中文 — load on demand, retry after failure
-  function loadDicts() {
-    if (dictPromise) return dictPromise;
+  // dictionaries are only needed off English — load on demand, retry after failure
+  function loadDict(code) {
+    var file = fileFor(code);
+    if (!file) return Promise.resolve();
+    if (dictPromise && dictFor === code) return dictPromise;
+    dictFor = code;
     dictPromise = new Promise(function (resolve) {
-      var left = DICT_FILES.length;
-      var failed = false;
-      function done() {
-        if (--left > 0) return;
-        if (failed) dictPromise = null; // do not memoise a failure for the session
+      var s = document.createElement('script');
+      s.src = './' + file + V;
+      s.onload = function () { resolve(); };
+      s.onerror = function () {
+        console.warn('[sandcode] i18n dictionary failed to load:', file);
+        dictPromise = null; // do not memoise a failure for the session
         resolve();
-      }
-      DICT_FILES.forEach(function (src) {
-        var s = document.createElement('script');
-        s.src = './' + src + V;
-        s.onload = done;
-        s.onerror = function () {
-          failed = true;
-          console.warn('[sandcode] i18n dictionary failed to load:', src);
-          done();
-        };
-        document.head.appendChild(s);
-      });
+      };
+      document.head.appendChild(s);
     });
     return dictPromise;
   }
 
-  function setLang(l) {
-    try { localStorage.setItem(KEY, l); } catch (e) {}
-    document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
-    if (l === 'zh') {
-      loadDicts().then(function () { applyLang(l); paintButton(l); })
-        .catch(function (e) { console.warn('[sandcode] i18n apply failed:', e); });
-    } else { applyLang(l); paintButton(l); }
+  function setLang(code) {
+    code = resolve(code);
+    try { localStorage.setItem(KEY, code); } catch (e) {}
+    document.documentElement.lang = BY_CODE[code].tag;
+    // a dictionary from a previous switch would mask this language's gaps
+    if (dictFor !== code) window.__I18N = {};
+    loadDict(code).then(function () {
+      applyLang(code);
+      paintButton();
+    }).catch(function (e) { console.warn('[sandcode] i18n apply failed:', e); });
   }
 
   function swapTextNode(node, l) {
     var cur = node.nodeValue;
     // a writer other than this engine changed the node — adopt it as the source
-    if (node.__i18nEN === undefined || (cur !== node.__i18nEN && cur !== node.__i18nLast)) {
-      node.__i18nEN = cur;
+    if (node.__i18nSrc === undefined || (cur !== node.__i18nSrc && cur !== node.__i18nLast)) {
+      node.__i18nSrc = cur;
     }
-    var src = node.__i18nEN;
+    var src = node.__i18nSrc;
     var m = src.match(/^(\s*)([\s\S]*?)(\s*)$/);
     var key = norm(m[2]);
     if (!key) return;
-    var next = (l === 'zh' && dict()[key] !== undefined) ? m[1] + dict()[key] + m[3] : src;
+    var hit = l === 'en' ? undefined : dict()[key];
+    var next = hit !== undefined ? m[1] + hit + m[3] : src;
     if (cur !== next) { node.nodeValue = next; node.__i18nLast = next; }
   }
 
@@ -107,7 +135,8 @@
           // same rule as text nodes: someone else's write becomes the new source
           if (st.src[a] === undefined || (cur !== st.src[a] && cur !== st.last[a])) st.src[a] = cur;
           var key = norm(st.src[a]);
-          var next = (l === 'zh' && dict()[key] !== undefined) ? dict()[key] : st.src[a];
+          var hit = l === 'en' ? undefined : dict()[key];
+          var next = hit !== undefined ? hit : st.src[a];
           if (cur !== next) { el.setAttribute(a, next); st.last[a] = next; }
         });
         attrState.set(el, st);
@@ -140,8 +169,8 @@
       eachText(document.body, function (t) { swapTextNode(t, l); });
       swapAttrs(document, l); // covers <head> too; swapAttrs(document.body) would repeat this
       var titleKey = norm(_origTitle);
-      if (l === 'zh' && dict()[titleKey] !== undefined) document.title = dict()[titleKey];
-      else document.title = _origTitle;
+      var titleHit = l === 'en' ? undefined : dict()[titleKey];
+      document.title = titleHit !== undefined ? titleHit : _origTitle;
     } finally { unlock(); }
   }
 
@@ -149,42 +178,123 @@
     timer = null;
     var nodes = queued;
     queued = null;
-    if (!nodes || lang() !== 'zh') return;
+    var l = lang();
+    if (!nodes || l === 'en') return;
     applying = true;
     try {
       nodes.forEach(function (n) {
         // the terminal replaces its whole subtree every frame — detached nodes
         // are stale, so translating them would only burn time
-        if (n.isConnected) translate(n, 'zh');
+        if (n.isConnected) translate(n, l);
       });
     } finally { unlock(); }
   }
 
-  // button (auto-injected so no HTML edits are needed)
-  function paintButton(l) {
-    var b = document.getElementById('lang-btn');
-    if (b) b.textContent = (l === 'zh') ? 'EN' : '中文';
+  /* ---------- language picker ----------
+     A listbox rather than a two-state button, so every language is one click
+     away and the control scales as languages are added. Focus moves into the
+     list on open, which is what makes arrow keys and Escape work for free. */
+  function paintButton() {
+    var cur = document.querySelector('.lang-cur');
+    if (cur) cur.textContent = BY_CODE[lang()].label;
   }
-  function injectButton() {
-    if (document.getElementById('lang-btn')) return;
-    // bail out rather than leaving a detached button with a live click handler
+
+  function closeMenu(restoreFocus) {
+    var wrap = document.getElementById('lang');
+    if (!wrap || !open) return;
+    open = false;
+    wrap.querySelector('.lang-menu').hidden = true;
+    wrap.querySelector('#lang-btn').setAttribute('aria-expanded', 'false');
+    if (restoreFocus) wrap.querySelector('#lang-btn').focus();
+  }
+
+  function openMenu() {
+    var wrap = document.getElementById('lang');
+    if (!wrap || open) return;
+    open = true;
+    var menu = wrap.querySelector('.lang-menu');
+    menu.hidden = false;
+    wrap.querySelector('#lang-btn').setAttribute('aria-expanded', 'true');
+    var sel = menu.querySelector('[aria-selected="true"]') || menu.firstElementChild;
+    if (sel) sel.focus();
+  }
+
+  function buildMenu() {
+    var wrap = document.createElement('div');
+    wrap.className = 'lang';
+    wrap.id = 'lang';
+
+    var btn = document.createElement('button');
+    btn.id = 'lang-btn';
+    btn.type = 'button';
+    btn.className = 'lang-btn';
+    btn.setAttribute('aria-haspopup', 'listbox');
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-label', 'Language');
+    btn.title = 'Language / 语言';
+    btn.innerHTML = '<span class="lang-cur"></span><span class="lang-caret" aria-hidden="true"></span>';
+    btn.addEventListener('click', function () { open ? closeMenu(false) : openMenu(); });
+    btn.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); openMenu(); }
+    });
+
+    var menu = document.createElement('ul');
+    menu.className = 'lang-menu';
+    menu.setAttribute('role', 'listbox');
+    menu.setAttribute('aria-label', 'Language');
+    menu.hidden = true;
+
+    LANGS.forEach(function (l) {
+      var li = document.createElement('li');
+      li.setAttribute('role', 'option');
+      li.tabIndex = -1;
+      li.dataset.c = l.c;
+      li.setAttribute('aria-selected', l.c === lang() ? 'true' : 'false');
+      li.setAttribute('lang', l.tag);
+      li.textContent = l.label;
+      li.addEventListener('click', function () { pick(l.c); });
+      menu.appendChild(li);
+    });
+
+    menu.addEventListener('keydown', function (e) {
+      var items = Array.prototype.slice.call(menu.children);
+      var i = items.indexOf(document.activeElement);
+      if (e.key === 'ArrowDown') { e.preventDefault(); items[Math.min(i + 1, items.length - 1)].focus(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); items[Math.max(i - 1, 0)].focus(); }
+      else if (e.key === 'Home') { e.preventDefault(); items[0].focus(); }
+      else if (e.key === 'End') { e.preventDefault(); items[items.length - 1].focus(); }
+      else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (document.activeElement.dataset.c) pick(document.activeElement.dataset.c);
+      } else if (e.key === 'Escape' || e.key === 'Tab') { closeMenu(e.key === 'Escape'); }
+    });
+
+    wrap.appendChild(btn);
+    wrap.appendChild(menu);
+    return wrap;
+  }
+
+  function pick(code) {
+    closeMenu(true);
+    if (code === lang()) return;
+    setLang(code);
+  }
+
+  function injectMenu() {
+    if (document.getElementById('lang')) return;
+    // bail out rather than leaving a detached control with a live click handler
     var nav = document.querySelector('.nav-links');
     var top = nav ? null : document.querySelector('.top-actions');
     if (!nav && !top) return;
-    var b = document.createElement('button');
-    b.id = 'lang-btn';
-    b.type = 'button';
-    b.title = 'Language / 语言';
-    b.setAttribute('aria-label', 'Switch language');
-    b.style.cssText = 'border:1px solid var(--line,#DBD8DF);background:transparent;color:var(--muted,#5D5969);' +
-      'border-radius:0;padding:8px 10px;font-family:var(--font-mono,monospace);font-size:11px;font-weight:500;' +
-      'letter-spacing:.08em;text-transform:uppercase;cursor:pointer;flex:none;margin-left:8px;';
-    b.addEventListener('click', function () {
-      setLang(lang() === 'zh' ? 'en' : 'zh');
+    var wrap = buildMenu();
+    if (nav) nav.insertBefore(wrap, document.getElementById('theme-btn') || null);
+    else top.insertBefore(wrap, top.firstChild);
+    paintButton();
+
+    document.addEventListener('click', function (e) {
+      var w = document.getElementById('lang');
+      if (open && w && !w.contains(e.target)) closeMenu(false);
     });
-    if (nav) nav.insertBefore(b, document.getElementById('theme-btn') || null);
-    else top.insertBefore(b, top.firstChild);
-    paintButton(lang());
   }
 
   // keep dynamically added content translated — only the changed subtrees.
@@ -192,7 +302,7 @@
   function observe() {
     if (!('MutationObserver' in window) || !document.body) return;
     new MutationObserver(function (records) {
-      if (applying || lang() !== 'zh') return;
+      if (applying || lang() === 'en') return;
       for (var i = 0; i < records.length; i++) {
         var r = records[i];
         if (r.type === 'characterData') {
@@ -211,19 +321,19 @@
     }).observe(document.body, {childList: true, subtree: true, characterData: true});
   }
 
-  // the inline bootstrap hides the page until the dictionaries land, so 中文
-  // visitors never see an English first paint
+  // the inline bootstrap hides the page until the dictionary lands, so a
+  // non-English visitor never sees an English first paint
   function ungated() { document.documentElement.classList.remove(GATE); }
 
   document.addEventListener('DOMContentLoaded', function () {
-    injectButton();
+    var l = lang();
+    injectMenu();
     observe();
-    if (lang() === 'zh') {
-      loadDicts()
-        .then(function () { applyLang('zh'); })
-        .catch(function (e) { console.warn('[sandcode] i18n apply failed:', e); })
-        .then(ungated); // always un-hide, even if applying threw
-    } else { applyLang('en'); ungated(); }
-    document.documentElement.lang = lang() === 'zh' ? 'zh-CN' : 'en';
+    document.documentElement.lang = BY_CODE[l].tag;
+    if (l === 'en') { ungated(); return; }
+    loadDict(l)
+      .then(function () { applyLang(l); paintButton(); })
+      .catch(function (e) { console.warn('[sandcode] i18n apply failed:', e); })
+      .then(ungated); // always un-hide, even if applying threw
   });
 })();

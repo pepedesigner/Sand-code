@@ -1,19 +1,21 @@
 #!/usr/bin/env node
 /* Sandcode i18n dictionary check — no dependencies.
-   The engine matches a key against a whole normalized text node (or a
-   placeholder/title/aria-label value, or a JS string literal), so this lint
-   has to do the same: exact lookup, never substring containment. Substring
-   matching passed any short key ("The", "Run", "Date") that happened to occur
-   inside unrelated copy, which hid real orphans.
-     1. orphan keys   — dictionary keys that no longer appear anywhere
-     2. duplicate keys — same key defined in more than one dict file
+   There is one dictionary per language (i18n-<code>.js) and the engine matches a
+   key against a whole normalized text node (or a placeholder/title/aria-label
+   value, or a JS string literal), so this lint has to do the same: exact lookup,
+   never substring containment. Substring matching passed any short key ("The",
+   "Run", "Date") that happened to occur inside unrelated copy, which hid real
+   orphans. It reports:
+     1. orphan keys    — a key that no page or script ever produces
+     2. duplicate keys — the same key defined twice inside one language
+     3. coverage       — a key another language has and this one does not
    Usage: node check-i18n.js   (exit 1 when findings exist) */
 'use strict';
 const fs = require('fs');
 const path = require('path');
 
 const ROOT = __dirname;
-const isDict = f => /^i18n-dict-.*\.js$/.test(f);
+const isDict = f => /^i18n-[a-z]{2}\.js$/.test(f);
 const DICTS = fs.readdirSync(ROOT).filter(isDict).sort();
 const HTML = fs.readdirSync(ROOT).filter(f => f.endsWith('.html'));
 // every root script whose string literals end up in the DOM, minus the
@@ -69,29 +71,43 @@ for (const f of JS) {
   }
 }
 
-// ---- collect dictionary keys (single- or double-quoted, one per line) ----
-const keys = new Map(); // key -> [files]
+// ---- collect dictionary keys, per language ----
+const byLang = new Map(); // file -> Map(key -> occurrences)
 for (const f of DICTS) {
   const src = fs.readFileSync(path.join(ROOT, f), 'utf8');
   const re = /^\s*(?:'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)")\s*:/gm; // keys start the line
+  const seen = new Map();
   let m;
   while ((m = re.exec(src)) !== null) {
     const key = (m[1] !== undefined ? m[1] : m[2]).replace(/\\(['"\\])/g, '$1');
-    if (!keys.has(key)) keys.set(key, []);
-    keys.get(key).push(f);
+    seen.set(key, (seen.get(key) || 0) + 1);
   }
+  byLang.set(f, seen);
 }
 
 // ---- report ----
 let bad = 0;
-const dupes = [...keys.entries()].filter(([, v]) => v.length > 1);
-for (const [key, files] of dupes) console.warn(`DUPLICATE  "${key}"  in ${files.join(', ')}`);
-if (dupes.length) bad++;
+const union = new Set();
+for (const seen of byLang.values()) for (const k of seen.keys()) union.add(k);
 
-const orphans = [...keys.keys()].filter(k => !snippets.has(k));
-for (const k of orphans) console.warn(`ORPHAN     "${k}"  (defined in ${(keys.get(k)).join(', ')})`);
-if (orphans.length) bad++;
+for (const [f, seen] of byLang) {
+  const dupes = [...seen.entries()].filter(([, n]) => n > 1);
+  for (const [key, n] of dupes) console.warn(`DUPLICATE  ${f}  "${key}"  ×${n}`);
+  if (dupes.length) bad++;
 
-console.log(`checked ${keys.size} keys against ${HTML.length} pages + ${JS.length} js files`);
-if (bad) { console.error(`✗ ${dupes.length} duplicates, ${orphans.length} orphans`); process.exit(1); }
-console.log('✓ dictionary clean');
+  const orphans = [...seen.keys()].filter(k => !snippets.has(k));
+  for (const k of orphans) console.warn(`ORPHAN     ${f}  "${k}"`);
+  if (orphans.length) bad++;
+
+  // a key another language translates and this one does not means the page
+  // silently falls back to English for that string
+  const missing = [...union].filter(k => !seen.has(k));
+  for (const k of missing) console.warn(`MISSING    ${f}  "${k}"`);
+  if (missing.length) bad++;
+}
+
+console.log(`checked ${union.size} keys across ${DICTS.length} languages ` +
+  `(${DICTS.map(f => f.replace(/^i18n-|\.js$/g, '')).join(', ')}) ` +
+  `against ${HTML.length} pages + ${JS.length} js files`);
+if (bad) { console.error(`✗ ${bad} finding${bad === 1 ? '' : 's'}`); process.exit(1); }
+console.log('✓ dictionaries clean and aligned');

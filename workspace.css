@@ -18,6 +18,7 @@ html,body{height:100%}
 body{margin:0;background:var(--abg);color:var(--afg);
   font-family:var(--font-sans);
   font-size:var(--text-body-sm);line-height:1.5;overflow:hidden;
+  overflow-wrap:break-word; /* long German/Russian compounds, as in style.css */
   /* App surfaces alias the tokens instead of repeating literals, so one
      derivation drives both the marketing site and the console. They sit on
      body rather than :root because a custom property resolves against the
