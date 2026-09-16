@@ -81,7 +81,7 @@
     }).join('');
     return '<div class="side-top">' +
       '<a class="mini-logo" href="./index.html"><span>Sand</span>Code<i>*</i></a>' +
-      '<span class="env-pill"><span class="pulse"></span>api.sandcode.ai</span></div>' +
+      '<span class="env-pill"><span class="pulse"></span>api.sandbase.ai</span></div>' +
       '<nav class="ws-nav" aria-label="Console">' + groups + '</nav>' +
       '<div class="side-foot"><a class="back-site" href="./index.html">← Back to site</a></div>';
   }

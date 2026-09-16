@@ -53,7 +53,7 @@
     var bars = $('daily-bars');
     if (bars) {
       var CELLS = 10; // must match the column height / --pitch-v in workspace.css
-      var vals = [1.2, 2.1, 1.6, 3.4, 2.8, 5.6, 3.1, 2.4, 5.2, 3.8, 4.1, 2.9, 3.6, 5.4]; // sums to the $47.20 headline
+      var vals = [1.1, 1.7, 1.4, 3.0, 2.5, 4.9, 2.7, 2.1, 4.6, 3.4, 3.6, 2.6, 3.2, 4.8]; // sums to the $41.60 headline
       var max = Math.max.apply(null, vals);
       vals.forEach(function (v) {
         var col = document.createElement('div');
@@ -88,8 +88,8 @@
         var row = b.closest('tr');
         var cell = row && row.querySelector('td.mono');
         var tag = Math.random().toString(16).slice(2, 6);
-        if (cell) cell.textContent = 'sc_live_••••' + tag;
-        b.setAttribute('data-copy', 'sc_live_mock_' + tag + '_key');
+        if (cell) cell.textContent = 'sb_live_••••' + tag;
+        b.setAttribute('data-copy', 'sb_live_mock_' + tag + '_key');
         toast('Key rotated. The old value stopped working.');
       } else if (b.hasAttribute('data-revoke')) {
         var dead = b.closest('tr');
@@ -119,12 +119,12 @@
         }
         var actions = cell('num');
         actions.append(
-          act('Copy', 'data-copy', 'sc_live_mock_' + tag + '_key', 'ghost'),
+          act('Copy', 'data-copy', 'sb_live_mock_' + tag + '_key', 'ghost'),
           act('Rotate', 'data-regen', null, 'ghost'),
           act('Revoke', 'data-revoke', null, 'danger')
         );
         var tr = document.createElement('tr');
-        tr.append(cell(null, 'New key'), cell('mono', 'sc_live_••••' + tag), cell(null, 'never'), actions);
+        tr.append(cell(null, 'New key'), cell('mono', 'sb_live_••••' + tag), cell(null, 'never'), actions);
         tb.prepend(tr);
         toast('Key created — copy it now.');
       });

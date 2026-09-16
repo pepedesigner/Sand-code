@@ -81,3 +81,8 @@ The demo was originally built around opencode.ai and is rebranded for SandCode. 
 | `opencode` (binary) | `sandbase` |
 | OpenCode Zen | Sand Zen |
 | API base `opencode.ai/zen/v1` | `https://api.sandbase.ai/v1` |
+| API key prefix | `sb_live_` |
+
+Note the split the spec draws and the rebrand keeps: **SandBase** is the platform (the API host, the key prefix, the console), **SandCode** is the coding plan sold on top of it. So the marketing domain is `sandcode.ai` while the API is `api.sandbase.ai` — that is not a typo.
+
+Two figures on the site are fixed by the spec's canonical snapshot and are quoted from it verbatim, not derived: the month is **$41.60 of $70.00 ($28.40 left)**, and the cache multiplier is **2.8×** — the spec names 2.8× the only figure allowed externally, so the worked example on the Models page is built to reproduce it rather than to show the raw best case.

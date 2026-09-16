@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SandCode Console — Overview</title>
-<link rel="stylesheet" href="./fonts.css?v=6">
-<link rel="stylesheet" href="./tokens.css?v=6">
-<link rel="stylesheet" href="./workspace.css?v=6">
-<link rel="stylesheet" href="./buttons.css?v=6">
-<link rel="stylesheet" href="./chrome.css?v=6">
+<link rel="stylesheet" href="./fonts.css?v=7">
+<link rel="stylesheet" href="./tokens.css?v=7">
+<link rel="stylesheet" href="./workspace.css?v=7">
+<link rel="stylesheet" href="./buttons.css?v=7">
+<link rel="stylesheet" href="./chrome.css?v=7">
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <link rel="preload" as="font" type="font/woff2" href="./fonts/clash-grotesk-variable.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="./fonts/geist-mono-latin.woff2" crossorigin>
@@ -27,7 +27,7 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
-<script>try{var l=(localStorage.getItem('sandcode-lang')||(navigator.languages&&navigator.languages[0])||navigator.language||'en').toLowerCase().split('-')[0],d=document.documentElement;if('en zh ja ko es de fr pt ru'.split(' ').indexOf(l)<0)l='en';window.__sandLang=l;d.lang=l;if(l!=='en'){d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},3000);var p=document.createElement('link');p.rel='preload';p.as='script';p.href='./i18n-'+l+'.js?v=6';document.head.appendChild(p)}}catch(e){}</script>
+<script>try{var l=(localStorage.getItem('sandcode-lang')||(navigator.languages&&navigator.languages[0])||navigator.language||'en').toLowerCase().split('-')[0],d=document.documentElement;if('en zh ja ko es de fr pt ru'.split(' ').indexOf(l)<0)l='en';window.__sandLang=l;d.lang=l;if(l!=='en'){d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},3000);var p=document.createElement('link');p.rel='preload';p.as='script';p.href='./i18n-'+l+'.js?v=7';document.head.appendChild(p)}}catch(e){}</script>
 <div id="app">
   <aside id="side"></aside>
   <div id="side-scrim" hidden></div>
@@ -39,18 +39,18 @@
       <div class="ws-grid">
         <div class="ws-card"><h2>Current plan</h2><div class="big">Standard · $9.9/mo</div><p>$70 model pool · renews Oct 1</p>
           <div class="btnrow"><a class="wbtn" style="text-decoration:none" href="./workspace-plan.html">Coding Plan</a><a class="wbtn ghost" style="text-decoration:none" href="./workspace-billing.html">Billing</a></div></div>
-        <div class="ws-card"><h2>This month</h2><div class="big">$47.20</div><p>of $70.00 · 12.4K requests · 8.1M tokens</p>
+        <div class="ws-card"><h2>This month</h2><div class="big">$41.60</div><p>of $70.00, $28.40 left · 12.4K requests · 8.1M tokens</p>
           <div class="btnrow"><a class="wbtn ghost" style="text-decoration:none" href="./workspace-usage.html">View usage</a></div></div>
       </div>
       <div class="ws-card" style="margin-bottom:14px"><h2>Windows at a glance</h2>
         <div class="ubar"><i style="width:32%"></i></div>
-        <div class="urow"><span>6h rolling window · $4.80 of $15.00</span><span>32%</span></div>
+        <div class="urow"><span>6h rolling window</span><span><span>used</span> $4.80 · <span>left</span> $10.20 · 32%</span></div>
         <div class="ubar"><i style="width:53%"></i></div>
-        <div class="urow"><span>Weekly · $18.40 of $35.00</span><span>53%</span></div>
-        <div class="ubar"><i style="width:67%"></i></div>
-        <div class="urow"><span>Monthly · $47.20 of $70.00</span><span>67%</span></div>
+        <div class="urow"><span>Weekly</span><span><span>used</span> $18.40 · <span>left</span> $16.60 · 53%</span></div>
+        <div class="ubar"><i style="width:59%"></i></div>
+        <div class="urow"><span>Monthly</span><span><span>used</span> $41.60 · <span>left</span> $28.40 · 59%</span></div>
         <div class="ubar"><i style="width:21%"></i></div>
-        <div class="urow"><span>Reasoning sub-quota · $4.20 of $20.00</span><span>21%</span></div>
+        <div class="urow"><span>Reasoning sub-quota</span><span><span>used</span> $4.20 · <span>left</span> $15.80 · 21%</span></div>
       </div>
       <div class="ws-grid">
         <div class="ws-card"><h2>Top models</h2>
@@ -72,8 +72,8 @@
   </main>
 </div>
 <div id="toast" role="status" aria-live="polite" hidden></div>
-<script src="./chrome.js?v=6"></script>
-<script src="./i18n.js?v=6"></script>
-<script src="./common.js?v=6"></script>
-<script src="./workspace-pages.js?v=6"></script>
+<script src="./chrome.js?v=7"></script>
+<script src="./i18n.js?v=7"></script>
+<script src="./common.js?v=7"></script>
+<script src="./workspace-pages.js?v=7"></script>
 </body></html>
