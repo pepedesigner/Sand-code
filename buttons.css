@@ -65,6 +65,12 @@
 
 /* ---------- icon (square, not round) ---------- */
 .theme-btn, #menu-side { width:40px;height:40px;min-height:0;padding:0; }
+/* In the marketing nav the toggle sits between the language picker and the
+   Install CTA, so all three share one height — 44, which is what the base button
+   already is and what #toTop below already uses. The console topbar keeps the
+   40: that row *is* --header-h (16px padding, a control either side), so growing
+   its controls would grow the header. */
+.nav-links .theme-btn { width:44px;height:44px; }
 /* #toTop is created hidden and revealed with .show — it owns the fade as well,
    otherwise the base transition would override it and the button would pop in. */
 #toTop { width:44px;height:44px;min-height:0;padding:0;font-size:17px;

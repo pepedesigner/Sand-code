@@ -90,7 +90,11 @@ h1 em,h2 em{
 .nav-links a:not(.btn).active{background:var(--bg3);color:var(--ink);font-weight:600;
   box-shadow:inset 0 -2px 0 var(--accent)}
 .theme-btn{flex:none;margin-left:8px}
-.nav-links a.btn{margin-left:10px}
+/* The nav owns its CTA's margins. `.btn` carries a document-flow margin further
+   down this file, and a top margin there is not neutral in a centred flex row:
+   it shifts the box down by half of it, which is what left the Install button
+   sitting 4px below the controls beside it. */
+.nav-links a.btn{margin:0 0 0 10px}
 
 /* ---------- micro-label ---------- */
 /* one spec for every mono caption: eyebrows, badges, column heads */

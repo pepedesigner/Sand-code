@@ -8,6 +8,10 @@
 
 /* ---------- language picker ---------- */
 .lang{position:relative;display:inline-flex;flex:none;margin-left:8px}
+/* 40 is the height the console topbar's row is built on (16px padding + control
+   = --header-h); in the marketing nav the picker sits beside the Install CTA, so
+   there it takes the CTA's 44 and the three controls line up. */
+.nav-links .lang-btn{height:44px}
 .lang-btn{
   display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 11px;
   background:var(--bg2);border:0;color:var(--ink);
