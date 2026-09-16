@@ -45,14 +45,26 @@
       el.addEventListener('change', function () { toast(el.dataset.toast); });
     });
 
-    // usage: daily bars
+    // usage: daily columns
+    // Values are quantised to a whole number of cells so a column is a stack of
+    // discrete blocks rather than a continuous bar — that is what makes the
+    // chart readable at a glance against the empty cells behind it, and it means
+    // the fill never ends halfway through a cell.
     var bars = $('daily-bars');
     if (bars) {
+      var CELLS = 10; // must match the column height / --pitch-v in workspace.css
       var vals = [1.2, 2.1, 1.6, 3.4, 2.8, 5.6, 3.1, 2.4, 5.2, 3.8, 4.1, 2.9, 3.6, 5.4]; // sums to the $47.20 headline
       var max = Math.max.apply(null, vals);
-      bars.innerHTML = vals.map(function (v) {
-        return '<div style="height:' + Math.round((v / max) * 100) + '%" title="$' + v.toFixed(2) + '"></div>';
-      }).join('');
+      vals.forEach(function (v) {
+        var col = document.createElement('div');
+        col.className = 'dcol';
+        col.title = '$' + v.toFixed(2);
+        var lit = Math.max(1, Math.round((v / max) * CELLS));
+        var fill = document.createElement('i');
+        fill.style.height = ((lit / CELLS) * 100) + '%';
+        col.appendChild(fill);
+        bars.appendChild(col);
+      });
     }
 
     // billing: top-up bumps the wallet balance

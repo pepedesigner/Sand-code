@@ -181,6 +181,33 @@ h1{font-size:var(--text-hero);line-height:1.06;letter-spacing:-.025em;margin:0 0
 .logo-row{display:flex;gap:0;justify-content:flex-start;width:max-content;margin:0 auto;align-items:baseline;color:var(--muted)}
 .logo-row span{font-size:19px;white-space:nowrap;margin-right:38px;font-weight:500;letter-spacing:-.01em}
 .logo-row span:nth-child(odd){font-family:var(--font-mono);font-weight:500}
+/* script.js appends a second copy of the strip, so -50% is exactly one copy and
+   the loop is seamless. Desktop only: below 761px the row wraps instead. */
+@media(min-width:761px) and (prefers-reduced-motion:no-preference){
+  .logo-row{animation:marquee 26s linear infinite}
+  .logos:hover .logo-row{animation-play-state:paused}
+}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ---------- hero entrance ----------
+   Plays on load rather than on scroll, so it is pure CSS — a keyframe with a
+   stagger through animation-delay, which the compositor runs off the main
+   thread. `both` holds the from-state through the delay, so nothing flashes in
+   before its turn. Under reduced motion none of it runs and the hero is simply
+   there. */
+@media(prefers-reduced-motion:no-preference){
+  .hero .badge,.hero h1,.hero .sub,.hero-ctas,.hero .install,.hero .terminal,.logos{
+    animation:hero-in .9s var(--ease) both;
+  }
+  .hero .badge{animation-delay:.1s}
+  .hero h1{animation-delay:.19s}
+  .hero .sub{animation-delay:.28s}
+  .hero-ctas{animation-delay:.37s}
+  .hero .install{animation-delay:.46s}
+  .hero .terminal{animation-delay:.55s}
+  .logos{animation-delay:.64s}
+}
+@keyframes hero-in{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
 
 /* ---------- sections ---------- */
 section.block{padding-block:clamp(56px,8vw,88px);border-top:1px solid var(--line);text-align:center}
@@ -239,8 +266,6 @@ section.block .eyebrow::before{counter-increment:sec;content:"0" counter(sec);ma
 .zen-banner h2{color:var(--panel-fg)}
 .zen-banner p{color:rgba(242,240,243,.72)}
 .zen-banner a.cta{position:relative;margin-top:20px}
-/* the rule above sets an inline colour for the intro copy; keep the CTA readable */
-.zen-banner p a{color:var(--panel-fg)}
 .waitlist{border:1px solid var(--line);background:var(--bg2);padding:44px 32px;
   border-radius:0;margin:36px 0;text-align:center}
 .waitlist form{display:flex;gap:10px;margin:20px auto 0;max-width:520px;flex-wrap:wrap}
@@ -296,7 +321,6 @@ footer{border-top:1px solid var(--line);margin-top:0;background:var(--bg)}
   letter-spacing:var(--tracking-label);color:var(--accent);margin-bottom:10px}
 .step b{display:block;font-size:var(--text-card-title);font-weight:500;letter-spacing:-.011em;margin-bottom:6px}
 .step p{margin:0;color:var(--muted);font-size:var(--text-body-sm);line-height:1.55}
-.step code{font-family:var(--font-mono);font-size:12px;background:var(--bg3);padding:2px 6px}
 
 /* ---------- enterprise extras ---------- */
 .pillrow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:28px}

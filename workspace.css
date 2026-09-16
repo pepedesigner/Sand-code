@@ -7,6 +7,21 @@
   /* shared type/shape/motion come from tokens.css:
      --font-sans, --font-mono, --radius-button, --pill,
      --shadow-pop, --ease, --t-fast, --t-med */
+
+  /* Every meter in the console is drawn as discrete cells rather than a smooth
+     fill, so the grid itself is the unit of measure — a window reads as "how
+     many cells are lit" instead of a vague length of colour. `--pitch` is the
+     cell plus its gap; both the track and the fill tile on it and anchor to the
+     same edge, so a filled cell always sits exactly over an empty one. */
+  --cell:6px;
+  --cell-gap:3px;
+  --pitch:9px;
+  /* The daily columns use a coarser pitch: they are a chart, so the block has to
+     read as a block, and 10 whole cells is a legible scale. The column height is
+     an exact multiple of --pitch-v, so the top cell is never a sliver. */
+  --cell-v:9px;
+  --cell-v-gap:4px;
+  --pitch-v:13px;
 }
 *{box-sizing:border-box}
 /* the inline bootstrap adds this class when 中文 is the stored language, so the
@@ -115,8 +130,25 @@ button{font:inherit;color:inherit}
    console actually shows ('Standard · $9.9/mo'), not the biggest number */
 .ws-card .big{font-family:var(--font-mono);font-weight:500;font-size:clamp(1.75rem,1.4rem + 1.1vw,2.25rem);
   letter-spacing:-.03em;line-height:1.1;margin:14px 0 4px;color:var(--afg)}
-.ubar{height:8px;border-radius:0;background:var(--tint-track);margin:14px 0 8px;overflow:hidden}
-.ubar i{display:block;height:100%;border-radius:0;background:var(--accent)}
+/* ---------- segmented meters ---------- */
+/* A tiled gradient rather than N elements: the markup keeps its plain
+   `style="width:32%"` and still renders as cells at any width. Anchoring both
+   layers to `left` is what keeps the fill's cells registered with the track's —
+   without it a 32% fill can land mid-cell against the empty ones. */
+.ubar{
+  height:12px;margin:16px 0 9px;
+  background-image:linear-gradient(90deg,var(--tint-track) 0 var(--cell),transparent var(--cell) var(--pitch));
+  background-size:var(--pitch) 100%;
+  background-repeat:repeat-x;
+  background-position:left center;
+}
+.ubar i{
+  display:block;height:100%;
+  background-image:linear-gradient(90deg,var(--accent) 0 var(--cell),transparent var(--cell) var(--pitch));
+  background-size:var(--pitch) 100%;
+  background-repeat:repeat-x;
+  background-position:left center;
+}
 .urow{display:flex;justify-content:space-between;gap:16px;font-family:var(--font-mono);
   font-size:var(--text-label-xs);letter-spacing:var(--tracking-label);text-transform:uppercase;color:var(--adim)}
 .utable{width:100%;border-collapse:collapse;font-size:var(--text-body-sm);margin-top:8px}
@@ -152,8 +184,41 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,su
 .switch input:checked + em::after{transform:translateX(18px)}
 .switch input:focus-visible + em{outline:2px solid var(--accent);outline-offset:2px}
 .mono{font-family:var(--font-mono);font-size:12px}
-.dbars{display:flex;gap:6px;align-items:flex-end;height:120px;margin-top:16px}
-.dbars div{flex:1;background:var(--accent);border-radius:0;min-height:4px;opacity:.9}
+/* Daily columns: a full-height track of empty cells with the lit ones stacked
+   from the bottom. script.js quantises each value to a whole number of cells,
+   so a column never ends mid-cell — the chart steps rather than slides. */
+.dbars{display:flex;gap:8px;align-items:stretch;height:130px;margin-top:18px}
+.dcol{
+  flex:1;position:relative;
+  background-image:linear-gradient(0deg,var(--tint-track) 0 var(--cell-v),transparent var(--cell-v) var(--pitch-v));
+  background-size:100% var(--pitch-v);
+  background-repeat:repeat-y;
+  background-position:bottom center;
+}
+.dcol i{
+  position:absolute;left:0;right:0;bottom:0;display:block;
+  background-image:linear-gradient(0deg,var(--accent) 0 var(--cell-v),transparent var(--cell-v) var(--pitch-v));
+  background-size:100% var(--pitch-v);
+  background-repeat:repeat-y;
+  background-position:bottom center;
+}
+
+/* Inline cell bar for a share in a table — same grid at a smaller pitch, so a
+   table of percentages stops being a column of bare numbers. */
+.share{
+  display:inline-block;width:60px;height:8px;margin-right:10px;vertical-align:middle;
+  background-image:linear-gradient(90deg,var(--tint-track) 0 4px,transparent 4px 6px);
+  background-size:6px 100%;
+  background-repeat:repeat-x;
+  background-position:left center;
+}
+.share i{
+  display:block;height:100%;
+  background-image:linear-gradient(90deg,var(--accent) 0 4px,transparent 4px 6px);
+  background-size:6px 100%;
+  background-repeat:repeat-x;
+  background-position:left center;
+}
 .check{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;
   font-size:var(--text-body-sm);color:var(--amut)}
 .check li{list-style:none;padding-left:22px;position:relative}

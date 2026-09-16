@@ -175,13 +175,12 @@ document.addEventListener('DOMContentLoaded', ()=>{
   // it (common.js missing, an unsupported API, one bad selector …)
   const safe = (fn)=>{ try { fn(); } catch (e) { console.warn('[sandcode] init failed:', fn.name || fn, e); } };
   if(window.Sand && Sand.initTheme) safe(Sand.initTheme);
-  [initTabs, initMenu, initWaitlist, initTerm, initCopyBtn, initUsecase, initHeroDots].forEach(safe);
-  // GSAP when available, legacy IO reveal as fallback (also covers no-JS-safe default)
-  safe(()=>{ if (!initMotion()) { initReveal(); initScrollAffordances(); } });
+  [initTabs, initMenu, initWaitlist, initTerm, initCopyBtn, initUsecase, initHeroDots,
+   initReveal, initScrollAffordances, initCountUp, initMarquee].forEach(safe);
 });
 // The progress bar and back-to-top button are not decorations — reducing motion
-// must not remove them, only the tweened behaviour. initScrollFX owns the GSAP
-// version; this is the plain-scroll equivalent used when motion is off.
+// must not remove them, only the tweened behaviour. No animation library is
+// involved: the bar is written on scroll and the button toggles a class.
 function initScrollAffordances(){
   var bar = document.querySelector('.progress');
   if(!bar){ bar = document.createElement('div'); bar.className = 'progress'; document.body.prepend(bar); }
@@ -194,23 +193,75 @@ function initScrollAffordances(){
     document.body.appendChild(top);
     top.addEventListener('click', ()=>{ window.scrollTo({ top: 0, behavior: 'auto' }); });
   }
+  var header = document.querySelector('.site-header');
+  var last = window.scrollY;
   const onScroll = ()=>{
     const doc = document.documentElement;
     const max = doc.scrollHeight - window.innerHeight;
-    bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, window.scrollY / max) : 0) + ')';
-    top.classList.toggle('show', window.scrollY > 600);
+    const y = window.scrollY;
+    bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0) + ')';
+    top.classList.toggle('show', y > 600);
+    // the header retracts while reading downward and comes back the moment you
+    // scroll up (the direction test is `y > last`)
+    if(header) header.classList.toggle('nav-hidden', y > 160 && y > last);
+    last = y;
   };
   window.addEventListener('scroll', onScroll, {passive:true});
   window.addEventListener('resize', onScroll, {passive:true});
   onScroll();
+}
+// Count the stat figures up once they scroll into view. The markup already
+// carries the final value, so a missing IntersectionObserver, reduced motion or
+// an element that never intersects all simply leave the number correct.
+function initCountUp(){
+  const els = document.querySelectorAll('[data-count]');
+  if(!els.length || !('IntersectionObserver' in window) || !window.requestAnimationFrame) return;
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const DUR = 1400;
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach((e)=>{
+      if(!e.isIntersecting) return;
+      io.unobserve(e.target);
+      const el = e.target;
+      const end = parseFloat(el.dataset.count) || 0;
+      const suffix = el.dataset.suffix || '';
+      const t0 = performance.now();
+      const tick = (now)=>{
+        const p = Math.min(1, (now - t0) / DUR);
+        const eased = 1 - Math.pow(1 - p, 3);   // ease-out cubic
+        el.textContent = Math.round(end * eased) + suffix;
+        if(p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  }, {threshold: 0, rootMargin: '0px 0px -10% 0px'});
+  els.forEach((el)=>io.observe(el));
+}
+// The marquee itself is a CSS keyframe (see .logo-row); this only supplies the
+// second copy that makes -50% land exactly on one loop. Below 761px the strip
+// wraps instead of scrolling, so nothing is duplicated there.
+function initMarquee(){
+  const row = document.querySelector('.logo-row');
+  if(!row || !row.children.length) return;
+  if(!(window.matchMedia && window.matchMedia('(min-width: 761px)').matches)) return;
+  // the clones are decoration — without this a screen reader reads the client
+  // list twice, which is what a plain innerHTML += would have done
+  Array.prototype.slice.call(row.children).forEach((el)=>{
+    const clone = el.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    row.appendChild(clone);
+  });
 }
 function initCopyBtn(){
   const btn = document.getElementById('copy-btn');
   if(btn) btn.addEventListener('click', copyCmd);
 }
 // scroll reveal (progressive enhancement: no-JS keeps content visible)
+// The hero's own children are animated by the `hero-in` keyframe in style.css
+// instead, so they are deliberately absent here — running both would have a
+// transition and an animation fighting over the same transform.
 function initReveal(){
-  const els = document.querySelectorAll('section.block, .terminal, .install, .logos, .card, .feat, .stat, .plan, .zen-banner, .waitlist, .compare, .uc-panel, .quad');
+  const els = document.querySelectorAll('section.block, .card, .feat, .stat, .plan, .zen-banner, .waitlist, .compare, .uc-panel, .quad');
   if(!els.length || !('IntersectionObserver' in window)){
     return;
   }
@@ -300,8 +351,8 @@ function initHeroDots(){
     const stop = host.querySelector('.terminal') || host.querySelector('.install');
     let limit = rect.height;
     if(stop){
-      // offsetTop is the layout position, so an in-flight entrance tween
-      // (GSAP translates the card by 28px) can't skew the measurement
+      // offsetTop is the layout position and transforms never move it, so the
+      // card's entrance animation (a 28px translateY) cannot skew this
       limit = (stop.offsetParent === host)
         ? stop.offsetTop
         : stop.getBoundingClientRect().top - rect.top;
@@ -408,104 +459,4 @@ function initHeroDots(){
     new MutationObserver(()=>{ readColors(); measure(); })
       .observe(document.body, {attributes:true, attributeFilter:['data-theme']});
   }
-}
-// scroll-driven FX: progress bar, auto-hiding header, h2 blur-rise,
-// hero scroll-hint fade, back-to-top. Targets avoid existing tweens.
-function initScrollFX(){
-  // progress bar
-  var bar = document.querySelector('.progress');
-  if(!bar){ bar = document.createElement('div'); bar.className = 'progress'; document.body.prepend(bar); }
-  gsap.to(bar, { scaleX: 1, ease: 'none',
-    scrollTrigger: { start: 0, end: 'max', scrub: 0.3 } });
-
-  // header hides on scroll down, returns on scroll up
-  var header = document.querySelector('.site-header');
-  if(header){
-    ScrollTrigger.create({ start: 80, end: 'max',
-      onUpdate: function(self){
-        var y = self.scroll();
-        header.classList.toggle('nav-hidden', y > 160 && self.direction === 1);
-      } });
-  }
-
-  // h2 blur-rise (parents carry the block reveal — no tween conflict)
-  gsap.utils.toArray('section.block h2, .doc h2').forEach(function(h){
-    gsap.from(h, { y: 34, opacity: 0, filter: 'blur(8px)', duration: 0.9, ease: 'power3.out',
-      scrollTrigger: { trigger: h, start: 'top 88%', once: true } });
-  });
-
-  // hero scroll hint fades as you leave the hero
-  var hint = document.querySelector('.scroll-hint');
-  if(hint){
-    gsap.to(hint, { opacity: 0, ease: 'none',
-      scrollTrigger: { trigger: '.hero', start: 'top top', end: '45% top', scrub: true } });
-  }
-
-  // back-to-top
-  var top = document.querySelector('#toTop');
-  if(!top){
-    top = document.createElement('button');
-    top.id = 'toTop'; top.type = 'button';
-    top.setAttribute('aria-label', 'Back to top');
-    top.textContent = '↑';
-    document.body.appendChild(top);
-    top.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); });
-  }
-  ScrollTrigger.create({ start: 600, end: 'max',
-    onEnter: function(){ top.classList.add('show'); },
-    onLeaveBack: function(){ top.classList.remove('show'); } });
-}
-function initMotion(){
-  try{
-    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-    if(!window.gsap || !window.ScrollTrigger) return false;
-    gsap.registerPlugin(ScrollTrigger);
-
-    // hero entrance
-    const heroSeq = ['.hero .badge', '.hero h1', '.hero .sub', '.hero-ctas', '.hero .install', '.hero .terminal', '.logos'];
-    const present = heroSeq.filter((s)=>document.querySelector(s));
-    if(present.length){
-      gsap.set(present, { y: 28, opacity: 0 });
-      gsap.to(present, { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', stagger: 0.09, delay: 0.1 });
-    }
-
-    // gentle parallax on the product frame
-    if(document.querySelector('.hero .terminal')){
-      gsap.to('.hero .terminal', { yPercent: -3, ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
-    }
-
-    // scroll reveals (batch; visible panels only — hidden tab panels are excluded)
-    const targets = gsap.utils.toArray('section.block, .card, .feat, .stat, .plan, .zen-banner, .waitlist, .compare, .doc, .quad');
-    targets.forEach((el)=>{
-      gsap.from(el, { y: 26, opacity: 0, duration: 0.8, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
-    });
-
-    // stat count-up
-    document.querySelectorAll('[data-count]').forEach((el)=>{
-      const end = parseFloat(el.dataset.count);
-      const suffix = el.dataset.suffix || '';
-      const obj = { v: 0 };
-      ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true,
-        onEnter: ()=>gsap.to(obj, { v: end, duration: 1.4, ease: 'power2.out',
-          onUpdate: ()=>{ el.textContent = Math.round(obj.v) + suffix; } }) });
-    });
-
-    // logo marquee (seamless loop, desktop only)
-    const row = document.querySelector('.logo-row');
-    const wide = window.matchMedia && window.matchMedia('(min-width: 761px)').matches;
-    if(row && row.children.length && wide){
-      row.innerHTML += row.innerHTML;
-      const tween = gsap.to(row, { xPercent: -50, duration: 26, ease: 'none', repeat: -1 });
-      row.addEventListener('mouseenter', ()=>tween.pause());
-      row.addEventListener('mouseleave', ()=>tween.play());
-    }
-    // webfonts shift layout after load — re-measure triggers so reveals fire correctly
-    if(document.fonts && document.fonts.ready){
-      document.fonts.ready.then(()=>{ if(window.ScrollTrigger) ScrollTrigger.refresh(); });
-    }
-    initScrollFX();
-    return true;
-  }catch(e){ if(window.console) console.warn('[sandcode] motion fallback:', e); return false; }
 }
