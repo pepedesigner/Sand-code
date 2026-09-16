@@ -30,7 +30,7 @@ Everything the site needs runs offline: fonts, GSAP, and the favicon are all ven
 - `check-i18n.js` — dictionary lint: `node check-i18n.js` reports orphan keys (a key no page or script ever produces), duplicate keys within a language, and **coverage gaps** (a key another language translates and this one does not, which would silently fall back to English). Matching is exact, the way the engine looks strings up — substring matching would hide real orphans. Exits 1 on findings.
 - `remotion/` — a standalone Remotion intro video kept for marketing use. It is **not embedded in any page**; renders (`remotion/out/`, `poster.png`, `preview.gif`) are gitignored and distributed via GitHub Releases.
 - `robots.txt` / `sitemap.xml` — the six marketing pages are indexable; every `workspace-*.html` carries `noindex` (demo-only).
-- `favicon.svg` + og/twitter meta + `canonical` — shared social-card and SEO basics on every page. The card image is `assets/og.png` (1200×630), rendered from the same tokens as the site — it still shows the earlier dark/blue palette and needs re-rendering.
+- `favicon.svg` + og/twitter meta + `canonical` — shared social-card and SEO basics on every page. The card image is `assets/og.png` (1200×630), rendered from the same `fonts.css` / `tokens.css` the site ships: a throwaway page laid out at 1200×630 with `zoom:2`, screenshotted, downscaled with LANCZOS and quantised to a 64-colour palette (40 KB). Re-render it the same way after a token change rather than redrawing it by hand.
 
 ## Run locally
 

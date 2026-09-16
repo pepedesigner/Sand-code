@@ -4,39 +4,73 @@ import {
   Easing,
   Img,
   Sequence,
+  continueRender,
+  delayRender,
   interpolate,
   spring,
   staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from 'remotion';
-import {loadFont as loadNewsreader} from '@remotion/google-fonts/Newsreader';
-import {loadFont as loadInter} from '@remotion/google-fonts/Inter';
 
-const {fontFamily: serif} = loadNewsreader('normal', {
-  weights: ['500'],
-  subsets: ['latin'],
-});
-const {fontFamily: serifItalic} = loadNewsreader('italic', {
-  weights: ['500'],
-  subsets: ['latin'],
-});
-const {fontFamily: sans} = loadInter('normal', {
-  weights: ['400', '600', '800'],
-  subsets: ['latin'],
-});
+/* The site has no serif face and no rounded corners, so neither does this.
+   Colours mirror tokens.css instead of being picked by eye, and the type is the
+   same two files the site serves — loaded through the FontFace API rather than
+   @remotion/google-fonts, which cannot reach either family. */
+const CANVAS = '#F2F0F3';
+const INK = '#0E0B1A';
+const MUTED = '#5D5969';
+const ACCENT = '#5A3AEB';
+const LIME = '#D9FF43';
 
-const PAPER = '#f4f0e8';
-const INK = '#1f1c19';
-const MUTED = '#6e675e';
-const CLAY = '#bc5b34';
-const NIGHT = '#151110';
-const MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
+const SANS = '"Clash Grotesk", system-ui, sans-serif';
+const MONO = '"Geist Mono", ui-monospace, monospace';
+
+const handle = delayRender('Loading SandCode fonts');
+Promise.all([
+  new FontFace('Clash Grotesk', `url(${staticFile('clash-grotesk-variable.woff2')})`, {
+    weight: '200 700',
+  }).load(),
+  new FontFace('Geist Mono', `url(${staticFile('geist-mono-latin.woff2')})`, {
+    weight: '100 900',
+  }).load(),
+])
+  .then((fonts) => {
+    fonts.forEach((font) => document.fonts.add(font));
+    return document.fonts.ready;
+  })
+  .then(() => continueRender(handle))
+  .catch(() => continueRender(handle));
 
 const rise = (s: number) => ({
   opacity: s,
   transform: `translateY(${interpolate(s, [0, 1], [36, 0])}px)`,
 });
+
+/* The same corner marks the site's scenes use. */
+const Corners: React.FC = () => (
+  <>
+    {(['tl', 'tr', 'bl', 'br'] as const).map((c) => (
+      <span
+        key={c}
+        style={{
+          position: 'absolute',
+          width: 14,
+          height: 14,
+          backgroundColor: LIME,
+          top: c[0] === 't' ? 0 : undefined,
+          bottom: c[0] === 'b' ? 0 : undefined,
+          left: c[1] === 'l' ? 0 : undefined,
+          right: c[1] === 'r' ? 0 : undefined,
+        }}
+      />
+    ))}
+  </>
+);
+
+const Mark: React.FC<{children: React.ReactNode}> = ({children}) => (
+  <span style={{backgroundColor: LIME, color: INK, padding: '0 0.14em'}}>{children}</span>
+);
 
 const Title: React.FC = () => {
   const frame = useCurrentFrame();
@@ -50,72 +84,93 @@ const Title: React.FC = () => {
   const s3 = spring({frame: frame - 34, fps, config: {damping: 200, stiffness: 110}});
   return (
     <AbsoluteFill
-      style={{backgroundColor: PAPER, alignItems: 'center', justifyContent: 'center', opacity: fade}}
+      style={{
+        backgroundColor: CANVAS,
+        alignItems: 'center',
+        justifyContent: 'center',
+        opacity: fade,
+      }}
     >
+      <Corners />
       <div style={{...rise(s1), textAlign: 'center'}}>
-        <div
-          style={{
-            fontFamily: sans,
-            fontWeight: 800,
-            fontSize: 27,
-            letterSpacing: 12,
-            color: CLAY,
-          }}
-        >
-          SANDCODE
-        </div>
-        <div style={{fontFamily: serif, fontSize: 98, color: INK, marginTop: 26, lineHeight: 1.05}}>
-          The open-source
+        <div style={{fontFamily: SANS, fontWeight: 550, fontSize: 30, color: INK}}>
+          SandCode<span style={{color: ACCENT}}>*</span>
         </div>
         <div
           style={{
-            fontFamily: serifItalic,
-            fontSize: 98,
-            color: CLAY,
+            fontFamily: SANS,
+            fontWeight: 500,
+            fontSize: 92,
+            letterSpacing: '-0.03em',
             lineHeight: 1.05,
+            color: INK,
+            marginTop: 34,
           }}
         >
-          AI coding agent
+          Flat-rate compute for
         </div>
         <div
           style={{
-            width: 120,
-            height: 3,
-            backgroundColor: CLAY,
-            margin: '34px auto 0',
+            fontFamily: SANS,
+            fontWeight: 500,
+            fontSize: 92,
+            letterSpacing: '-0.03em',
+            lineHeight: 1.05,
+            color: INK,
+          }}
+        >
+          <Mark>every</Mark> agent client.
+        </div>
+        <div
+          style={{
+            width: 132,
+            height: 2,
+            backgroundColor: INK,
+            margin: '40px auto 0',
             transform: `scaleX(${s2})`,
           }}
         />
         <div
-          style={{...rise(s3), fontFamily: MONO, fontSize: 27, color: MUTED, marginTop: 30}}
+          style={{
+            ...rise(s3),
+            fontFamily: MONO,
+            fontSize: 23,
+            fontWeight: 500,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: MUTED,
+            marginTop: 32,
+          }}
         >
-          Free models · 75+ providers · MIT open source
+          8 models · 3 clouds · one pool
         </div>
       </div>
     </AbsoluteFill>
   );
 };
 
+/* A square ink plate, like the site's buttons — not a pill. */
 const Caption: React.FC<{children: React.ReactNode}> = ({children}) => (
   <div
     style={{
       position: 'absolute',
       left: 44,
       bottom: 44,
-      backgroundColor: 'rgba(21,17,16,0.88)',
-      color: '#fff',
-      fontFamily: sans,
-      fontWeight: 600,
-      fontSize: 26,
-      padding: '14px 28px',
-      borderRadius: 999,
+      backgroundColor: INK,
+      color: CANVAS,
+      fontFamily: MONO,
+      fontWeight: 500,
+      fontSize: 21,
+      letterSpacing: '0.08em',
+      textTransform: 'uppercase',
+      padding: '16px 26px',
     }}
   >
     {children}
   </div>
 );
 
-const Shot: React.FC<{src: string; dur: number; travel: number; caption: string}> = ({
+const Screen: React.FC<{src: string; dur: number; travel: number; caption: string}> = ({
   src,
   dur,
   travel,
@@ -131,23 +186,20 @@ const Shot: React.FC<{src: string; dur: number; travel: number; caption: string}
     extrapolateRight: 'clamp',
   });
   return (
-    <AbsoluteFill style={{backgroundColor: NIGHT, opacity: fade, overflow: 'hidden'}}>
-      <Img
-        src={staticFile(src)}
-        style={{width: 1280, transform: `translateY(${y}px)`}}
-      />
+    <AbsoluteFill style={{backgroundColor: CANVAS, opacity: fade, overflow: 'hidden'}}>
+      <Img src={staticFile(src)} style={{width: 1280, transform: `translateY(${y}px)`}} />
       <Caption>{caption}</Caption>
     </AbsoluteFill>
   );
 };
 
-const ZoomShot: React.FC<{src: string; dur: number; caption: string}> = ({
+const ZoomScreen: React.FC<{src: string; dur: number; caption: string}> = ({
   src,
   dur,
   caption,
 }) => {
   const frame = useCurrentFrame();
-  const scale = interpolate(frame, [0, dur - 1], [1, 1.07], {
+  const scale = interpolate(frame, [0, dur - 1], [1, 1.06], {
     easing: Easing.inOut(Easing.cubic),
     extrapolateRight: 'clamp',
   });
@@ -156,14 +208,10 @@ const ZoomShot: React.FC<{src: string; dur: number; caption: string}> = ({
     extrapolateRight: 'clamp',
   });
   return (
-    <AbsoluteFill style={{backgroundColor: NIGHT, opacity: fade, overflow: 'hidden'}}>
+    <AbsoluteFill style={{backgroundColor: CANVAS, opacity: fade, overflow: 'hidden'}}>
       <Img
         src={staticFile(src)}
-        style={{
-          width: 1280,
-          transform: `scale(${scale})`,
-          transformOrigin: '50% 42%',
-        }}
+        style={{width: 1280, transform: `scale(${scale})`, transformOrigin: '50% 42%'}}
       />
       <Caption>{caption}</Caption>
     </AbsoluteFill>
@@ -180,31 +228,62 @@ const Cta: React.FC = () => {
   const s = spring({frame: frame - 10, fps, config: {damping: 200, stiffness: 110}});
   return (
     <AbsoluteFill
-      style={{backgroundColor: PAPER, alignItems: 'center', justifyContent: 'center', opacity: fade}}
+      style={{
+        backgroundColor: CANVAS,
+        alignItems: 'center',
+        justifyContent: 'center',
+        opacity: fade,
+      }}
     >
+      <Corners />
       <div style={{...rise(s), textAlign: 'center'}}>
-        <div style={{fontFamily: serif, fontSize: 88, color: INK, lineHeight: 1.08}}>
+        <div
+          style={{
+            fontFamily: SANS,
+            fontWeight: 500,
+            fontSize: 84,
+            letterSpacing: '-0.03em',
+            lineHeight: 1.06,
+            color: INK,
+          }}
+        >
           Ship your next diff
         </div>
-        <div style={{fontFamily: serifItalic, fontSize: 88, color: CLAY, lineHeight: 1.08}}>
-          today.
+        <div
+          style={{
+            fontFamily: SANS,
+            fontWeight: 500,
+            fontSize: 84,
+            letterSpacing: '-0.03em',
+            lineHeight: 1.06,
+            color: INK,
+          }}
+        >
+          <Mark>today.</Mark>
         </div>
         <div
           style={{
             display: 'inline-block',
-            marginTop: 40,
+            marginTop: 46,
             backgroundColor: INK,
-            color: '#fff',
-            fontFamily: sans,
-            fontWeight: 700,
-            fontSize: 30,
-            padding: '20px 52px',
-            borderRadius: 999,
+            color: CANVAS,
+            fontFamily: SANS,
+            fontWeight: 500,
+            fontSize: 28,
+            padding: '20px 34px',
           }}
         >
-          Get SandCode
+          Install SandCode ›
         </div>
-        <div style={{fontFamily: MONO, fontSize: 25, color: MUTED, marginTop: 28}}>
+        <div
+          style={{
+            fontFamily: MONO,
+            fontSize: 23,
+            letterSpacing: '0.02em',
+            color: MUTED,
+            marginTop: 30,
+          }}
+        >
           curl -fsSL https://sandcode.ai/install | bash
         </div>
       </div>
@@ -214,20 +293,27 @@ const Cta: React.FC = () => {
 
 export const Main: React.FC = () => {
   return (
-    <AbsoluteFill style={{backgroundColor: PAPER, fontFamily: sans}}>
+    <AbsoluteFill style={{backgroundColor: CANVAS, fontFamily: SANS}}>
       <Sequence from={0} durationInFrames={150} name="title">
         <Title />
       </Sequence>
-      <Sequence from={150} durationInFrames={180} name="home">
-        <Shot src="index-desktop.png" dur={180} travel={4250} caption="sandcode.ai — home" />
+      {/* travel = page height minus frame height, so each screen is panned end
+          to end instead of stopping mid-section */}
+      <Sequence from={150} durationInFrames={240} name="home">
+        <Screen src="index-desktop.png" dur={240} travel={6615} caption="sandcode.ai — home" />
       </Sequence>
-      <Sequence from={330} durationInFrames={150} name="go">
-        <Shot src="go-desktop.png" dur={150} travel={4139} caption="Go plans — from $1/mo" />
+      <Sequence from={390} durationInFrames={270} name="pricing">
+        <Screen
+          src="pricing-desktop.png"
+          dur={270}
+          travel={7491}
+          caption="Pricing — one price, every client"
+        />
       </Sequence>
-      <Sequence from={480} durationInFrames={120} name="workspace">
-        <ZoomShot src="workspace-desktop.png" dur={120} caption="Workspace — plan, usage, billing" />
+      <Sequence from={660} durationInFrames={120} name="console">
+        <ZoomScreen src="console-desktop.png" dur={120} caption="Console — plan, usage, billing" />
       </Sequence>
-      <Sequence from={600} durationInFrames={120} name="cta">
+      <Sequence from={780} durationInFrames={120} name="cta">
         <Cta />
       </Sequence>
     </AbsoluteFill>
