@@ -34,6 +34,7 @@ Object.assign(window.__I18N, {
   'Get started': 'Começar',
   'Demo site inspired by opencode.ai. All trademarks belong to their respective owners.': 'Site de demonstração inspirado no opencode.ai. Todas as marcas pertencem aos seus respectivos proprietários.',
   'English': 'Português',
+  'Language': 'Idioma',
 
   /* ---- homepage hero ---- */
   'New · A rolling 6h window, daily burst and PAYG overflow — no wall at the window': 'Novo · Janela móvel de 6 h, burst diário e excedente no PAYG — sem parede na janela',
@@ -873,6 +874,7 @@ Object.assign(window.__I18N, {
   /* ---- sign in / sign up ---- */
   'Sign in': 'Entrar',
   'Sign in | SandCode': 'Entrar | SandCode',
+  'Demo only — there is no backend. Do not enter a real password.': 'Apenas demonstração — não há backend. Não insira uma senha real.',
   'Welcome back. Sign in to open your SandCode Console.': 'Bem-vindo de volta. Entre para abrir o seu console SandCode.',
   'Continue with GitHub': 'Continuar com o GitHub',
   'or': 'ou',

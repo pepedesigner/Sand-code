@@ -14,13 +14,11 @@
      cell plus its gap; both the track and the fill tile on it and anchor to the
      same edge, so a filled cell always sits exactly over an empty one. */
   --cell:6px;
-  --cell-gap:3px;
   --pitch:9px;
   /* The daily columns use a coarser pitch: they are a chart, so the block has to
      read as a block, and 10 whole cells is a legible scale. The column height is
      an exact multiple of --pitch-v, so the top cell is never a sliver. */
   --cell-v:9px;
-  --cell-v-gap:4px;
   --pitch-v:13px;
 }
 *{box-sizing:border-box}
@@ -119,7 +117,7 @@ button{font:inherit;color:inherit}
 .ws-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-bottom:1px;
   background:var(--aline);border:1px solid var(--aline)}
 .ws-grid > .ws-card{border:0}
-.ws-card{background:var(--apanel);
+.ws-card{background:var(--apanel);overflow-x:auto;
   border:1px solid var(--aline);border-radius:0;
   padding:24px;box-shadow:none;
   display:flex;flex-direction:column}
@@ -167,7 +165,6 @@ button{font:inherit;color:inherit}
 .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;padding-top:18px}
 /* .wbtn shape/size/type/state live in buttons.css; the ghost hover wash is
    workspace-specific */
-.wbtn.ghost:hover{background:var(--accent);color:var(--accent-strong)}
 .winput,.wselect{background-color:var(--bg);border:1px solid var(--aline);border-radius:0;color:var(--afg);
   padding:11px 13px;font-size:var(--text-body-sm);font-family:inherit;width:100%}
 /* The platform arrow is the one glyph in the console we do not draw, and it sits
@@ -197,7 +194,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,su
    focus ring has real area — a 0x0 input has no visible focus indicator */
 .switch input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
 .switch em{position:absolute;inset:0;background:var(--tint-track);border-radius:var(--pill);transition:background .18s var(--ease)}
-.switch em::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:var(--bg2);transition:transform .18s var(--ease)}
+.switch em::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:var(--bg2);box-shadow:inset 0 0 0 1px var(--line-strong);transition:transform .18s var(--ease)}
 .switch input:checked + em{background:var(--accent)}
 .switch input:checked + em::after{transform:translateX(18px)}
 .switch input:focus-visible + em{outline:2px solid var(--accent);outline-offset:2px}
@@ -260,24 +257,14 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,su
 /* ---------- dark theme ----------
    Surfaces come from tokens.css, so only values that are literal rgba tints of
    the light canvas need a dark counterpart — and those live on `body` above. */
-body[data-theme="dark"] .switch em::after{background:var(--bg2)}
 body[data-theme="dark"] #side-scrim{background:rgba(0,0,0,.6)}
 
 /* ---------- auth gate ----------
-   The console is behind a sign-in, and the gate fails closed: `auth-locked` is
-   in the markup itself, so the page starts hidden and the inline bootstrap has
-   to *earn* the reveal by finding a session. The other way round — hide from
-   script — means every way of not running that script (scripting off, an
-   extension, a CSP that refuses inline script, a parse error earlier in the
-   head) hands the whole console to a signed-out visitor, which is the one
-   outcome the gate exists to prevent.
-
-   Hiding `body` covers everything: the shell, the cards and the toast all live
-   inside it. */
-html.auth-locked body{visibility:hidden}
-/* visibility is inherited but overridable, so the no-JS notice can sit inside
-   the hidden body and still be the one thing on screen */
-html.auth-locked .auth-nojs{visibility:visible}
+   The two rules that hide a locked console are inline in the <head> of every
+   console page, not here. The gate has to hold even when this stylesheet does
+   not load, so it cannot depend on it — with the rules only here, a blocked or
+   offline workspace.css left the console fully visible. What remains below is
+   the styling of the no-JS notice, which only ever shows inside a hidden body. */
 .auth-nojs{position:relative;z-index:var(--z-toast);max-width:520px;margin:18vh auto 0;padding:0 22px;
   font-family:var(--font-sans);color:var(--afg)}
 .auth-nojs h1{margin:0 0 10px;font-size:var(--text-h2)}
@@ -287,7 +274,7 @@ html.auth-locked .auth-nojs{visibility:visible}
 /* The top bar gets its own layer so the dropdown is not painted under the page
    cards that follow it. 20 sits above content but below the mobile drawer
    (--z-side), so an open drawer still covers the bar it was opened from. */
-#topbar{position:relative;z-index:20}
+#topbar{position:relative;z-index:var(--z-topbar)}
 .acct{position:relative;flex:none}
 /* .avatar doubles as a button here — buttons.css does not own this selector, so
    the resets have to be explicit */
@@ -312,7 +299,7 @@ button.avatar:hover{background:var(--mark-bg);color:var(--mark-fg)}
 .ws-dialog{width:min(470px,calc(100vw - 32px));background:var(--apanel);color:var(--afg);
   border:1px solid var(--aline);border-radius:0;padding:26px;box-shadow:var(--shadow-pop)}
 .ws-dialog::backdrop{background:rgba(14,11,26,.5)}
-.ws-dialog h2{margin:0;font-family:var(--font-sans);font-size:var(--text-h);color:var(--afg)}
+.ws-dialog h2{margin:0;font-family:var(--font-sans);font-size:var(--text-h2);color:var(--afg)}
 .dlg-sub{margin:10px 0 0;color:var(--amut);font-size:var(--text-body-sm)}
 .dlg-field{margin-top:20px}
 .dlg-label{display:block;margin-bottom:9px;font-family:var(--font-mono);font-size:var(--text-label-xs);

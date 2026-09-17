@@ -53,6 +53,7 @@
   var dictFor = null; // which language dictPromise belongs to
   var queued = null; // Set of nodes whose subtree needs (re)translating
   var timer = null;
+  var switching = false; // a new dictionary is in flight; hold off translating
   var open = false; // picker state
 
   function dict() { return window.__I18N || {}; }
@@ -68,13 +69,19 @@
   }
 
   // One normalisation for every source: an explicit choice wins, then whatever
-  // the bootstrap resolved pre-paint, then the browser itself.
+  // the bootstrap resolved pre-paint, then the browser itself. Cached, because
+  // the observer asks on every mutation batch and reading localStorage that
+  // often is wasted work while this file is the only writer.
+  var curLang = null;
   function lang() {
-    var src = null;
-    try { src = localStorage.getItem(KEY); } catch (e) { /* private mode */ }
-    if (!src) src = window.__sandLang;
-    if (!src) src = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
-    return resolve(src);
+    if (curLang === null) {
+      var src = null;
+      try { src = localStorage.getItem(KEY); } catch (e) { /* private mode */ }
+      if (!src) src = window.__sandLang;
+      if (!src) src = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
+      curLang = resolve(src);
+    }
+    return curLang;
   }
 
   // dictionaries are only needed off English — load on demand, retry after failure
@@ -99,14 +106,24 @@
 
   function setLang(code) {
     code = resolve(code);
+    curLang = code; // keep the cache in step, or the observer would use the old language
     try { localStorage.setItem(KEY, code); } catch (e) {}
     document.documentElement.lang = BY_CODE[code].tag;
-    // a dictionary from a previous switch would mask this language's gaps
+    observe(); // only installed for languages that need it
+    /* A dictionary from a previous switch would mask this language's gaps, so it
+       is dropped — but flushes are held off until the new one lands. Otherwise a
+       mutation in that window (a toast, the terminal) would translate against the
+       emptied object and revert finished text to English. */
+    switching = true;
     if (dictFor !== code) window.__I18N = {};
     loadDict(code).then(function () {
+      switching = false;
       applyLang(code);
       paintButton();
-    }).catch(function (e) { console.warn('[sandcode] i18n apply failed:', e); });
+    }).catch(function (e) {
+      switching = false;
+      console.warn('[sandcode] i18n apply failed:', e);
+    });
   }
 
   function swapTextNode(node, l) {
@@ -151,16 +168,26 @@
   function eachText(root, fn) {
     if (root.nodeType === 3) {
       var parent = root.parentElement;
-      if (!parent || (parent.tagName !== 'SCRIPT' && parent.tagName !== 'STYLE')) fn(root);
+      if (parent && parent.tagName !== 'SCRIPT' && parent.tagName !== 'STYLE'
+          && !skipped(parent)) fn(root);
       return;
     }
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     var n;
     while ((n = walker.nextNode())) {
       var p = n.parentElement;
-      if (p && (p.tagName === 'SCRIPT' || p.tagName === 'STYLE')) continue;
+      if (!p || p.tagName === 'SCRIPT' || p.tagName === 'STYLE') continue;
+      if (skipped(p)) continue;
       fn(n);
     }
+  }
+  /* The picker's own labels are endonyms and must stay as authored. Its English
+     row reads "English", which is also a dictionary key (the footer's language
+     label), so without this the engine relabels that row with the *current*
+     language's name — leaving French users with "Français" twice and no way to
+     find English. */
+  function skipped(el) {
+    return !!(el.closest && el.closest('[data-i18n-skip]'));
   }
 
   // observer callbacks are microtasks — they run before this timer clears the flag
@@ -187,7 +214,7 @@
     var nodes = queued;
     queued = null;
     var l = lang();
-    if (!nodes || l === 'en') return;
+    if (!nodes || l === 'en' || switching) return;
     applying = true;
     try {
       nodes.forEach(function (n) {
@@ -231,6 +258,8 @@
     var wrap = document.createElement('div');
     wrap.className = 'lang';
     wrap.id = 'lang';
+    // text inside the picker is authored, not translated — see skipped()
+    wrap.setAttribute('data-i18n-skip', '');
 
     var btn = document.createElement('button');
     btn.id = 'lang-btn';
@@ -307,9 +336,10 @@
 
   // keep dynamically added content translated — only the changed subtrees.
   // `applying` means the records came from our own writes, so they are ignored.
+  var observer = null;
   function observe() {
-    if (!('MutationObserver' in window) || !document.body) return;
-    new MutationObserver(function (records) {
+    if (observer || !('MutationObserver' in window) || !document.body) return;
+    observer = new MutationObserver(function (records) {
       if (applying || lang() === 'en') return;
       for (var i = 0; i < records.length; i++) {
         var r = records[i];
@@ -326,7 +356,8 @@
       if (!queued) return;
       clearTimeout(timer);
       timer = setTimeout(flush, DEBOUNCE);
-    }).observe(document.body, {childList: true, subtree: true, characterData: true});
+    });
+    observer.observe(document.body, {childList: true, subtree: true, characterData: true});
   }
 
   // the inline bootstrap hides the page until the dictionary lands, so a
@@ -336,7 +367,10 @@
   document.addEventListener('DOMContentLoaded', function () {
     var l = lang();
     injectMenu();
-    observe();
+    // An English page has nothing to re-translate, and the hero terminal alone
+    // rewrites its subtree every ~16ms — installing the observer there means a
+    // callback per frame for the whole first render, all of them no-ops.
+    if (l !== 'en') observe();
     document.documentElement.lang = BY_CODE[l].tag;
     if (l === 'en') { ungated(); return; }
     loadDict(l)

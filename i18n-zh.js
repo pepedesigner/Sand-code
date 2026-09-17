@@ -33,6 +33,7 @@ Object.assign(window.__I18N, {
   'Get started': '快速开始',
   'Demo site inspired by opencode.ai. All trademarks belong to their respective owners.': '本站为演示站点，灵感源自 opencode.ai，商标归各自所有者所有。',
   'English': '中文',
+  'Language': '语言',
   /* ---- homepage hero ---- */
   'New · A rolling 6h window, daily burst and PAYG overflow — no wall at the window': '新 · 6 小时滚动窗口、每日 Burst 与 PAYG 接力——窗口永不硬停',
   'See how →': '了解机制 →',
@@ -845,6 +846,7 @@ Object.assign(window.__I18N, {
   /* ---- sign in / sign up ---- */
   'Sign in': '登录',
   'Sign in | SandCode': '登录 | SandCode',
+  'Demo only — there is no backend. Do not enter a real password.': '演示站点——没有后端。请勿输入真实密码。',
   'Welcome back. Sign in to open your SandCode Console.': '欢迎回来。登录以打开你的 SandCode 控制台。',
   'Continue with GitHub': '使用 GitHub 继续',
   'or': '或',

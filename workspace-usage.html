@@ -23,11 +23,12 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://sandcode.ai/assets/og.png">
 <meta property="og:site_name" content="SandCode">
+<style>html.auth-locked body{visibility:hidden}html.auth-locked .auth-nojs{visibility:visible}</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <noscript><div class="auth-nojs"><h1>Sign-in needs JavaScript</h1><p>The console keeps your session in this browser, so it cannot open without scripts. Turn JavaScript on and reload this page.</p></div></noscript>
-<script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t}catch(e){}</script>
+<script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.body.dataset.theme=t}catch(e){}</script>
 <script>try{if(localStorage.getItem('sandcode-auth'))document.documentElement.classList.remove('auth-locked');else location.replace('./signin.html')}catch(e){location.replace('./signin.html')}</script>
 <script>try{var l=(localStorage.getItem('sandcode-lang')||(navigator.languages&&navigator.languages[0])||navigator.language||'en').toLowerCase().split('-')[0],d=document.documentElement;if('en zh ja ko es de fr pt ru'.split(' ').indexOf(l)<0)l='en';window.__sandLang=l;d.lang=l;if(l!=='en'){d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},3000);var p=document.createElement('link');p.rel='preload';p.as='script';p.href='./i18n-'+l+'.js?v=24';document.head.appendChild(p)}}catch(e){}</script>
 <div id="app">

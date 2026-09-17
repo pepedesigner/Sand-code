@@ -42,7 +42,8 @@
   font-weight: 100 900;
   font-display: swap;
   src: url(./fonts/geist-mono-symbols.woff2) format('woff2');
-  unicode-range: U+2000-2001, U+2004-2008, U+200A, U+23B8-23BD, U+2500-259F;
+  unicode-range: U+00A0, U+00B7, U+2000-2001, U+2004-2008, U+200A, U+2013-2014, U+2018-201D, U+2022, U+2026,
+                 U+2190-2193, U+23FA, U+2500-259F, U+2600, U+2630, U+263E, U+2713;
 }
 /* latin */
 @font-face {

@@ -89,7 +89,7 @@ function initAuth(){
   const err = document.getElementById('auth-err');
   const email = document.getElementById('auth-email');
   const pass = document.getElementById('auth-pass');
-  const fail = (msg)=>{ if(err){ err.textContent = msg; err.hidden = false; } };
+  const fail = (msg)=>{ if(err){ err.textContent = msg; email.setAttribute('aria-invalid','true'); } };
   const enter = (addr)=>{
     if(window.Sand && Sand.auth) Sand.auth.signIn(addr);
     location.href = './workspace-overview.html';
@@ -106,7 +106,10 @@ function initAuth(){
   if(gh) gh.addEventListener('click', ()=>enter('alex@techstartup.io'));
   // clear the message as soon as the visitor starts fixing it
   [email, pass].forEach((el)=>{
-    if(el) el.addEventListener('input', ()=>{ if(err) err.hidden = true; });
+    if(el) el.addEventListener('input', ()=>{
+      if(err) err.textContent = '';
+      [email, pass].forEach((i)=>{ if(i) i.removeAttribute('aria-invalid'); });
+    });
   });
 }
 // fake terminal session — one-time type-on, never loops.
@@ -161,20 +164,43 @@ function initTerm(){
     }
     return d;
   }
-  // the first `full` lines, plus the in-progress line clipped to `ci` chars
+  // Only the in-progress line is rewritten. Rebuilding the whole block on every
+  // keystroke re-created every finished line and the caret with them — which
+  // restarted the caret's blink animation on each character, so the caret never
+  // actually blinked while the command was typing.
+  let committed = 0;   // lines already finalised in the DOM
+  let cur = null;      // the in-progress line element (or null)
+  let curCaret = null; // its caret, kept as a stable child
+  function commitCur(){
+    if(!cur) return;
+    if(curCaret){ curCaret.remove(); curCaret = null; }
+    cur = null;
+    committed++;
+  }
   function render(full, ci, caret){
-    const frag = document.createDocumentFragment();
-    for(let i = 0; i < Math.min(full, L.length); i++) frag.appendChild(lineDom(L[i], null));
-    if(full < L.length){
-      const cur = lineDom(L[full], ci);
-      if(caret){
-        const c = document.createElement('span');
-        c.className = 't-caret';
-        cur.appendChild(c);
-      }
-      frag.appendChild(cur);
+    if(full > committed && cur) commitCur();       // the in-progress line is done
+    while(committed < Math.min(full, L.length)){   // the caller can also jump ahead
+      el.appendChild(lineDom(L[committed], null));
+      committed++;
     }
-    el.replaceChildren(frag);
+    if(full >= L.length){ commitCur(); return; }
+    if(!cur){
+      cur = document.createElement('div');
+      cur.className = 't-line';
+      el.appendChild(cur);
+    }
+    const next = lineDom(L[full], ci);
+    const frag = document.createDocumentFragment();
+    while(next.firstChild) frag.appendChild(next.firstChild);
+    if(caret && !curCaret){
+      curCaret = document.createElement('span');
+      curCaret.className = 't-caret';
+      cur.appendChild(curCaret);
+    } else if(!caret && curCaret){
+      curCaret.remove();
+      curCaret = null;
+    }
+    cur.insertBefore(frag, curCaret); // text goes before the caret, never replacing it
   }
 
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
@@ -225,21 +251,29 @@ function initScrollAffordances(){
     top.addEventListener('click', ()=>{ window.scrollTo({ top: 0, behavior: 'auto' }); });
   }
   var header = document.querySelector('.site-header');
-  var last = window.scrollY;
+  var last = window.scrollY, max = 0, ticking = false;
+  // scrollHeight is a layout read: doing it inside the scroll handler forced a
+  // synchronous layout on every event. It only changes when the layout does.
+  const measure = ()=>{ max = document.documentElement.scrollHeight - window.innerHeight; };
   const onScroll = ()=>{
-    const doc = document.documentElement;
-    const max = doc.scrollHeight - window.innerHeight;
-    const y = window.scrollY;
-    bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0) + ')';
-    top.classList.toggle('show', y > 600);
-    // the header retracts while reading downward and comes back the moment you
-    // scroll up (the direction test is `y > last`)
-    if(header) header.classList.toggle('nav-hidden', y > 160 && y > last);
-    last = y;
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(()=>{
+      ticking = false;
+      const y = window.scrollY;
+      bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0) + ')';
+      top.classList.toggle('show', y > 600);
+      // the header retracts while reading downward and comes back the moment you
+      // scroll up (the direction test is `y > last`)
+      if(header) header.classList.toggle('nav-hidden', y > 160 && y > last);
+      last = y;
+    });
   };
+  const reflow = ()=>{ measure(); onScroll(); };
   window.addEventListener('scroll', onScroll, {passive:true});
-  window.addEventListener('resize', onScroll, {passive:true});
-  onScroll();
+  window.addEventListener('resize', reflow, {passive:true});
+  if(window.ResizeObserver) new ResizeObserver(reflow).observe(document.body);
+  reflow();
 }
 // Count the stat figures up once they scroll into view. The markup already
 // carries the final value, so a missing IntersectionObserver, reduced motion or
@@ -479,7 +513,7 @@ function initHeroDots(){
   // the hero's height settles late (webfonts, headline wrapping, entrance
   // tweens) — watch the element itself instead of guessing when to re-measure
   if(window.ResizeObserver) new ResizeObserver(schedule).observe(host);
-  else if(document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+  else if(document.fonts && document.fonts.ready) document.fonts.ready.then(schedule).catch(()=>{});
 
   if(!reduce){
     host.addEventListener('pointermove', onMove, {passive:true});

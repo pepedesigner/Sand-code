@@ -29,7 +29,7 @@
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.body.dataset.theme=t;if(localStorage.getItem('sandcode-auth'))location.replace('./workspace-overview.html')}catch(e){}</script>
+<script>try{var t=localStorage.getItem('sandcode-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.body.dataset.theme=t;if(localStorage.getItem('sandcode-auth'))location.replace('./workspace-overview.html')}catch(e){}</script>
 <script>try{var l=(localStorage.getItem('sandcode-lang')||(navigator.languages&&navigator.languages[0])||navigator.language||'en').toLowerCase().split('-')[0],d=document.documentElement;if('en zh ja ko es de fr pt ru'.split(' ').indexOf(l)<0)l='en';window.__sandLang=l;d.lang=l;if(l!=='en'){d.classList.add('i18n-pending');setTimeout(function(){d.classList.remove('i18n-pending')},3000);var p=document.createElement('link');p.rel='preload';p.as='script';p.href='./i18n-'+l+'.js?v=24';document.head.appendChild(p)}}catch(e){}</script>
 <header class="site-header"></header>
 
@@ -38,14 +38,15 @@
 <h1>Sign in</h1>
 <p class="sub">Welcome back. Sign in to open your SandCode Console.</p>
 <div class="authcard">
+<p class="auth-demo">Demo only — there is no backend. Do not enter a real password.</p>
 <button class="btn light ghbtn" id="auth-github" type="button">Continue with GitHub</button>
 <div class="auth-or"><span>or</span></div>
 <form id="auth-form" novalidate>
 <label for="auth-email">Email</label>
-<input id="auth-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+<input id="auth-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" aria-describedby="auth-err" required>
 <label for="auth-pass">Password</label>
-<input id="auth-pass" name="password" type="password" autocomplete="current-password" placeholder="At least 8 characters" required>
-<p id="auth-err" role="alert" hidden></p>
+<input id="auth-pass" name="password" type="password" autocomplete="current-password" placeholder="At least 8 characters" aria-describedby="auth-err" required>
+<p id="auth-err" role="alert"></p>
 <button class="btn" type="submit">Sign in</button>
 </form>
 <p class="auth-alt">New to SandCode? <a href="./signup.html">Create an account</a></p>

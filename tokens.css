@@ -16,6 +16,8 @@
   --text-hero:clamp(2.5rem,1.5rem + 3.4vw,3.75rem);
   --text-h1:clamp(2rem,1.2rem + 2.5vw,2.8125rem);
   --text-h2:clamp(1.75rem,1.35rem + 1.3vw,2.25rem);
+  --text-h3:1.5rem;          /* 24px — doc/panel sub-headings */
+  --text-logo:1.3125rem;     /* 21px — the wordmark */
   --text-plan-value:clamp(2.25rem,1.8rem + 1.5vw,2.875rem);
   --text-card-title:1.375rem;
   --text-lede:1.0625rem;
@@ -49,6 +51,7 @@
   --z-side:30;             /* app sidebar                        */
   --z-header:50;           /* sticky marketing header            */
   --z-menu:60;             /* injected chrome: language menu, skip link */
+  --z-topbar:20;           /* console topbar, above cards, below --z-side */
   --z-fab:90;              /* back-to-top                        */
   --z-toast:99;            /* toast + scroll progress            */
 
@@ -71,8 +74,8 @@
   --accent-strong:#FFFFFF; /* accent-inverted foreground   */
   --mark-bg:#D9FF43;       /* lime highlight (the reference's tint-cyan) */
   --mark-fg:#0E0B1A;
-  --positive:#3F7A1A;      /* success state                */
-  --red:#C0362C;           /* destructive                  */
+  --positive:#356B12;      /* success state — 5.11 on --bg3 (was 4.16, under AA) */
+  --red:#AD2C1C;           /* destructive — 5.29 on --bg3 (was 4.38, under AA)   */
 
   --plate:#0E0B1A;         /* full-bleed dark band          */
   --tint-mint:#E7E4EA;     /* quiet band                    */
@@ -104,6 +107,14 @@
    labels that would otherwise be blank cells */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* CJK has no letter case and no word spaces. The tracked uppercase treatment
+   that suits the Latin micro-labels only inserts a gap between every Han, Kana
+   and Hangul character, and the negative tracking on headings crowds them. */
+:is(html:lang(zh),html:lang(ja),html:lang(ko)) :is(.eyebrow,.badge,.menu-btn,.logo-row,
+  .compare thead th,.utable th,.ws-nav span,.wlabel,.urow,.model-badge,.crumbs,.dlg-label,
+  .auth-or,.lang-btn){letter-spacing:0;text-transform:none}
+:is(html:lang(zh),html:lang(ja),html:lang(ko)) :is(h1,h2,h3,.quotebig,.stat strong){letter-spacing:0}
 
 /* ---- dark: re-derived, not an inversion ---- */
 body[data-theme="dark"]{

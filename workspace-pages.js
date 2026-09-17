@@ -15,6 +15,7 @@
     toastTimer = setTimeout(function () { el.hidden = true; }, 2000);
   }
   function copyText(t, msg) {
+    if (!window.Sand || !Sand.copyText) { toast('Copy failed'); return; }
     Sand.copyText(t).then(
       function () { toast(msg || 'Copied to clipboard.'); },
       function () { toast('Copy failed'); }
@@ -30,7 +31,7 @@
   function secret() {
     var s = '';
     while (s.length < 28) s += Math.random().toString(36).slice(2);
-    return 'sb_live_' + s.slice(0, 28);
+    return 'sc_live_' + s.slice(0, 28);
   }
   function node(tag, cls, text) {
     var n = document.createElement(tag);
@@ -48,26 +49,45 @@
      per interaction. Reusing it also makes the two-step key flow a content
      swap rather than a second element. */
   var dlg = null;
+  /* <dialog> is Safari 15.4+. Where showModal/close are missing the element is
+     opened non-modally instead of throwing — a degraded dialog beats a button
+     that does nothing, and it keeps Escape/backdrop as the only casualties. */
+  function closeDialog(el) {
+    if (!el) return;
+    if (typeof el.close === 'function') el.close();
+    else el.removeAttribute('open');
+  }
   function openDialog(html) {
     if (!dlg) {
       dlg = document.createElement('dialog');
       dlg.className = 'ws-dialog';
-      // the platform reports a backdrop click as a click on the dialog itself
-      dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+      // the platform reports a backdrop click as a click on the dialog itself, so
+      // a click in the dialog's own padding counted as "outside" and closed it —
+      // compare the pointer against the box instead of the target
+      dlg.addEventListener('click', function (e) {
+        var r = dlg.getBoundingClientRect();
+        if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) closeDialog(dlg);
+      });
       document.body.appendChild(dlg);
     }
-    if (dlg.open) dlg.close();
+    if (dlg.open) closeDialog(dlg);
     dlg.innerHTML = html;
     // <dialog> takes no accessible name from its contents, so point it at the
     // heading — screen readers announce the dialog by its title
     var h = dlg.querySelector('h2');
     if (h) { h.id = 'dlg-title'; dlg.setAttribute('aria-labelledby', 'dlg-title'); }
-    dlg.showModal();
+    if (typeof dlg.showModal === 'function') dlg.showModal();
+    else dlg.setAttribute('open', '');
     return dlg;
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    Sand.initTheme();
+    // common.js can be missing (blocked, offline, or refused by a CSP). Its
+    // helpers are the first thing this file touches, and an unguarded throw here
+    // used to take every other interaction on the console down with it.
+    if (window.Sand && Sand.initTheme) {
+      try { Sand.initTheme(); } catch (e) { console.warn('[sandcode] console theme failed:', e); }
+    }
 
     // mobile sidebar
     var menu = $('menu-side'), side = $('side'), scrim = $('side-scrim');
@@ -142,7 +162,7 @@
         after.textContent = money(cur + pick());
         d.querySelector('[data-confirm]').addEventListener('click', function () {
           bal.textContent = money(cur + pick());
-          d.close();
+          closeDialog(d);
           toast('Funds added to your wallet — overflow is covered.');
         });
       });
@@ -159,16 +179,15 @@
         var row = b.closest('tr');
         var cell = row && row.querySelector('td.mono');
         var tag = Math.random().toString(16).slice(2, 6);
-        if (cell) cell.textContent = 'sb_live_••••' + tag;
-        b.setAttribute('data-copy', 'sb_live_mock_' + tag + '_key');
+        if (cell) cell.textContent = 'sc_live_••••' + tag;
+        b.setAttribute('data-copy', 'sc_live_mock_' + tag + '_key');
         toast('Key rotated. The old value stopped working.');
       } else if (b.hasAttribute('data-revoke')) {
         var dead = b.closest('tr');
         if (dead) dead.remove();
         toast('Key revoked.');
       } else if (b.hasAttribute('data-close')) {
-        var dlg = b.closest('dialog');
-        if (dlg) dlg.close();
+        closeDialog(b.closest('dialog'));
       } else if (b.hasAttribute('data-signout')) {
         closeAcct(false);
         signOutDialog();
@@ -222,11 +241,11 @@
         '<button class="wbtn danger" type="button" data-go>Sign out</button></div>'
       );
       d.querySelector('[data-go]').addEventListener('click', function () {
-        Sand.auth.signOut();
-        d.close();
+        if (window.Sand && Sand.auth) Sand.auth.signOut();
+        closeDialog(d);
         toast('Signed out.');
-        var go = d.querySelector('[data-close]');
-        if (go) go.blur();
+        var acct = document.getElementById('acct-btn');
+        if (acct) acct.focus();
         // land on sign-in rather than the marketing home: signing out of the
         // console is the start of signing back in, and the console is gated
         setTimeout(function () { location.href = './signin.html'; }, 900);
@@ -259,7 +278,7 @@
         act('Revoke', 'data-revoke', null, 'danger')
       );
       var tr = document.createElement('tr');
-      tr.append(cell(null, name), cell('mono', 'sb_live_••••' + value.slice(-4)), cell(null, 'never'), actions);
+      tr.append(cell(null, name), cell('mono', 'sc_live_••••' + value.slice(-4)), cell(null, 'never'), actions);
       tb.prepend(tr);
     }
 

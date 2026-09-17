@@ -114,8 +114,12 @@
   // a different account.
   function acctMenuHtml() {
     var email = signedInAs();
+    /* role="menu" exposes only its menuitems, so the identity block inside it is
+       not announced — the address has to reach the button's own name or a screen
+       reader never learns who is signed in. */
     return '<div class="acct">' +
-      '<button class="avatar" id="acct-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Account">' +
+      '<button class="avatar" id="acct-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="' +
+      esc('Account — signed in as ' + email) + '">' +
       esc(email.charAt(0).toUpperCase()) + '</button>' +
       '<div class="acct-menu" id="acct-menu" role="menu" aria-labelledby="acct-btn" hidden>' +
       '<div class="acct-head"><b>' + esc(email) + '</b><span>Standard · $9.9/mo</span></div>' +
@@ -144,6 +148,21 @@
       if (topbar) topbar.innerHTML = wsTopbarHtml();
     }
   }
+
+  // The auth gate lives in the markup (`html.auth-locked`, hidden by an inline
+  // <style> in each console page) and is normally cleared by that page's inline
+  // bootstrap. Resolving it again from here — an external file — keeps the gate
+  // working when a CSP refuses inline script, which would otherwise leave the
+  // page hidden forever with nothing on screen to explain why.
+  function enforceGate() {
+    var root = document.documentElement;
+    if (!root.classList.contains('auth-locked')) return;
+    var session = null;
+    try { session = localStorage.getItem('sandcode-auth'); } catch (e) { session = null; }
+    if (session) root.classList.remove('auth-locked');
+    else location.replace('./signin.html');
+  }
+  enforceGate();
 
   // Mount synchronously so the chrome (sidebar/topbar/nav) is in the DOM
   // before first paint — otherwise navigating between pages briefly shows a

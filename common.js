@@ -4,16 +4,18 @@
    mounted. */
 (function () {
   var KEY = 'sandcode-theme';
-  var LIGHT_MQ = '(prefers-color-scheme: light)';
+  var DARK_MQ = '(prefers-color-scheme: dark)';
   // Mobile browsers tint their own chrome with this. It cannot be a static
   // <meta> pair driven by prefers-color-scheme, because the visitor can pick a
   // theme that disagrees with the OS — so the toggle owns it instead.
   var THEME_COLOR = { light: '#F2F0F3', dark: '#0E0B1A' };
 
   // theme: follows the OS until the visitor picks one, then that choice wins
-  // and is shared across pages. Dark is the fallback when matchMedia is absent.
+  // and is shared across pages. The system is light-first, so light is also the
+  // fallback when matchMedia is absent — only an explicit dark preference wins.
   function systemTheme() {
-    return (window.matchMedia && window.matchMedia(LIGHT_MQ).matches) ? 'light' : 'dark';
+    var mq = window.matchMedia && window.matchMedia(DARK_MQ);
+    return (mq && mq.matches) ? 'dark' : 'light';
   }
   function storedTheme() {
     try { return localStorage.getItem(KEY); } catch (e) { return null; }
@@ -33,7 +35,7 @@
     var b = document.getElementById('theme-btn');
     if (b) b.textContent = (t === 'dark') ? '☀' : '☾';
   }
-  function current() { return document.body.dataset.theme || 'dark'; }
+  function current() { return document.body.dataset.theme || 'light'; }
   function setTheme(t) {
     try { localStorage.setItem(KEY, t); } catch (e) {}
     paint(t);
@@ -46,7 +48,7 @@
     });
     // keep following the OS while the visitor has not chosen explicitly
     if (window.matchMedia) {
-      var mq = window.matchMedia(LIGHT_MQ);
+      var mq = window.matchMedia(DARK_MQ);
       var onChange = function () { if (!storedTheme()) paint(systemTheme()); };
       if (mq.addEventListener) mq.addEventListener('change', onChange);
       else if (mq.addListener) mq.addListener(onChange);

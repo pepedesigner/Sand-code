@@ -19,9 +19,11 @@ const isDict = f => /^i18n-[a-z]{2}\.js$/.test(f);
 const DICTS = fs.readdirSync(ROOT).filter(isDict).sort();
 const HTML = fs.readdirSync(ROOT).filter(f => f.endsWith('.html'));
 // every root script whose string literals end up in the DOM, minus the
-// dictionaries themselves (self-references would mask orphans)
+// dictionaries themselves (self-references would mask orphans) and this tool.
+// i18n.js belongs here: it builds the language picker and sets that control's
+// aria-label, so its literals are strings the engine really does look up.
 const JS = fs.readdirSync(ROOT).filter(f =>
-  f.endsWith('.js') && !isDict(f) && f !== 'check-i18n.js' && f !== 'i18n.js');
+  f.endsWith('.js') && !isDict(f) && f !== 'check-i18n.js');
 // The attributes i18n.js actually swaps, plus data-toast (which becomes a
 // toast's text). `content` is deliberately absent: the engine never touches it,
 // so counting <meta content> as translatable would hide a key that is never
